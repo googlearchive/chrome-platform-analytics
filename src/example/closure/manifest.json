@@ -1,0 +1,16 @@
+{
+  "name": "Analytics Closure-based Sample App",
+  "description": "An example app using Google Analytics",
+  "version": "1.2.3",
+  "manifest_version": 2,
+  "app": {
+    "background": {
+      "scripts": ["background.js"]
+    }
+  },
+  "permissions": [
+    "https://www.google-analytics.com/",
+    "storage"
+  ],
+  "offline_enabled": true
+}
