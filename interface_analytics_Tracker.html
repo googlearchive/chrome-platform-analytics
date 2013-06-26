@@ -1,0 +1,634 @@
+<!doctype html>
+
+
+<html>
+<head>
+  <link rel="shortcut icon" href="static/images/favicon.ico" type="image/x-icon">
+  <title>Tracker (Chrome Platform Analytics - JavaScript)</title>
+  <link rel="stylesheet" href="static/css/base.css">
+  <link rel="stylesheet" href="static/css/doc.css">
+  <link rel="stylesheet" href="static/css/sidetree.css">
+  <link rel="stylesheet" href="static/css/prettify.css">
+
+  <script>
+     var _staticFilePath = "static/";
+     var _typeTreeName = "analytics";
+     var _fileTreeName = "Source";
+  </script>
+
+  <script src="static/js/doc.js">
+  </script>
+
+  <script type="text/javascript" src="//www.google.com/jsapi"></script>
+  <script type="text/javascript">
+     google.load("visualization", "1", {packages:["orgchart"]});
+     var _loadingVisualizations = true;
+  </script>
+
+  <meta charset="utf8">
+</head>
+
+<body onload="grokdoc.onLoad();">
+
+<div id="header">
+  <div class="g-section g-tpl-50-50 g-split">
+    <div class="g-unit g-first">
+      <a id="logo" href="index.html">Chrome Platform Analytics</a>
+    </div>
+
+    <div class="g-unit">
+      <div class="g-c">
+        <strong>Go to class or file:</strong>
+        <input type="text" id="ac">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<div class="colmask rightmenu">
+<div class="colleft">
+    <div class="col1">
+      <!-- Column 1 start -->
+
+<div id="title">
+        <span class="fn">Tracker</span>
+</div>
+
+<div class="g-section g-tpl-75-25">
+  <div class="g-unit g-first" id="description">
+    <span class='nodesc'>No description.</span>
+  </div>
+
+
+</div>
+
+
+
+
+
+
+<h2 class="g-first">Inheritance</h2>
+<div class='gviz-org-chart-container goog-inline-block'>
+<table class='gviz-org-chart' style='display:none'>
+  <tr><td>analytics.Tracker</td><td></td></tr>
+</table>
+</div>
+<div class='gviz-org-chart-container goog-inline-block'>
+<table class='gviz-org-chart' style='display:none'>
+</table>
+</div>
+
+
+
+
+  <h2>Constructor</h2>
+      <div class="fn-constructor">
+    analytics.Tracker(<span></span>)
+  </div>
+
+
+
+<h2>Instance Methods</h2>
+
+
+
+
+
+
+
+
+
+<div>
+       <div class="desc">
+         Defined in
+         <span class="fn-name">
+            <a href="interface_analytics_Tracker.html">
+              analytics.Tracker
+            </a>
+         </span>
+       </div>
+
+
+
+
+
+
+<div class="section">
+  <table class="horiz-rule">
+
+
+     <tr class="even entry public">
+       <td class="access"></td>
+
+
+
+
+
+
+  <td>
+    <a name="analytics.Tracker.prototype.send"></a>
+
+
+     <div class="arg">
+       <img align="left" src="static/images/blank.gif">
+
+        <span class="entryName">send<span class="args">(<span class="arg">hitType</span>,&nbsp;<span class="arg">opt_extraParams</span>)</span>
+        </span>
+        &#8658; <div class="fullType"><span class="type">goog.async.Deferred</span></div>
+      </div>
+
+
+     <div class="entryOverview">
+       Sends the Event to Google Analytics.
+     </div>
+
+
+    <! -- Method details -->
+    <div class="entryDetails">
+
+      <div class="detailsSection">
+        <b>Arguments: </b>
+
+
+
+
+
+
+<table class="horiz-rule">
+     
+   <tr class="even">
+     <td>
+        <span class="entryName">hitType</span>
+        : <div class="fullType"><span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span></div>
+        <div class="entryOverview">hitType</div>
+     </td>
+   </tr>
+     
+   <tr class="odd">
+     <td>
+        <span class="entryName">opt_extraParams</span>
+        : <div class="fullType">(<span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FObject">Object</a></span><span>&nbsp;|&nbsp;</span><span class="type">undefined</span>)</div>
+        <div class="entryOverview">An optional object containing <code>string</code> / <code>!analytics.Value</code> pairs to send with the hit. The values are NOT persisted in the tracker.</div>
+     </td>
+   </tr>
+  </table>
+      </div>
+   
+      <div class="detailsSection">
+        <b>Returns:</b>&nbsp;<div class="fullType"><span class="type">goog.async.Deferred</span></div>&nbsp;
+            goog.async.Deferred
+      </div>
+  
+    </div>
+   
+  </td>
+
+
+     </tr>
+
+
+     <tr class="odd entry public">
+       <td class="access"></td>
+
+
+
+
+
+
+  <td>
+    <a name="analytics.Tracker.prototype.sendAppView"></a>
+
+
+     <div class="arg">
+       <img align="left" src="static/images/blank.gif">
+
+        <span class="entryName">sendAppView<span class="args">(<span class="arg">description</span>)</span>
+        </span>
+        &#8658; <div class="fullType"><span class="type">goog.async.Deferred</span></div>
+      </div>
+
+
+     <div class="entryOverview">
+       Sends the AppView hit to Google Analytics.
+     </div>
+
+
+    <! -- Method details -->
+    <div class="entryDetails">
+
+      <div class="detailsSection">
+        <b>Arguments: </b>
+
+
+
+
+
+
+<table class="horiz-rule">
+     
+   <tr class="even">
+     <td>
+        <span class="entryName">description</span>
+        : <div class="fullType"><span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span></div>
+        <div class="entryOverview">A unique description of the "screen" ( or "place, or "view") within your application. This is should more specific than your app name, but generally not include any runtime data. In most cases all "screens" should be known at the time the app is build. Examples: "MainScreen" or "SettingsView".</div>
+     </td>
+   </tr>
+  </table>
+      </div>
+   
+      <div class="detailsSection">
+        <b>Returns:</b>&nbsp;<div class="fullType"><span class="type">goog.async.Deferred</span></div>&nbsp;
+            goog.async.Deferred
+      </div>
+  
+    </div>
+   
+  </td>
+
+
+     </tr>
+
+
+     <tr class="even entry public">
+       <td class="access"></td>
+
+
+
+
+
+
+  <td>
+    <a name="analytics.Tracker.prototype.sendEvent"></a>
+
+
+     <div class="arg">
+       <img align="left" src="static/images/blank.gif">
+
+        <span class="entryName">sendEvent<span class="args">(<span class="arg">category</span>,&nbsp;<span class="arg">action</span>,&nbsp;<span class="arg">opt_label</span>,&nbsp;<span class="arg">opt_value</span>)</span>
+        </span>
+        &#8658; <div class="fullType"><span class="type">goog.async.Deferred</span></div>
+      </div>
+
+
+     <div class="entryOverview">
+       Sends the Event hit to Google Analytics.
+     </div>
+
+
+    <! -- Method details -->
+    <div class="entryDetails">
+
+      <div class="detailsSection">
+        <b>Arguments: </b>
+
+
+
+
+
+
+<table class="horiz-rule">
+     
+   <tr class="even">
+     <td>
+        <span class="entryName">category</span>
+        : <div class="fullType"><span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span></div>
+        <div class="entryOverview">Specifies the event category.</div>
+     </td>
+   </tr>
+     
+   <tr class="odd">
+     <td>
+        <span class="entryName">action</span>
+        : <div class="fullType"><span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span></div>
+        <div class="entryOverview">Specifies the event action.</div>
+     </td>
+   </tr>
+     
+   <tr class="even">
+     <td>
+        <span class="entryName">opt_label</span>
+        : <div class="fullType">(<span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span><span>&nbsp;|&nbsp;</span><span class="type">undefined</span>)</div>
+        <div class="entryOverview">Specifies the event label.</div>
+     </td>
+   </tr>
+     
+   <tr class="odd">
+     <td>
+        <span class="entryName">opt_value</span>
+        : <div class="fullType">(<span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FNumber">number</a></span><span>&nbsp;|&nbsp;</span><span class="type">undefined</span>)</div>
+        <div class="entryOverview">Specifies the event value. Values must be non-negative.</div>
+     </td>
+   </tr>
+  </table>
+      </div>
+   
+      <div class="detailsSection">
+        <b>Returns:</b>&nbsp;<div class="fullType"><span class="type">goog.async.Deferred</span></div>&nbsp;
+            goog.async.Deferred
+      </div>
+  
+    </div>
+   
+  </td>
+
+
+     </tr>
+
+
+     <tr class="odd entry public">
+       <td class="access"></td>
+
+
+
+
+
+
+  <td>
+    <a name="analytics.Tracker.prototype.sendException"></a>
+
+
+     <div class="arg">
+       <img align="left" src="static/images/blank.gif">
+
+        <span class="entryName">sendException<span class="args">(<span class="arg">opt_description</span>,&nbsp;<span class="arg">opt_fatal</span>)</span>
+        </span>
+        &#8658; <div class="fullType"><span class="type">goog.async.Deferred</span></div>
+      </div>
+
+
+     <div class="entryOverview">
+       Sends the Exception hit to Google Analytics.
+     </div>
+
+
+    <! -- Method details -->
+    <div class="entryDetails">
+
+      <div class="detailsSection">
+        <b>Arguments: </b>
+
+
+
+
+
+
+<table class="horiz-rule">
+     
+   <tr class="even">
+     <td>
+        <span class="entryName">opt_description</span>
+        : <div class="fullType">(<span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span><span>&nbsp;|&nbsp;</span><span class="type">undefined</span>)</div>
+        <div class="entryOverview">Specifies the description of an exception.</div>
+     </td>
+   </tr>
+     
+   <tr class="odd">
+     <td>
+        <span class="entryName">opt_fatal</span>
+        : <div class="fullType">(<span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FBoolean">boolean</a></span><span>&nbsp;|&nbsp;</span><span class="type">undefined</span>)</div>
+        <div class="entryOverview">Was the exception fatal.</div>
+     </td>
+   </tr>
+  </table>
+      </div>
+   
+      <div class="detailsSection">
+        <b>Returns:</b>&nbsp;<div class="fullType"><span class="type">goog.async.Deferred</span></div>&nbsp;
+            goog.async.Deferred
+      </div>
+  
+    </div>
+   
+  </td>
+
+
+     </tr>
+
+
+     <tr class="even entry public">
+       <td class="access"></td>
+
+
+
+
+
+
+  <td>
+    <a name="analytics.Tracker.prototype.sendSocial"></a>
+
+
+     <div class="arg">
+       <img align="left" src="static/images/blank.gif">
+
+        <span class="entryName">sendSocial<span class="args">(<span class="arg">network</span>,&nbsp;<span class="arg">action</span>,&nbsp;<span class="arg">target</span>)</span>
+        </span>
+        &#8658; <div class="fullType"><span class="type">goog.async.Deferred</span></div>
+      </div>
+
+
+     <div class="entryOverview">
+       Sends the Social hit to Google Analytics.
+     </div>
+
+
+    <! -- Method details -->
+    <div class="entryDetails">
+
+      <div class="detailsSection">
+        <b>Arguments: </b>
+
+
+
+
+
+
+<table class="horiz-rule">
+     
+   <tr class="even">
+     <td>
+        <span class="entryName">network</span>
+        : <div class="fullType"><span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span></div>
+        <div class="entryOverview">Specifies the social network, for example Facebook or Google Plus.</div>
+     </td>
+   </tr>
+     
+   <tr class="odd">
+     <td>
+        <span class="entryName">action</span>
+        : <div class="fullType"><span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span></div>
+        <div class="entryOverview">Specifies the social interaction action. For example on Google Plus when a user clicks the +1 button, the social action is 'plus'.</div>
+     </td>
+   </tr>
+     
+   <tr class="even">
+     <td>
+        <span class="entryName">target</span>
+        : <div class="fullType"><span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span></div>
+        <div class="entryOverview">Specifies the target of a social interaction. This value is typically a URL but can be any text.</div>
+     </td>
+   </tr>
+  </table>
+      </div>
+   
+      <div class="detailsSection">
+        <b>Returns:</b>&nbsp;<div class="fullType"><span class="type">goog.async.Deferred</span></div>&nbsp;
+            goog.async.Deferred
+      </div>
+  
+    </div>
+   
+  </td>
+
+
+     </tr>
+
+
+     <tr class="odd entry public">
+       <td class="access"></td>
+
+
+
+
+
+
+  <td>
+    <a name="analytics.Tracker.prototype.set"></a>
+
+
+     <div class="arg">
+       <img align="left" src="static/images/blank.gif">
+
+        <span class="entryName">set<span class="args">(<span class="arg">param</span>,&nbsp;<span class="arg">value</span>)</span>
+        </span>
+      </div>
+
+
+     <div class="entryOverview">
+       Sets an individual value, replacing any previously set values.
+     </div>
+
+
+    <! -- Method details -->
+    <div class="entryDetails">
+
+      <div class="detailsSection">
+        <b>Arguments: </b>
+
+
+
+
+
+
+<table class="horiz-rule">
+     
+   <tr class="even">
+     <td>
+        <span class="entryName">param</span>
+        : <div class="fullType">(<span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span><span>&nbsp;|&nbsp;</span><span class="type">{defaultValue: (string</span><span>&nbsp;|&nbsp;</span><span class="type">undefined), id: string, maxLength: (number</span><span>&nbsp;|&nbsp;</span><span class="type">undefined), name: string, ...}</span>)</div>
+        <div class="entryOverview">param</div>
+     </td>
+   </tr>
+     
+   <tr class="odd">
+     <td>
+        <span class="entryName">value</span>
+        : <div class="fullType">(<span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FBoolean">boolean</a></span><span>&nbsp;|&nbsp;</span><span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FNumber">number</a></span><span>&nbsp;|&nbsp;</span><span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span>)</div>
+        <div class="entryOverview">value</div>
+     </td>
+   </tr>
+  </table>
+      </div>
+   
+  
+    </div>
+   
+  </td>
+
+
+     </tr>
+
+
+  </table>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section">
+  <table class="horiz-rule">
+
+
+  </table>
+</div>
+
+
+
+
+
+
+
+
+
+<div class="section">
+  <table class="horiz-rule">
+
+
+  </table>
+</div>
+
+
+
+
+
+
+
+
+
+<div class="section">
+  <table class="horiz-rule">
+
+
+  </table>
+</div>
+      <!-- Column 1 end -->
+    </div>
+
+        <div class="col2">
+          <!-- Column 2 start -->
+          <div class="col2-c">
+            <h2 id="ref-head">Package Tracker</h2>
+            <div id="localView"></div>
+          </div>
+
+          <div class="col2-c">
+            <h2 id="ref-head">Package Reference</h2>
+            <div id="sideTypeIndex" rootPath="" current="Tracker"></div>
+          </div>
+          <!-- Column 2 end -->
+        </div>
+</div>
+</div>
+
+</body>
+</html>
