@@ -1,0 +1,134 @@
+// Copyright 2013 Google Inc. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+/**
+ * @fileoverview Unit test for ParameterMap.
+ *
+ * @author smckay@google.com (Steve McKay)
+ * @author tbreisacher@google.com (Tyler Breisacher)
+ */
+
+goog.require('analytics.HitType');
+goog.require('analytics.Parameter');
+goog.require('analytics.internal.ParameterMap');
+
+goog.require('goog.testing.jsunit');
+
+
+/** @type {!analytics.internal.ParameterMap} */
+var map;
+
+
+function setUp() {
+  map = new analytics.internal.ParameterMap();
+}
+
+function testSetGetSingleValue() {
+  map.set(analytics.Parameters.SCREEN_RESOLUTION, '1024x768');
+  assertEquals('1024x768', map.get(analytics.Parameters.SCREEN_RESOLUTION));
+}
+
+function testMultipleValuesDoNotInterfere() {
+  map.set(analytics.Parameters.SCREEN_RESOLUTION, '1024x768');
+  map.set(analytics.Parameters.CAMPAIGN_ID, '789');
+  assertEquals('1024x768', map.get(analytics.Parameters.SCREEN_RESOLUTION));
+  assertEquals('789', map.get(analytics.Parameters.CAMPAIGN_ID));
+}
+
+function testDuplicateKeyReplacesValue() {
+  map.set(analytics.Parameters.SCREEN_RESOLUTION, '1024x768');
+  map.set(analytics.Parameters.SCREEN_RESOLUTION, 'Bedazzler');
+  assertEquals('Bedazzler', map.get(analytics.Parameters.SCREEN_RESOLUTION));
+}
+
+function testEquality() {
+  map.set(analytics.Parameters.SCREEN_RESOLUTION, '1024x768');
+  map.set(analytics.Parameters.CAMPAIGN_ID, '789');
+
+  /** @type {!analytics.internal.ParameterMap} */
+  var other = new analytics.internal.ParameterMap(
+      analytics.Parameters.SCREEN_RESOLUTION, '1024x768',
+      analytics.Parameters.CAMPAIGN_ID, '789'
+      );
+  assertTrue(map.equals(other));
+}
+
+function testInequality() {
+  map.set(analytics.Parameters.SCREEN_RESOLUTION, 'Bedazzler');
+  map.set(analytics.Parameters.CAMPAIGN_ID, '789');
+
+  /** @type {!analytics.internal.ParameterMap} */
+  var other = new analytics.internal.ParameterMap(
+      analytics.Parameters.SCREEN_RESOLUTION, '1024x768',
+      analytics.Parameters.CAMPAIGN_ID, '789'
+      );
+  assertFalse(map.equals(other));
+}
+
+function testConstructorDisallowsUnevenNumberOfArguments() {
+  try {
+    new analytics.internal.ParameterMap(
+        analytics.Parameters.SCREEN_RESOLUTION, '1024x768',
+        analytics.Parameters.CAMPAIGN_ID);
+    fail('Should have thrown exception.');
+  } catch (expected) {}
+}
+
+function testForEachElementIteratesOverAllElements() {
+  map.set(analytics.Parameters.SCREEN_RESOLUTION, '1024x768');
+  map.set(analytics.Parameters.CAMPAIGN_ID, '789');
+
+  /** @type {!Array.<string>} */
+  var entries = [];
+
+  map.forEachEntry(
+      /**
+       * @param {!analytics.Parameter} key
+       * @param {!analytics.Value} value
+       */
+      function(key, value) {
+        entries.push([key.name, value].join('='));
+      });
+
+  assertSameElements(['ci=789', 'sr=1024x768'], entries);
+}
+
+function testAddsConstructorValues() {
+  map = new analytics.internal.ParameterMap(
+      analytics.Parameters.SCREEN_RESOLUTION, '1024x768',
+      analytics.Parameters.CAMPAIGN_ID, '789'
+      );
+  assertEquals('1024x768', map.get(analytics.Parameters.SCREEN_RESOLUTION));
+  assertEquals('789', map.get(analytics.Parameters.CAMPAIGN_ID));
+}
+
+function testClone() {
+  map.set(analytics.Parameters.SCREEN_RESOLUTION, '1024x768');
+  map.set(analytics.Parameters.CAMPAIGN_ID, '789');
+
+  var clone = map.clone();
+  assertTrue(map.equals(clone));
+}
+
+function testClone_ChangesNotShared() {
+  map.set(analytics.Parameters.SCREEN_RESOLUTION, '1024x768');
+  map.set(analytics.Parameters.CAMPAIGN_ID, '789');
+
+  var clone = map.clone();
+  map.set(analytics.Parameters.APP_NAME, 'Tahiti');
+  clone.set(analytics.Parameters.LANGUAGE, 'en-US');
+  assertFalse(map.equals(clone));
+  assertNull(clone.get(analytics.Parameters.APP_NAME));
+  assertNull(map.get(analytics.Parameters.LANGUAGE));
+}
