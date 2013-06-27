@@ -13,9 +13,6 @@
 // limitations under the License.
 
 /**
- * @fileoverview Interface for a simple key/value based tracker object providing
- * partially-stateful incremental building of hits.
- *
  * @author smckay@google.com (Steve McKay)
  * @author tbreisacher@google.com (Tyler Breisacher)
  */
@@ -29,13 +26,29 @@ goog.require('analytics.Value');
 
 
 /**
+ * Provides support for sending hits to Google Analytics using convenient
+ * named methods like {@code sendAppView} and {@code sendEvent} or the
+ * general purpose {@code send} method.
+ *
+ * <p>Clients can set session values using {@code set}. These values, once set,
+ * are included in all subsequent hits.
+ *
+ * <p>For analytics hittypes that are not supported by a named method clients
+ * can call {@code send} with param/value {@code Object} describing the hit.
+ *
+ * Obtain a instance using the {@code analytics.Service#getTracker}.
+ *
  * @interface
  */
 analytics.Tracker = function() {};
 
 
 /**
- * Sets an individual value, replacing any previously set values.
+ * Sets an individual value on the {@code Tracker}, replacing any previously
+ * set values with the same param. The value is persistent for the life
+ * of the {@code Tracker} instance, or until replaced with another call
+ * to {@code set}.
+
  *
  * @param {!analytics.Parameter|string} param
  * @param {!analytics.Value} value
@@ -44,7 +57,13 @@ analytics.Tracker.prototype.set;
 
 
 /**
- * Sends the Event to Google Analytics.
+ * Sends a hit to Google Analytics. Caller is responsible for ensuring the
+ * of the information sent with that hit. Values can be provided either
+ * using {@code set} or using {@code opt_extraParams}.
+ *
+ * <p>Whenever possible use a named method like {@code sendAppView} or
+ * {@code sendEvent}.
+
  *
  * @param {!analytics.HitType} hitType
  * @param {!Object=} opt_extraParams An optional object containing
@@ -56,8 +75,8 @@ analytics.Tracker.prototype.send;
 
 
 /**
- * Sends the AppView hit to Google Analytics. Also persists the value
- * for inclusion in all subsequent hits.
+ * Sends an AppView hit to Google Analytics.
+
  *
  * @param {string} description A unique description of the "screen" (
  *     or "place, or "view") within your application. This is should more
@@ -70,7 +89,8 @@ analytics.Tracker.prototype.sendAppView;
 
 
 /**
- * Sends the Event hit to Google Analytics.
+ * Sends an Event hit to Google Analytics.
+
  *
  * @param {string} category Specifies the event category.
  * @param {string} action Specifies the event action.
@@ -83,7 +103,8 @@ analytics.Tracker.prototype.sendEvent;
 
 
 /**
- * Sends the Social hit to Google Analytics.
+ * Sends a Social hit to Google Analytics.
+
  *
  * @param {string} network Specifies the social network, for example Facebook
  *     or Google Plus.
@@ -98,10 +119,12 @@ analytics.Tracker.prototype.sendSocial;
 
 
 /**
- * Sends the Exception hit to Google Analytics.
+ * Sends an Exception hit to Google Analytics.
+
  *
  * @param {string=} opt_description Specifies the description of an exception.
  * @param {boolean=} opt_fatal Was the exception fatal.
  * @return {!goog.async.Deferred}
  */
 analytics.Tracker.prototype.sendException;
+

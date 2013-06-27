@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @fileoverview Primary interface for creating analytics classes.
+ * @fileoverview Provides support for creating service objects.
  *
  * @author smckay@google.com (Steve McKay)
  * @author tbreisacher@google.com (Tyler Breisacher)
@@ -42,7 +42,10 @@ goog.require('goog.net.NetworkStatusMonitor');
 goog.require('goog.structs.Map');
 
 
-/** @private {string} */
+/**
+ * The URL of the GA server. This library only communicates over SSL.
+ * @private {string}
+ */
 analytics.GA_SERVER_ = 'https://www.google-analytics.com/collect';
 
 
@@ -51,7 +54,7 @@ analytics.STORAGE_NAMESPACE_ = 'google-analytics';
 
 
 /**
- * The longest payload that can be sent with a POST request.
+ * The maximum number of characters that can be included in the POST payload.
  * @private {number}
  */
 analytics.MAX_POST_LENGTH_ = 8192;
@@ -61,7 +64,11 @@ analytics.MAX_POST_LENGTH_ = 8192;
 analytics.serviceInstances_ = new goog.structs.Map();
 
 
-/** @private {!analytics.internal.Channel|undefined} */
+/**
+ * The channel that handles hits sent from a tracker instance. All
+ * tracker instances share this single, lazily initialized, channel instance.
+ * @private {!analytics.internal.Channel|undefined}
+ */
 analytics.channelPipeline_;
 
 
@@ -75,10 +82,16 @@ analytics.resetForTesting = function() {
 
 
 /**
- * Returns a service instance for the named app. Generally you'll only ever
- * want to call this with a single name as you'll want all tracking to be
- * scoped to your named app.
- * @param {string} appName The name of your application.
+ * Returns a service instance for the named Chrome Platform App/Extension.
+ * Generally you'll only ever want to call this with a single name that
+ * identifies the host Chrome Platform App/Extension or extension using the
+ * library. This name is used to scoped hits to your app on Google Analytics.
+ *
+ * @param {string} appName The name of your Chrome Platform App/Extension.
+ *     Though library could read the name of the app from the chrome manifest
+ *     file as it does with the app version, the name may in fact be translated.
+ *     For this reason the caller must supplied a name.
+ *
  * @return {!analytics.GoogleAnalytics}
  */
 analytics.getService = function(appName) {
@@ -189,21 +202,31 @@ analytics.getAppVersion_ = function() {
 
 
 
-/** @interface */
+/**
+ * Service object providing access to {@code analytics.Tracker} and
+ * {@code analytics.Config} objects.
+ *
+ * <p>An instance of this can be obtained using {@code analytics.getService}.
+ *
+ * @interface
+ */
 analytics.GoogleAnalytics = function() {};
 
 
 /**
- * Creates a new tracker instance for the supplied trackingId.
- * @param {string} trackingId
+ * Creates a new {@code analytics.Tracker} instance.
+ * @param {string} trackingId Your Google Analytics tracking id. This id should
+ *     be for an "app" style property.
+ *
  * @return {!analytics.Tracker}
  */
 analytics.GoogleAnalytics.prototype.getTracker;
 
 
 /**
- * Provides read/write access to configuration values used by the
- * Google Analytics service classes.
+ * Provides read/write access to the runtime configuration information used
+ * by the Google Analytics service classes.
+ *
  * @return {!goog.async.Deferred} A deferred {@code !analytics.Config}
  *     that fires when the object is ready to handle method calls.
  *     Deferred is necessary to allow for object initialization from
