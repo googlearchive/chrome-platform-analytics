@@ -85,6 +85,7 @@ analytics.internal.ServiceTracker.prototype.sendAppView =
   var hit = {
     'description': description
   };
+  this.set(analytics.Parameters.DESCRIPTION, description);
   return this.send(analytics.HitTypes.APPVIEW, hit);
 };
 

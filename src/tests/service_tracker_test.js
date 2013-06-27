@@ -128,6 +128,17 @@ function testSendAppView() {
   assertTypedHitSent(APPVIEW_HIT);
 }
 
+function testSendAppView_PersistsDescriptionParameter() {
+  tracker.sendAppView(APPVIEW_HIT.description);
+  tracker.sendEvent(
+      EVENT_HIT.eventCategory,
+      EVENT_HIT.eventAction,
+      EVENT_HIT.eventLabel,
+      EVENT_HIT.eventValue);
+  channel.assertLastHitHasEntry(
+      analytics.Parameters.DESCRIPTION, APPVIEW_HIT.description);
+}
+
 function testSendEvent() {
   tracker.sendEvent(
       EVENT_HIT.eventCategory,

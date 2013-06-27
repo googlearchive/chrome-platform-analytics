@@ -36,6 +36,7 @@ analytics.Tracker = function() {};
 
 /**
  * Sets an individual value, replacing any previously set values.
+ *
  * @param {!analytics.Parameter|string} param
  * @param {!analytics.Value} value
  */
@@ -44,6 +45,7 @@ analytics.Tracker.prototype.set;
 
 /**
  * Sends the Event to Google Analytics.
+ *
  * @param {!analytics.HitType} hitType
  * @param {!Object=} opt_extraParams An optional object containing
  *     {@code string} / {@code !analytics.Value} pairs
@@ -54,7 +56,9 @@ analytics.Tracker.prototype.send;
 
 
 /**
- * Sends the AppView hit to Google Analytics.
+ * Sends the AppView hit to Google Analytics. Also persists the value
+ * for inclusion in all subsequent hits.
+ *
  * @param {string} description A unique description of the "screen" (
  *     or "place, or "view") within your application. This is should more
  *     specific than your app name, but generally not include any runtime
@@ -67,6 +71,7 @@ analytics.Tracker.prototype.sendAppView;
 
 /**
  * Sends the Event hit to Google Analytics.
+ *
  * @param {string} category Specifies the event category.
  * @param {string} action Specifies the event action.
  * @param {string=} opt_label Specifies the event label.
@@ -79,6 +84,7 @@ analytics.Tracker.prototype.sendEvent;
 
 /**
  * Sends the Social hit to Google Analytics.
+ *
  * @param {string} network Specifies the social network, for example Facebook
  *     or Google Plus.
  * @param {string} action Specifies the social interaction action.
@@ -93,6 +99,7 @@ analytics.Tracker.prototype.sendSocial;
 
 /**
  * Sends the Exception hit to Google Analytics.
+ *
  * @param {string=} opt_description Specifies the description of an exception.
  * @param {boolean=} opt_fatal Was the exception fatal.
  * @return {!goog.async.Deferred}
