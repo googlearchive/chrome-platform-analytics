@@ -60,18 +60,33 @@
  <div class="fn-constructor">
         <a href="interface_analytics_Config.html">
           analytics.Config</a><br/>
-        <div class="class-details">The interface providing clients with the ability to read and manipulate
-service configuration values.</div>
+        <div class="class-details">Provides support for reading and manipulating the configuration of the
+library.
+
+Obtain a instance using the <code>analytics.Service#getConfig</code>.</div>
  </div>
  <div class="fn-constructor">
         <a href="interface_analytics_GoogleAnalytics.html">
           analytics.GoogleAnalytics</a><br/>
-        <div class="class-details"><span class='nodesc'>No description.</span></div>
+        <div class="class-details">Service object providing access to <code>analytics.Tracker</code> and
+<code>analytics.Config</code> objects.
+
+<p>An instance of this can be obtained using <code>analytics.getService</code>.</p></div>
  </div>
  <div class="fn-constructor">
         <a href="interface_analytics_Tracker.html">
           analytics.Tracker</a><br/>
-        <div class="class-details"><span class='nodesc'>No description.</span></div>
+        <div class="class-details">Provides support for sending hits to Google Analytics using convenient
+named methods like <code>sendAppView</code> and <code>sendEvent</code> or the
+general purpose <code>send</code> method.
+
+<p>Clients can set session values using <code>set</code>. These values, once set,
+are included in all subsequent hits.
+
+<p>For analytics hittypes that are not supported by a named method clients
+can call <code>send</code> with param/value <code>Object</code> describing the hit.
+
+Obtain a instance using the <code>analytics.Service#getTracker</code>.</p></p></div>
  </div>
    
 <br/>
@@ -121,23 +136,15 @@ service configuration values.</div>
             <tbody>
               <tr><td>
                 <span class="entryName">
-                  ITEM
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  EVENT
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
                   TIMING
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  ITEM
                 </span>
                 <div class="entryOverview">
                   <span class='nodesc'>No description.</span>
@@ -153,6 +160,14 @@ service configuration values.</div>
              </td></tr>
               <tr><td>
                 <span class="entryName">
+                  EXCEPTION
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
                   APPVIEW
                 </span>
                 <div class="entryOverview">
@@ -161,7 +176,7 @@ service configuration values.</div>
              </td></tr>
               <tr><td>
                 <span class="entryName">
-                  EXCEPTION
+                  EVENT
                 </span>
                 <div class="entryOverview">
                   <span class='nodesc'>No description.</span>
@@ -217,71 +232,7 @@ service configuration values.</div>
             <tbody>
               <tr><td>
                 <span class="entryName">
-                  PAGE_LOAD_TIME
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  DESCRIPTION
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  CLIENT_ID
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  LANGUAGE
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  REDIRECT_RESPONSE_TIME
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  EX_DESCRIPTION
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  APP_VERSION
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  ANONYMIZE_IP
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  SOCIAL_ACTION
+                  DCLID
                 </span>
                 <div class="entryOverview">
                   <span class='nodesc'>No description.</span>
@@ -297,327 +248,7 @@ service configuration values.</div>
              </td></tr>
               <tr><td>
                 <span class="entryName">
-                  METRIC
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  EX_FATAL
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  CAMPAIGN_KEYWORD
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  EVENT_CATEGORY
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  ITEM_PRICE
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  APP_NAME
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  TRANSACTION_TAX
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  TIMING_VAR
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  DNS_TIME
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  HIT_TYPE
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  ITEM_CATEGORY
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  CAMPAIGN_SOURCE
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  CACHE_BUSTER
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  APP_ID
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  GCLID
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  ITEM_CODE
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  TCP_CONNECT_TIME
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  SCREEN_RESOLUTION
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  ITEM_QUANTITY
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  ENCODING
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  CAMPAIGN_CONTENT
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  TRANSACTION_REVENUE
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  QUEUE_TIME
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  EVENT_VALUE
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  TIMING_LABEL
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  DIMENSION
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  PAGE_DOWNLOAD_TIME
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  TRANSACTION_AFFILIATION
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  TRANSACTION_SHIPPING
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  EVENT_LABEL
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  EVENT_ACTION
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  CAMPAIGN_MEDIUM
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  TITLE
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  TRANSACTION_ID
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  DCLID
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  SOCIAL_TARGET
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  VIEWPORT_SIZE
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  CAMPAIGN_ID
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  TRACKING_ID
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  SOCIAL_NETWORK
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  SERVER_RESPONSE_TIME
+                  API_VERSION
                 </span>
                 <div class="entryOverview">
                   <span class='nodesc'>No description.</span>
@@ -633,7 +264,7 @@ service configuration values.</div>
              </td></tr>
               <tr><td>
                 <span class="entryName">
-                  APP_INSTALLER_ID
+                  PAGE_DOWNLOAD_TIME
                 </span>
                 <div class="entryOverview">
                   <span class='nodesc'>No description.</span>
@@ -641,7 +272,7 @@ service configuration values.</div>
              </td></tr>
               <tr><td>
                 <span class="entryName">
-                  API_VERSION
+                  TIMING_LABEL
                 </span>
                 <div class="entryOverview">
                   <span class='nodesc'>No description.</span>
@@ -649,7 +280,47 @@ service configuration values.</div>
              </td></tr>
               <tr><td>
                 <span class="entryName">
-                  TIMING_CATEGORY
+                  APP_NAME
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  CLIENT_ID
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  SOCIAL_NETWORK
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  LANGUAGE
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  DIMENSION
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  EX_DESCRIPTION
                 </span>
                 <div class="entryOverview">
                   <span class='nodesc'>No description.</span>
@@ -665,7 +336,63 @@ service configuration values.</div>
              </td></tr>
               <tr><td>
                 <span class="entryName">
+                  EX_FATAL
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  APP_INSTALLER_ID
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
                   CURRENCY_CODE
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  METRIC
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  TRANSACTION_SHIPPING
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  TIMING_CATEGORY
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  PAGE_LOAD_TIME
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  TRACKING_ID
                 </span>
                 <div class="entryOverview">
                   <span class='nodesc'>No description.</span>
@@ -681,7 +408,47 @@ service configuration values.</div>
              </td></tr>
               <tr><td>
                 <span class="entryName">
-                  TIMING_VALUE
+                  ITEM_CATEGORY
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  QUEUE_TIME
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  APP_VERSION
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  CAMPAIGN_ID
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  ITEM_QUANTITY
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  DNS_TIME
                 </span>
                 <div class="entryOverview">
                   <span class='nodesc'>No description.</span>
@@ -690,6 +457,254 @@ service configuration values.</div>
               <tr><td>
                 <span class="entryName">
                   SESSION_CONTROL
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  ITEM_PRICE
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  VIEWPORT_SIZE
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  CAMPAIGN_KEYWORD
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  TRANSACTION_AFFILIATION
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  ANONYMIZE_IP
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  EVENT_LABEL
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  TIMING_VALUE
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  TITLE
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  SERVER_RESPONSE_TIME
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  TRANSACTION_ID
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  TRANSACTION_REVENUE
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  EVENT_ACTION
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  EVENT_CATEGORY
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  CAMPAIGN_SOURCE
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  DESCRIPTION
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  SOCIAL_TARGET
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  GCLID
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  SOCIAL_ACTION
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  SCREEN_RESOLUTION
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  CAMPAIGN_CONTENT
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  EVENT_VALUE
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  TCP_CONNECT_TIME
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  ENCODING
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  APP_ID
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  HIT_TYPE
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  REDIRECT_RESPONSE_TIME
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  CAMPAIGN_MEDIUM
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  TRANSACTION_TAX
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  ITEM_CODE
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  TIMING_VAR
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  CACHE_BUSTER
                 </span>
                 <div class="entryOverview">
                   <span class='nodesc'>No description.</span>
@@ -738,6 +753,14 @@ declared here for obvious reasons.
             <tbody>
               <tr><td>
                 <span class="entryName">
+                  PAYLOAD_TOO_BIG
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
                   DEVICE_OFFLINE
                 </span>
                 <div class="entryOverview">
@@ -747,14 +770,6 @@ declared here for obvious reasons.
               <tr><td>
                 <span class="entryName">
                   RATE_LIMITED
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  PAYLOAD_TOO_BIG
                 </span>
                 <div class="entryOverview">
                   <span class='nodesc'>No description.</span>
@@ -818,14 +833,6 @@ declared here for obvious reasons.
             <tbody>
               <tr><td>
                 <span class="entryName">
-                  DEVICE_OFFLINE
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
                   PAYLOAD_TOO_BIG
                 </span>
                 <div class="entryOverview">
@@ -834,7 +841,7 @@ declared here for obvious reasons.
              </td></tr>
               <tr><td>
                 <span class="entryName">
-                  RATE_LIMITED
+                  SAMPLED_OUT
                 </span>
                 <div class="entryOverview">
                   <span class='nodesc'>No description.</span>
@@ -850,7 +857,15 @@ declared here for obvious reasons.
              </td></tr>
               <tr><td>
                 <span class="entryName">
-                  SAMPLED_OUT
+                  RATE_LIMITED
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  DEVICE_OFFLINE
                 </span>
                 <div class="entryOverview">
                   <span class='nodesc'>No description.</span>
@@ -898,22 +913,6 @@ declared here for obvious reasons.
             <tbody>
               <tr><td>
                 <span class="entryName">
-                  CURRENCY
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  BOOLEAN
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
                   INTEGER
                 </span>
                 <div class="entryOverview">
@@ -923,6 +922,22 @@ declared here for obvious reasons.
               <tr><td>
                 <span class="entryName">
                   FLOAT
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  CURRENCY
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  BOOLEAN
                 </span>
                 <div class="entryOverview">
                   <span class='nodesc'>No description.</span>
@@ -985,9 +1000,10 @@ declared here for obvious reasons.
 
 
      <div class="entryOverview">
-       Returns a service instance for the named app. Generally you'll only ever
-want to call this with a single name as you'll want all tracking to be
-scoped to your named app.
+       Returns a service instance for the named Chrome Platform App/Extension.
+Generally you'll only ever want to call this with a single name that
+identifies the host Chrome Platform App/Extension or extension using the
+library. This name is used to scoped hits to your app on Google Analytics.
      </div>
 
 
@@ -1008,7 +1024,7 @@ scoped to your named app.
      <td>
         <span class="entryName">appName</span>
         : <div class="fullType"><span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span></div>
-        <div class="entryOverview">The name of your application.</div>
+        <div class="entryOverview">The name of your Chrome Platform App/Extension. Though library could read the name of the app from the chrome manifest file as it does with the app version, the name may in fact be translated. For this reason the caller must supplied a name.</div>
      </td>
    </tr>
   </table>

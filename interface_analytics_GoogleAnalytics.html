@@ -60,7 +60,10 @@
 
 <div class="g-section g-tpl-75-25">
   <div class="g-unit g-first" id="description">
-    <span class='nodesc'>No description.</span>
+    Service object providing access to <code>analytics.Tracker</code> and
+<code>analytics.Config</code> objects.
+
+<p>An instance of this can be obtained using <code>analytics.getService</code>.</p>
   </div>
 
 
@@ -143,8 +146,8 @@
 
 
      <div class="entryOverview">
-       Provides read/write access to configuration values used by the
-Google Analytics service classes.
+       Provides read/write access to the runtime configuration information used
+by the Google Analytics service classes.
      </div>
 
 
@@ -187,7 +190,7 @@ Google Analytics service classes.
 
 
      <div class="entryOverview">
-       Creates a new tracker instance for the supplied trackingId.
+       Creates a new <code>analytics.Tracker</code> instance.
      </div>
 
 
@@ -208,7 +211,7 @@ Google Analytics service classes.
      <td>
         <span class="entryName">trackingId</span>
         : <div class="fullType"><span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span></div>
-        <div class="entryOverview">trackingId</div>
+        <div class="entryOverview">Your Google Analytics tracking id. This id should be for an "app" style property.</div>
      </td>
    </tr>
   </table>

@@ -60,7 +60,17 @@
 
 <div class="g-section g-tpl-75-25">
   <div class="g-unit g-first" id="description">
-    <span class='nodesc'>No description.</span>
+    Provides support for sending hits to Google Analytics using convenient
+named methods like <code>sendAppView</code> and <code>sendEvent</code> or the
+general purpose <code>send</code> method.
+
+<p>Clients can set session values using <code>set</code>. These values, once set,
+are included in all subsequent hits.
+
+<p>For analytics hittypes that are not supported by a named method clients
+can call <code>send</code> with param/value <code>Object</code> describing the hit.
+
+Obtain a instance using the <code>analytics.Service#getTracker</code>.</p></p>
   </div>
 
 
@@ -143,7 +153,12 @@
 
 
      <div class="entryOverview">
-       Sends the Event to Google Analytics.
+       Sends a hit to Google Analytics. Caller is responsible for ensuring the
+of the information sent with that hit. Values can be provided either
+using <code>set</code> or using <code>opt_extraParams</code>.
+
+<p>Whenever possible use a named method like <code>sendAppView</code> or
+<code>sendEvent</code>.</p>
      </div>
 
 
@@ -213,7 +228,7 @@
 
 
      <div class="entryOverview">
-       Sends the AppView hit to Google Analytics.
+       Sends an AppView hit to Google Analytics.
      </div>
 
 
@@ -275,7 +290,7 @@
 
 
      <div class="entryOverview">
-       Sends the Event hit to Google Analytics.
+       Sends an Event hit to Google Analytics.
      </div>
 
 
@@ -361,7 +376,7 @@
 
 
      <div class="entryOverview">
-       Sends the Exception hit to Google Analytics.
+       Sends an Exception hit to Google Analytics.
      </div>
 
 
@@ -431,7 +446,7 @@
 
 
      <div class="entryOverview">
-       Sends the Social hit to Google Analytics.
+       Sends a Social hit to Google Analytics.
      </div>
 
 
@@ -508,7 +523,10 @@
 
 
      <div class="entryOverview">
-       Sets an individual value, replacing any previously set values.
+       Sets an individual value on the <code>Tracker</code>, replacing any previously
+set values with the same param. The value is persistent for the life
+of the <code>Tracker</code> instance, or until replaced with another call
+to <code>set</code>.
      </div>
 
 
