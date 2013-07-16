@@ -49,6 +49,14 @@ goog.require('goog.structs.Map');
 analytics.GA_SERVER_ = 'https://www.google-analytics.com/collect';
 
 
+/**
+ * The current version of this library. Should be increased whenever we make a
+ * major change to the library.
+ * @private {string}
+ */
+analytics.LIBRARY_VERSION_ = 'ca1';
+
+
 /** @private {string} */
 analytics.STORAGE_NAMESPACE_ = 'google-analytics';
 
@@ -164,8 +172,9 @@ analytics.internal.ChannelPipelineFactory_ = function(settings) {
             networkStatus);
 
     /** @type {!analytics.internal.Channel} */
-    var paramFilterChannel =
-        new analytics.internal.ParameterFilterChannel(xhrChannel);
+    var paramFilterChannel = new analytics.internal.ParameterFilterChannel(
+        xhrChannel,
+        analytics.LIBRARY_VERSION_);
 
     /** @type {!analytics.internal.TokenBucket} */
     var tokenBucket = new analytics.internal.TokenBucket(

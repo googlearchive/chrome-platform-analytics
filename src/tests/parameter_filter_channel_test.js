@@ -36,10 +36,15 @@ var channel;
 var params;
 
 
+/** @const {string} */
+var libVersion = 'ca1';
+
+
 function setUp() {
   params = new analytics.internal.ParameterMap();
   channel = new analytics.internal.ParameterFilterChannel(
-      analytics.internal.DummyChannel.getInstance());
+      analytics.internal.DummyChannel.getInstance(),
+      libVersion);
 }
 
 function testSend_TruncatesGreedyStrings() {
@@ -55,4 +60,9 @@ function testSend_RemovesParametersWithDefaultValues() {
   params.set(analytics.Parameters.ENCODING, 'UTF-8');
   channel.send(analytics.HitTypes.TRANSACTION, params);
   assertNull(params.get(analytics.Parameters.ENCODING));
+}
+
+function testSend_AddsLibraryVersion() {
+  channel.send(analytics.HitTypes.TRANSACTION, params);
+  assertEquals(libVersion, params.get(analytics.Parameters.LIBRARY_VERSION));
 }

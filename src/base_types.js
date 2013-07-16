@@ -671,5 +671,13 @@ analytics.Parameters = {
     valueType: analytics.ValueTypes.BOOLEAN,
     maxLength: undefined,
     defaultValue: '1'
+  },
+  /* Library version. For internal use only. */
+  LIBRARY_VERSION: {
+    id: 'libVersion',
+    name: '_v',
+    valueType: analytics.ValueTypes.TEXT,
+    maxLength: undefined,
+    defaultValue: undefined
   }
 };
