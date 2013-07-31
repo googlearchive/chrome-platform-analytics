@@ -23,7 +23,7 @@ goog.provide('analytics.testing.TestChannel');
 
 goog.require('analytics.internal.DivertingChannel');
 goog.require('analytics.internal.ParameterMap');
-goog.require('analytics.internal.Parameters');
+goog.require('analytics.internal.parameters');
 
 goog.require('goog.array');
 goog.require('goog.async.Deferred');
@@ -87,7 +87,7 @@ analytics.testing.TestChannel.prototype.hitWasSent = function(expected) {
  * @return {analytics.Value} Undefined if it is not present.
  */
 analytics.testing.TestChannel.prototype.findValue = function(key) {
-  var param = analytics.internal.Parameters.asParameter(key);
+  var param = analytics.internal.parameters.asParameter(key);
 
   /** @type {analytics.Value} */
   var found;
@@ -144,7 +144,7 @@ analytics.testing.TestChannel.prototype.assertLastHitHasEntry =
     function(key, value) {
   if (!this.lastHitHasEntry(key, value)) {
     /** @type {!analytics.Parameter} */
-    var param = analytics.internal.Parameters.asParameter(key);
+    var param = analytics.internal.parameters.asParameter(key);
     var msg = 'Last hit %s does not contain entry {%s: %s}.';
     var last = goog.array.peek(this.sent_);
     assertTrue('Failed. No hits available to test.', this.sent_.length > 0);

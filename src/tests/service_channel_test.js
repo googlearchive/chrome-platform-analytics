@@ -23,12 +23,17 @@ goog.require('analytics.Config');
 goog.require('analytics.HitTypes');
 goog.require('analytics.Parameters');
 goog.require('analytics.internal.ParameterMap');
+goog.require('analytics.internal.Parameters');
 goog.require('analytics.internal.ServiceChannel');
 goog.require('analytics.testing.TestChannel');
 goog.require('analytics.testing.TestSettings');
 
 goog.require('goog.structs.Map');
 goog.require('goog.testing.jsunit');
+
+
+/** @const {string} */
+var LIB_VERSION = 'ca1';
 
 
 /** @const {string} */
@@ -45,13 +50,13 @@ var TRACKING_ID = 'UA-12344-56779';
 
 /** @const {!analytics.internal.ParameterMap} */
 var HIT_0 = new analytics.internal.ParameterMap(
-    analytics.Parameters.SCREEN_RESOLUTION, '1024x768',
+    analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768',
     analytics.Parameters.CAMPAIGN_ID, '789');
 
 
 /** @const {!analytics.internal.ParameterMap} */
 var HIT_1 = new analytics.internal.ParameterMap(
-    analytics.Parameters.SCREEN_RESOLUTION, '22x44',
+    analytics.internal.Parameters.SCREEN_RESOLUTION, '22x44',
     analytics.Parameters.CAMPAIGN_ID, '11');
 
 
@@ -192,18 +197,22 @@ function testGetTracker_ReturnsNonNull() {
 // TODO(smckay): In a future CL default value init
 // will be moved to another Channel. This test will move
 // elsewhere.
-function testGetTracker_InstallsAppAndTrackingFields() {
+function testGetTracker_InstallsLibrarayAndAppAndTrackingFields() {
   tracker = channel.getTracker(TRACKING_ID);
   tracker.send(analytics.HitTypes.EVENT);
 
   enabledChannel.assertLastHitHasEntry(
-      analytics.Parameters.API_VERSION, 1);
+      analytics.internal.Parameters.LIBRARY_VERSION, LIB_VERSION);
   enabledChannel.assertLastHitHasEntry(
-      analytics.Parameters.TRACKING_ID, TRACKING_ID);
+      analytics.internal.Parameters.API_VERSION, 1);
   enabledChannel.assertLastHitHasEntry(
-      analytics.Parameters.APP_NAME, APP_NAME);
+      analytics.internal.Parameters.API_VERSION, 1);
   enabledChannel.assertLastHitHasEntry(
-      analytics.Parameters.APP_VERSION, APP_VERSION);
+      analytics.internal.Parameters.TRACKING_ID, TRACKING_ID);
+  enabledChannel.assertLastHitHasEntry(
+      analytics.internal.Parameters.APP_NAME, APP_NAME);
+  enabledChannel.assertLastHitHasEntry(
+      analytics.internal.Parameters.APP_VERSION, APP_VERSION);
 }
 
 
@@ -215,13 +224,14 @@ function testGetTracker_AutofillsEnvironmentalParams() {
   tracker.send(analytics.HitTypes.EVENT);
 
   assertTrue(/^[a-z]+-[A-Z]+$/.test(
-      enabledChannel.findValue(analytics.Parameters.LANGUAGE)));
+      enabledChannel.findValue(analytics.internal.Parameters.LANGUAGE)));
   assertTrue(/^[0-9]+-bit$/.test(
-      enabledChannel.findValue(analytics.Parameters.SCREEN_COLORS)));
+      enabledChannel.findValue(analytics.internal.Parameters.SCREEN_COLORS)));
   assertTrue(/^[0-9]+x[0-9]+$/.test(
-      enabledChannel.findValue(analytics.Parameters.SCREEN_RESOLUTION)));
+      enabledChannel.findValue(
+          analytics.internal.Parameters.SCREEN_RESOLUTION)));
   assertTrue(/^[0-9]+x[0-9]+$/.test(
-      enabledChannel.findValue(analytics.Parameters.VIEWPORT_SIZE)));
+      enabledChannel.findValue(analytics.internal.Parameters.VIEWPORT_SIZE)));
 }
 
 
@@ -248,7 +258,7 @@ function initChannel(opt_channelFactory) {
         return enabledChannel;
       };
   channel = new analytics.internal.ServiceChannel(
-      APP_NAME, APP_VERSION,
+      LIB_VERSION, APP_NAME, APP_VERSION,
       settings,
       channelFactory,
       disabledChannel);

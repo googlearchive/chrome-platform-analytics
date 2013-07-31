@@ -20,9 +20,9 @@
  */
 
 goog.require('analytics.HitTypes');
-goog.require('analytics.Parameters');
 goog.require('analytics.internal.AsyncSettingsChannel');
 goog.require('analytics.internal.ParameterMap');
+goog.require('analytics.internal.Parameters');
 goog.require('analytics.testing.TestChannel');
 goog.require('analytics.testing.TestSettings');
 
@@ -55,13 +55,13 @@ function setUp() {
 function testSend_AddsClientId() {
   channel.send(analytics.HitTypes.EVENT, params);
   tester.assertLastHitHasEntry(
-      analytics.Parameters.CLIENT_ID, settings.getUserId());
+      analytics.internal.Parameters.CLIENT_ID, settings.getUserId());
 }
 
 function testSend_ReplacesExistingClientId() {
-  params.set(analytics.Parameters.CLIENT_ID,
+  params.set(analytics.internal.Parameters.CLIENT_ID,
       analytics.internal.Identifier.generateUuid());
   channel.send(analytics.HitTypes.EVENT, params);
   tester.assertLastHitHasEntry(
-      analytics.Parameters.CLIENT_ID, settings.getUserId());
+      analytics.internal.Parameters.CLIENT_ID, settings.getUserId());
 }

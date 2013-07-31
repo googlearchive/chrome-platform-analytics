@@ -25,8 +25,8 @@
 
 goog.provide('analytics.internal.AsyncSettingsChannel');
 
-goog.require('analytics.Parameters');
 goog.require('analytics.internal.Channel');
+goog.require('analytics.internal.Parameters');
 goog.require('analytics.internal.Settings');
 
 
@@ -50,6 +50,7 @@ analytics.internal.AsyncSettingsChannel = function(settings, delegate) {
 /** @override */
 analytics.internal.AsyncSettingsChannel.prototype.send =
     function(hitType, parameters) {
-  parameters.set(analytics.Parameters.CLIENT_ID, this.settings_.getUserId());
+  parameters.set(
+      analytics.internal.Parameters.CLIENT_ID, this.settings_.getUserId());
   return this.delegate_.send(hitType, parameters);
 };

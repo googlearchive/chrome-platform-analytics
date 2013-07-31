@@ -21,7 +21,9 @@
 
 goog.require('analytics.HitType');
 goog.require('analytics.Parameter');
+goog.require('analytics.Parameters');
 goog.require('analytics.internal.ParameterMap');
+goog.require('analytics.internal.Parameters');
 
 goog.require('goog.testing.jsunit');
 
@@ -35,42 +37,45 @@ function setUp() {
 }
 
 function testSetGetSingleValue() {
-  map.set(analytics.Parameters.SCREEN_RESOLUTION, '1024x768');
-  assertEquals('1024x768', map.get(analytics.Parameters.SCREEN_RESOLUTION));
+  map.set(analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768');
+  assertEquals('1024x768',
+      map.get(analytics.internal.Parameters.SCREEN_RESOLUTION));
 }
 
 function testMultipleValuesDoNotInterfere() {
-  map.set(analytics.Parameters.SCREEN_RESOLUTION, '1024x768');
+  map.set(analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768');
   map.set(analytics.Parameters.CAMPAIGN_ID, '789');
-  assertEquals('1024x768', map.get(analytics.Parameters.SCREEN_RESOLUTION));
+  assertEquals('1024x768',
+      map.get(analytics.internal.Parameters.SCREEN_RESOLUTION));
   assertEquals('789', map.get(analytics.Parameters.CAMPAIGN_ID));
 }
 
 function testDuplicateKeyReplacesValue() {
-  map.set(analytics.Parameters.SCREEN_RESOLUTION, '1024x768');
-  map.set(analytics.Parameters.SCREEN_RESOLUTION, 'Bedazzler');
-  assertEquals('Bedazzler', map.get(analytics.Parameters.SCREEN_RESOLUTION));
+  map.set(analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768');
+  map.set(analytics.internal.Parameters.SCREEN_RESOLUTION, 'Bedazzler');
+  assertEquals('Bedazzler',
+      map.get(analytics.internal.Parameters.SCREEN_RESOLUTION));
 }
 
 function testEquality() {
-  map.set(analytics.Parameters.SCREEN_RESOLUTION, '1024x768');
+  map.set(analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768');
   map.set(analytics.Parameters.CAMPAIGN_ID, '789');
 
   /** @type {!analytics.internal.ParameterMap} */
   var other = new analytics.internal.ParameterMap(
-      analytics.Parameters.SCREEN_RESOLUTION, '1024x768',
+      analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768',
       analytics.Parameters.CAMPAIGN_ID, '789'
       );
   assertTrue(map.equals(other));
 }
 
 function testInequality() {
-  map.set(analytics.Parameters.SCREEN_RESOLUTION, 'Bedazzler');
+  map.set(analytics.internal.Parameters.SCREEN_RESOLUTION, 'Bedazzler');
   map.set(analytics.Parameters.CAMPAIGN_ID, '789');
 
   /** @type {!analytics.internal.ParameterMap} */
   var other = new analytics.internal.ParameterMap(
-      analytics.Parameters.SCREEN_RESOLUTION, '1024x768',
+      analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768',
       analytics.Parameters.CAMPAIGN_ID, '789'
       );
   assertFalse(map.equals(other));
@@ -79,14 +84,14 @@ function testInequality() {
 function testConstructorDisallowsUnevenNumberOfArguments() {
   try {
     new analytics.internal.ParameterMap(
-        analytics.Parameters.SCREEN_RESOLUTION, '1024x768',
+        analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768',
         analytics.Parameters.CAMPAIGN_ID);
     fail('Should have thrown exception.');
   } catch (expected) {}
 }
 
 function testForEachElementIteratesOverAllElements() {
-  map.set(analytics.Parameters.SCREEN_RESOLUTION, '1024x768');
+  map.set(analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768');
   map.set(analytics.Parameters.CAMPAIGN_ID, '789');
 
   /** @type {!Array.<string>} */
@@ -106,15 +111,16 @@ function testForEachElementIteratesOverAllElements() {
 
 function testAddsConstructorValues() {
   map = new analytics.internal.ParameterMap(
-      analytics.Parameters.SCREEN_RESOLUTION, '1024x768',
+      analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768',
       analytics.Parameters.CAMPAIGN_ID, '789'
       );
-  assertEquals('1024x768', map.get(analytics.Parameters.SCREEN_RESOLUTION));
+  assertEquals('1024x768',
+      map.get(analytics.internal.Parameters.SCREEN_RESOLUTION));
   assertEquals('789', map.get(analytics.Parameters.CAMPAIGN_ID));
 }
 
 function testClone() {
-  map.set(analytics.Parameters.SCREEN_RESOLUTION, '1024x768');
+  map.set(analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768');
   map.set(analytics.Parameters.CAMPAIGN_ID, '789');
 
   var clone = map.clone();
@@ -122,13 +128,13 @@ function testClone() {
 }
 
 function testClone_ChangesNotShared() {
-  map.set(analytics.Parameters.SCREEN_RESOLUTION, '1024x768');
+  map.set(analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768');
   map.set(analytics.Parameters.CAMPAIGN_ID, '789');
 
   var clone = map.clone();
-  map.set(analytics.Parameters.APP_NAME, 'Tahiti');
-  clone.set(analytics.Parameters.LANGUAGE, 'en-US');
+  map.set(analytics.internal.Parameters.APP_NAME, 'Tahiti');
+  clone.set(analytics.internal.Parameters.LANGUAGE, 'en-US');
   assertFalse(map.equals(clone));
-  assertNull(clone.get(analytics.Parameters.APP_NAME));
-  assertNull(map.get(analytics.Parameters.LANGUAGE));
+  assertNull(clone.get(analytics.internal.Parameters.APP_NAME));
+  assertNull(map.get(analytics.internal.Parameters.LANGUAGE));
 }

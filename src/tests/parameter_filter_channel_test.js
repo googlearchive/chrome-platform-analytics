@@ -24,6 +24,7 @@ goog.require('analytics.Parameters');
 goog.require('analytics.internal.DummyChannel');
 goog.require('analytics.internal.ParameterFilterChannel');
 goog.require('analytics.internal.ParameterMap');
+goog.require('analytics.internal.Parameters');
 
 goog.require('goog.testing.jsunit');
 
@@ -36,15 +37,10 @@ var channel;
 var params;
 
 
-/** @const {string} */
-var libVersion = 'ca1';
-
-
 function setUp() {
   params = new analytics.internal.ParameterMap();
   channel = new analytics.internal.ParameterFilterChannel(
-      analytics.internal.DummyChannel.getInstance(),
-      libVersion);
+      analytics.internal.DummyChannel.getInstance());
 }
 
 function testSend_TruncatesGreedyStrings() {
@@ -57,12 +53,7 @@ function testSend_TruncatesGreedyStrings() {
 }
 
 function testSend_RemovesParametersWithDefaultValues() {
-  params.set(analytics.Parameters.ENCODING, 'UTF-8');
+  params.set(analytics.Parameters.EX_FATAL, '1');
   channel.send(analytics.HitTypes.TRANSACTION, params);
-  assertNull(params.get(analytics.Parameters.ENCODING));
-}
-
-function testSend_AddsLibraryVersion() {
-  channel.send(analytics.HitTypes.TRANSACTION, params);
-  assertEquals(libVersion, params.get(analytics.Parameters.LIBRARY_VERSION));
+  assertNull(params.get(analytics.Parameters.EX_FATAL));
 }

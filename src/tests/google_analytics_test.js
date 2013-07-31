@@ -20,7 +20,6 @@
  */
 
 goog.require('analytics.HitTypes');
-goog.require('analytics.Parameters');
 goog.require('analytics.Tracker');
 goog.require('analytics.getService');
 goog.require('analytics.resetForTesting');

@@ -32,16 +32,11 @@ goog.require('goog.async.Deferred');
 /**
  * @constructor
  * @param {!analytics.internal.Channel} delegate
- * @param {string} libVersion The string that identifies this version of this
- *     library.
  * @implements {analytics.internal.Channel}
  */
-analytics.internal.ParameterFilterChannel = function(delegate, libVersion) {
+analytics.internal.ParameterFilterChannel = function(delegate) {
   /** @private {!analytics.internal.Channel} */
   this.delegate_ = delegate;
-
-  /** @private {string} */
-  this.libVersion_ = libVersion;
 };
 
 
@@ -50,7 +45,6 @@ analytics.internal.ParameterFilterChannel.prototype.send =
     function(hitType, parameters) {
   analytics.internal.ParameterFilterChannel.truncateStrings_(parameters);
   analytics.internal.ParameterFilterChannel.removeDefaults_(parameters);
-  this.appendLibraryVersion_(parameters);
   return this.delegate_.send(hitType, parameters);
 };
 
@@ -94,16 +88,4 @@ analytics.internal.ParameterFilterChannel.removeDefaults_ =
           parameters.remove(parameter);
         }
       });
-};
-
-
-/**
- * Adds the current version of this library to the parameter map.
- * @param {!analytics.internal.ParameterMap} parameters
- * @private
- */
-analytics.internal.ParameterFilterChannel.prototype.appendLibraryVersion_ =
-    function(parameters) {
-  parameters.set(
-      analytics.Parameters.LIBRARY_VERSION, this.libVersion_);
 };

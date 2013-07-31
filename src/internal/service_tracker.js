@@ -28,7 +28,7 @@ goog.require('analytics.Tracker');
 goog.require('analytics.Value');
 goog.require('analytics.internal.Channel');
 goog.require('analytics.internal.ParameterMap');
-goog.require('analytics.internal.Parameters');
+goog.require('analytics.internal.parameters');
 
 goog.require('goog.asserts');
 goog.require('goog.async.Deferred');
@@ -54,7 +54,7 @@ analytics.internal.ServiceTracker = function(channel) {
 
 /** @override */
 analytics.internal.ServiceTracker.prototype.set = function(param, value) {
-  var parameter = analytics.internal.Parameters.asParameter(param);
+  var parameter = analytics.internal.parameters.asParameter(param);
   this.params_.set(parameter, value);
 };
 
@@ -68,7 +68,7 @@ analytics.internal.ServiceTracker.prototype.send =
     goog.object.forEach(opt_extraParams,
         function(value, key) {
           if (goog.isDefAndNotNull(value)) {
-            hit.set(analytics.internal.Parameters.asParameter(key), value);
+            hit.set(analytics.internal.parameters.asParameter(key), value);
           }
         }, this);
   }

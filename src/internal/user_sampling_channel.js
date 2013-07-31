@@ -24,6 +24,7 @@ goog.provide('analytics.internal.UserSamplingChannel');
 
 goog.require('analytics.Results');
 goog.require('analytics.internal.Channel');
+goog.require('analytics.internal.Parameters');
 goog.require('analytics.internal.Settings');
 
 goog.require('goog.async.Deferred');
@@ -53,7 +54,7 @@ analytics.internal.UserSamplingChannel.SAMPLE_RATE_SCALE_ = 655.36;
 /** @override */
 analytics.internal.UserSamplingChannel.prototype.send =
     function(hitType, parameters) {
-  var clientId = parameters.get(analytics.Parameters.CLIENT_ID);
+  var clientId = parameters.get(analytics.internal.Parameters.CLIENT_ID);
 
   // Since all digits in the id are random, we just pull the four hex digits
   // from the second component in the id giving us a range of 0 - 65535. The

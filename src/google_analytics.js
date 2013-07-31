@@ -141,6 +141,7 @@ analytics.createService_ = function(appName) {
 
   var appVersion = analytics.getAppVersion_();
   return new analytics.internal.ServiceChannel(
+      analytics.LIBRARY_VERSION_,
       appName,
       appVersion,
       analytics.createSettings_(),
@@ -173,8 +174,7 @@ analytics.internal.ChannelPipelineFactory_ = function(settings) {
 
     /** @type {!analytics.internal.Channel} */
     var paramFilterChannel = new analytics.internal.ParameterFilterChannel(
-        xhrChannel,
-        analytics.LIBRARY_VERSION_);
+        xhrChannel);
 
     /** @type {!analytics.internal.TokenBucket} */
     var tokenBucket = new analytics.internal.TokenBucket(

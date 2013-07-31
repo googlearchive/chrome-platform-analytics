@@ -192,34 +192,10 @@ analytics.Parameter;
  * @enum {analytics.Parameter}
  */
 analytics.Parameters = {
-  /* Tracking ID / Web Property ID */
-  TRACKING_ID: {
-    id: 'trackingId',
-    name: 'tid',
-    valueType: analytics.ValueTypes.TEXT,
-    maxLength: undefined,
-    defaultValue: undefined
-  },
   /* Hit type */
   HIT_TYPE: {
     id: 'hitType',
     name: 't',
-    valueType: analytics.ValueTypes.TEXT,
-    maxLength: undefined,
-    defaultValue: undefined
-  },
-  /* Protocol Version */
-  API_VERSION: {
-    id: 'apiVersion',
-    name: 'v',
-    valueType: analytics.ValueTypes.TEXT,
-    maxLength: undefined,
-    defaultValue: undefined
-  },
-  /* Client ID */
-  CLIENT_ID: {
-    id: 'clientId',
-    name: 'cid',
     valueType: analytics.ValueTypes.TEXT,
     maxLength: undefined,
     defaultValue: undefined
@@ -254,46 +230,6 @@ analytics.Parameters = {
     name: 'sc',
     valueType: analytics.ValueTypes.TEXT,
     maxLength: undefined,
-    defaultValue: undefined
-  },
-  /* Screen Resolution */
-  SCREEN_RESOLUTION: {
-    id: 'screenResolution',
-    name: 'sr',
-    valueType: analytics.ValueTypes.TEXT,
-    maxLength: 20,
-    defaultValue: undefined
-  },
-  /* Viewport size */
-  VIEWPORT_SIZE: {
-    id: 'viewportSize',
-    name: 'vp',
-    valueType: analytics.ValueTypes.TEXT,
-    maxLength: 20,
-    defaultValue: undefined
-  },
-  /* Document Encoding */
-  ENCODING: {
-    id: 'encoding',
-    name: 'de',
-    valueType: analytics.ValueTypes.TEXT,
-    maxLength: 20,
-    defaultValue: 'UTF-8'
-  },
-  /* Screen Colors */
-  SCREEN_COLORS: {
-    id: 'screenColors',
-    name: 'sd',
-    valueType: analytics.ValueTypes.TEXT,
-    maxLength: 20,
-    defaultValue: undefined
-  },
-  /* User Language */
-  LANGUAGE: {
-    id: 'language',
-    name: 'ul',
-    valueType: analytics.ValueTypes.TEXT,
-    maxLength: 20,
     defaultValue: undefined
   },
   /* Non-Interaction Hit */
@@ -334,22 +270,6 @@ analytics.Parameters = {
     name: 'cm[1-9][0-9]*',
     valueType: analytics.ValueTypes.INTEGER,
     maxLength: undefined,
-    defaultValue: undefined
-  },
-  /* Application Name */
-  APP_NAME: {
-    id: 'appName',
-    name: 'an',
-    valueType: analytics.ValueTypes.TEXT,
-    maxLength: 100,
-    defaultValue: undefined
-  },
-  /* Application Version */
-  APP_VERSION: {
-    id: 'appVersion',
-    name: 'av',
-    valueType: analytics.ValueTypes.TEXT,
-    maxLength: 100,
     defaultValue: undefined
   },
   /* Application ID */
@@ -671,13 +591,5 @@ analytics.Parameters = {
     valueType: analytics.ValueTypes.BOOLEAN,
     maxLength: undefined,
     defaultValue: '1'
-  },
-  /* Library version. For internal use only. */
-  LIBRARY_VERSION: {
-    id: 'libVersion',
-    name: '_v',
-    valueType: analytics.ValueTypes.TEXT,
-    maxLength: undefined,
-    defaultValue: undefined
   }
 };

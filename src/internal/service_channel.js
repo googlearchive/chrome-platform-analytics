@@ -25,9 +25,9 @@
 
 goog.provide('analytics.internal.ServiceChannel');
 
-goog.require('analytics.Parameters');
 goog.require('analytics.internal.Channel');
 goog.require('analytics.internal.DivertingChannel');
+goog.require('analytics.internal.Parameters');
 goog.require('analytics.internal.ServiceTracker');
 goog.require('analytics.internal.Settings');
 
@@ -37,6 +37,8 @@ goog.require('goog.dom');
 
 /**
  * @constructor
+ * @param {string} libVersion The string that identifies this version of this
+ *     library.
  * @param {string} appName The Chromium Platform App name.
  * @param {string} appVersion The version of the platform app.
  * @param {!analytics.internal.Settings} settings
@@ -47,7 +49,15 @@ goog.require('goog.dom');
  * @implements {analytics.internal.Channel}
  */
 analytics.internal.ServiceChannel = function(
-    appName, appVersion, settings, enabledChannelFactory, disabledChannel) {
+    libVersion,
+    appName,
+    appVersion,
+    settings,
+    enabledChannelFactory,
+    disabledChannel) {
+
+  /** @private {string} */
+  this.libVersion_ = libVersion;
 
   /** @private {string} */
   this.appName_ = appName;
@@ -163,10 +173,11 @@ analytics.internal.ServiceChannel.prototype.send =
 /** @override */
 analytics.internal.ServiceChannel.prototype.getTracker = function(trackingId) {
   var tracker = new analytics.internal.ServiceTracker(this);
-  tracker.set(analytics.Parameters.API_VERSION, 1);
-  tracker.set(analytics.Parameters.APP_NAME, this.appName_);
-  tracker.set(analytics.Parameters.APP_VERSION, this.appVersion_);
-  tracker.set(analytics.Parameters.TRACKING_ID, trackingId);
+  tracker.set(analytics.internal.Parameters.LIBRARY_VERSION, this.libVersion_);
+  tracker.set(analytics.internal.Parameters.API_VERSION, 1);
+  tracker.set(analytics.internal.Parameters.APP_NAME, this.appName_);
+  tracker.set(analytics.internal.Parameters.APP_VERSION, this.appVersion_);
+  tracker.set(analytics.internal.Parameters.TRACKING_ID, trackingId);
   this.addEnvironmentalParams_(tracker);
   return tracker;
 };
@@ -211,17 +222,17 @@ analytics.internal.ServiceChannel.prototype.onSettingsChanged_ =
 analytics.internal.ServiceChannel.prototype.addEnvironmentalParams_ =
     function(tracker) {
   var value = window.navigator.language;
-  tracker.set(analytics.Parameters.LANGUAGE, value);
+  tracker.set(analytics.internal.Parameters.LANGUAGE, value);
 
   // Note: We're using ['foo'] notation to avoid issues with missing
   // externs and the possibility of the closure compiler renaming fields.
   value = screen['colorDepth'] + '-bit';
-  tracker.set(analytics.Parameters.SCREEN_COLORS, value);
+  tracker.set(analytics.internal.Parameters.SCREEN_COLORS, value);
 
   value = [screen['width'], screen['height']].join('x');
-  tracker.set(analytics.Parameters.SCREEN_RESOLUTION, value);
+  tracker.set(analytics.internal.Parameters.SCREEN_RESOLUTION, value);
 
   var size = goog.dom.getViewportSize();
   value = [size.width, size.height].join('x');
-  tracker.set(analytics.Parameters.VIEWPORT_SIZE, value);
+  tracker.set(analytics.internal.Parameters.VIEWPORT_SIZE, value);
 };

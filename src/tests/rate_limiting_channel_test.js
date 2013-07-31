@@ -22,6 +22,7 @@
 goog.require('analytics.HitTypes');
 goog.require('analytics.Parameters');
 goog.require('analytics.internal.ParameterMap');
+goog.require('analytics.internal.Parameters');
 goog.require('analytics.internal.RateLimitingChannel');
 goog.require('analytics.testing.TestChannel');
 goog.require('analytics.testing.TestTokenBucket');
@@ -32,7 +33,7 @@ goog.require('goog.testing.jsunit');
 
 /** @const {!analytics.internal.ParameterMap} */
 var HIT_0 = new analytics.internal.ParameterMap(
-    analytics.Parameters.SCREEN_RESOLUTION, '1024x768',
+    analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768',
     analytics.Parameters.CAMPAIGN_ID, '789'
     );
 

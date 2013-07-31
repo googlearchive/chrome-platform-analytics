@@ -24,6 +24,7 @@ goog.require('analytics.Parameters');
 goog.require('analytics.internal.ParameterMap');
 goog.require('analytics.internal.Parameters');
 goog.require('analytics.internal.ServiceTracker');
+goog.require('analytics.internal.parameters');
 goog.require('analytics.testing.TestChannel');
 
 goog.require('goog.object');
@@ -32,7 +33,7 @@ goog.require('goog.testing.jsunit');
 
 /** @const {!analytics.internal.ParameterMap} */
 var HIT_0 = new analytics.internal.ParameterMap(
-    analytics.Parameters.SCREEN_RESOLUTION, '1024x768',
+    analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768',
     analytics.Parameters.CAMPAIGN_ID, '789'
     );
 
@@ -81,7 +82,7 @@ function setUp() {
 }
 
 function testSend() {
-  tracker.set(analytics.Parameters.SCREEN_RESOLUTION, '1024x768');
+  tracker.set(analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768');
   tracker.set(analytics.Parameters.CAMPAIGN_ID, '789');
   tracker.send(analytics.HitTypes.EVENT);
 
@@ -90,12 +91,12 @@ function testSend() {
 
 
 function testSend_ExtraParamsById() {
-  tracker.set(analytics.Parameters.SCREEN_RESOLUTION, '1024x768');
+  tracker.set(analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768');
   tracker.set(analytics.Parameters.CAMPAIGN_ID, '789');
   tracker.send(analytics.HitTypes.EVENT, {'language': 'en-US'});
 
   channel.assertLastHitHasEntry(
-      analytics.Parameters.LANGUAGE, 'en-US');
+      analytics.internal.Parameters.LANGUAGE, 'en-US');
 }
 
 
@@ -183,7 +184,7 @@ function assertTypedHitSent(hit, opt_extraParams) {
   opt_extraParams && goog.object.extend(params, opt_extraParams);
   goog.object.forEach(params,
       function(value, key) {
-        var param = analytics.internal.Parameters.asParameter(key);
+        var param = analytics.internal.parameters.asParameter(key);
         channel.assertLastHitHasEntry(param, value);
       });
 }

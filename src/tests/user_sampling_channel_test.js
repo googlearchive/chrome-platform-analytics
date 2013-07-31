@@ -20,9 +20,9 @@
  */
 
 goog.require('analytics.HitTypes');
-goog.require('analytics.Parameters');
 goog.require('analytics.internal.Identifier');
 goog.require('analytics.internal.ParameterMap');
+goog.require('analytics.internal.Parameters');
 goog.require('analytics.internal.UserSamplingChannel');
 goog.require('analytics.testing.TestChannel');
 goog.require('analytics.testing.TestSettings');
@@ -45,7 +45,7 @@ function assertSampled(sampleRate, clientIdPart, expectHitSent) {
   var channel = new analytics.internal.UserSamplingChannel(settings, delegate);
 
   var params = new analytics.internal.ParameterMap(
-      analytics.Parameters.CLIENT_ID,
+      analytics.internal.Parameters.CLIENT_ID,
       '04D25678-' + clientIdPart + '-4321-y123-04D256789012');
 
   channel.send(analytics.HitTypes.APPVIEW, params);
@@ -130,7 +130,7 @@ function testSend_withRandomIds_sampleRate25() {
   for (var i = 0; i < 1000; i++) {
     var cid = analytics.internal.Identifier.generateUuid();
     var params = new analytics.internal.ParameterMap();
-    params.set(analytics.Parameters.CLIENT_ID, cid);
+    params.set(analytics.internal.Parameters.CLIENT_ID, cid);
     var delegate = new analytics.testing.TestChannel();
     var channel =
         new analytics.internal.UserSamplingChannel(settings, delegate);
@@ -154,7 +154,7 @@ function testSend_withRandomIds_sampleRate100() {
   for (var i = 0; i < 1000; i++) {
     var cid = analytics.internal.Identifier.generateUuid();
     var params = new analytics.internal.ParameterMap();
-    params.set(analytics.Parameters.CLIENT_ID, cid);
+    params.set(analytics.internal.Parameters.CLIENT_ID, cid);
     var delegate = new analytics.testing.TestChannel();
     var channel =
         new analytics.internal.UserSamplingChannel(settings, delegate);
@@ -175,7 +175,7 @@ function testSend_withRandomIds_sampleRate0() {
   for (var i = 0; i < 1000; i++) {
     var cid = analytics.internal.Identifier.generateUuid();
     var params = new analytics.internal.ParameterMap();
-    params.set(analytics.Parameters.CLIENT_ID, cid);
+    params.set(analytics.internal.Parameters.CLIENT_ID, cid);
     var delegate = new analytics.testing.TestChannel();
     var channel =
         new analytics.internal.UserSamplingChannel(settings, delegate);

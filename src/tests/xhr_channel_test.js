@@ -26,6 +26,7 @@ goog.require('analytics.Parameters');
 goog.require('analytics.Result');
 goog.require('analytics.Status');
 goog.require('analytics.internal.ParameterMap');
+goog.require('analytics.internal.Parameters');
 goog.require('analytics.internal.XhrChannel');
 
 goog.require('goog.testing.PropertyReplacer');
@@ -39,7 +40,7 @@ var EMPTY = {};
 
 /** @const {!analytics.internal.ParameterMap} */
 var HIT_0 = new analytics.internal.ParameterMap(
-    analytics.Parameters.SCREEN_RESOLUTION, '1024x768',
+    analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768',
     analytics.Parameters.CAMPAIGN_ID, '789'
     );
 
