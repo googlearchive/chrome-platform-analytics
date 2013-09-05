@@ -60,10 +60,12 @@
 
 <div class="g-section g-tpl-75-25">
   <div class="g-unit g-first" id="description">
-    Service object providing access to <code>analytics.Tracker</code> and
-<code>analytics.Config</code> objects.
+    Service object providing access to <code> analytics.Tracker</code> and
+<code> analytics.Config</code> objects.
 
-<p>An instance of this can be obtained using <code>analytics.getService</code>.</p>
+<p>An instance of this can be obtained using <code> analytics.getService</code>.
+
+</p>
   </div>
 
 
@@ -141,13 +143,15 @@
 
         <span class="entryName">getConfig<span class="args">()</span>
         </span>
-        &#8658; <div class="fullType"><span class="type">goog.async.Deferred</span></div>
+        &#8658; <span>!</span><span class="type">goog.async.Deferred</span>
       </div>
 
 
      <div class="entryOverview">
        Provides read/write access to the runtime configuration information used
 by the Google Analytics service classes.
+
+
      </div>
 
 
@@ -156,8 +160,11 @@ by the Google Analytics service classes.
 
    
       <div class="detailsSection">
-        <b>Returns:</b>&nbsp;<div class="fullType"><span class="type">goog.async.Deferred</span></div>&nbsp;
-            A deferred <code>!analytics.Config</code> that fires when the object is ready to handle method calls. Deferred is necessary to allow for object initialization from asynchronous storage.
+        <b>Returns:</b>&nbsp;<span>!</span><span class="type">goog.async.Deferred</span>&nbsp;
+            A deferred <code> !analytics.Config</code>
+    that fires when the object is ready to handle method calls.
+    Deferred is necessary to allow for object initialization from
+    asynchronous storage.
       </div>
   
     </div>
@@ -185,12 +192,13 @@ by the Google Analytics service classes.
 
         <span class="entryName">getTracker<span class="args">(<span class="arg">trackingId</span>)</span>
         </span>
-        &#8658; <div class="fullType"><span class="type"><a href="interface_analytics_Tracker.html">analytics.Tracker</a></span></div>
+        &#8658; <span>!</span><span class="type"><a href="interface_analytics_Tracker.html">analytics.Tracker</a></span>
       </div>
 
 
      <div class="entryOverview">
-       Creates a new <code>analytics.Tracker</code> instance.
+       Creates a new <code> analytics.Tracker</code> instance.
+
      </div>
 
 
@@ -210,16 +218,17 @@ by the Google Analytics service classes.
    <tr class="even">
      <td>
         <span class="entryName">trackingId</span>
-        : <div class="fullType"><span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span></div>
-        <div class="entryOverview">Your Google Analytics tracking id. This id should be for an "app" style property.</div>
+        : <span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span>
+        <div class="entryOverview">Your Google Analytics tracking id. This id should
+    be for an "app" style property.</div>
      </td>
    </tr>
   </table>
       </div>
    
       <div class="detailsSection">
-        <b>Returns:</b>&nbsp;<div class="fullType"><span class="type"><a href="interface_analytics_Tracker.html">analytics.Tracker</a></span></div>&nbsp;
-            analytics.Tracker
+        <b>Returns:</b>&nbsp;<span>!</span><span class="type"><a href="interface_analytics_Tracker.html">analytics.Tracker</a></span>&nbsp;
+            <span class='nodesc'>No description.</span>
       </div>
   
     </div>

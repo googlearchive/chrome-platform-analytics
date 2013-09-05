@@ -61,16 +61,18 @@
 <div class="g-section g-tpl-75-25">
   <div class="g-unit g-first" id="description">
     Provides support for sending hits to Google Analytics using convenient
-named methods like <code>sendAppView</code> and <code>sendEvent</code> or the
-general purpose <code>send</code> method.
+named methods like <code> sendAppView</code> and <code> sendEvent</code> or the
+general purpose <code> send</code> method.
 
-<p>Clients can set session values using <code>set</code>. These values, once set,
+<p>Clients can set session values using <code> set</code>. These values, once set,
 are included in all subsequent hits.
 
 <p>For analytics hittypes that are not supported by a named method clients
-can call <code>send</code> with param/value <code>Object</code> describing the hit.
+can call <code> send</code> with param/value <code> Object</code> describing the hit.
 
-Obtain a instance using the <code>analytics.Service#getTracker</code>.</p></p>
+Obtain a instance using the <code> analytics.Service#getTracker</code>.
+
+</p></p>
   </div>
 
 
@@ -148,17 +150,20 @@ Obtain a instance using the <code>analytics.Service#getTracker</code>.</p></p>
 
         <span class="entryName">send<span class="args">(<span class="arg">hitType</span>,&nbsp;<span class="arg">opt_extraParams</span>)</span>
         </span>
-        &#8658; <div class="fullType"><span class="type">goog.async.Deferred</span></div>
+        &#8658; <span>!</span><span class="type">goog.async.Deferred</span>
       </div>
 
 
      <div class="entryOverview">
        Sends a hit to Google Analytics. Caller is responsible for ensuring the
 of the information sent with that hit. Values can be provided either
-using <code>set</code> or using <code>opt_extraParams</code>.
+using <code> set</code> or using <code> opt_extraParams</code>.
 
-<p>Whenever possible use a named method like <code>sendAppView</code> or
-<code>sendEvent</code>.</p>
+<p>Whenever possible use a named method like <code> sendAppView</code> or
+<code> sendEvent</code>.
+
+
+</p>
      </div>
 
 
@@ -178,24 +183,26 @@ using <code>set</code> or using <code>opt_extraParams</code>.
    <tr class="even">
      <td>
         <span class="entryName">hitType</span>
-        : <div class="fullType"><span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span></div>
-        <div class="entryOverview">hitType</div>
+        : <span>!</span><span class="type">analytics.HitType</span>
+        <div class="entryOverview"><span class='nodesc'>No description.</span></div>
      </td>
    </tr>
      
    <tr class="odd">
      <td>
         <span class="entryName">opt_extraParams</span>
-        : <div class="fullType">(<span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FObject">Object</a></span><span>&nbsp;|&nbsp;</span><span class="type">undefined</span>)</div>
-        <div class="entryOverview">An optional object containing <code>string</code> / <code>!analytics.Value</code> pairs to send with the hit. The values are NOT persisted in the tracker.</div>
+        : <span>!</span><span class="type">Object=</span>
+        <div class="entryOverview">An optional object containing
+    <code> string</code> / <code> !analytics.Value</code> pairs
+    to send with the hit. The values are NOT persisted in the tracker.</div>
      </td>
    </tr>
   </table>
       </div>
    
       <div class="detailsSection">
-        <b>Returns:</b>&nbsp;<div class="fullType"><span class="type">goog.async.Deferred</span></div>&nbsp;
-            goog.async.Deferred
+        <b>Returns:</b>&nbsp;<span>!</span><span class="type">goog.async.Deferred</span>&nbsp;
+            <span class='nodesc'>No description.</span>
       </div>
   
     </div>
@@ -223,12 +230,15 @@ using <code>set</code> or using <code>opt_extraParams</code>.
 
         <span class="entryName">sendAppView<span class="args">(<span class="arg">description</span>)</span>
         </span>
-        &#8658; <div class="fullType"><span class="type">goog.async.Deferred</span></div>
+        &#8658; <span>!</span><span class="type">goog.async.Deferred</span>
       </div>
 
 
      <div class="entryOverview">
        Sends an AppView hit to Google Analytics.
+
+
+
      </div>
 
 
@@ -248,16 +258,20 @@ using <code>set</code> or using <code>opt_extraParams</code>.
    <tr class="even">
      <td>
         <span class="entryName">description</span>
-        : <div class="fullType"><span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span></div>
-        <div class="entryOverview">A unique description of the "screen" ( or "place, or "view") within your application. This is should more specific than your app name, but generally not include any runtime data. In most cases all "screens" should be known at the time the app is build. Examples: "MainScreen" or "SettingsView".</div>
+        : <span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span>
+        <div class="entryOverview">A unique description of the "screen" (
+    or "place, or "view") within your application. This is should more
+    specific than your app name, but generally not include any runtime
+    data. In most cases all "screens" should be known at the time
+    the app is build. Examples: "MainScreen" or "SettingsView".</div>
      </td>
    </tr>
   </table>
       </div>
    
       <div class="detailsSection">
-        <b>Returns:</b>&nbsp;<div class="fullType"><span class="type">goog.async.Deferred</span></div>&nbsp;
-            goog.async.Deferred
+        <b>Returns:</b>&nbsp;<span>!</span><span class="type">goog.async.Deferred</span>&nbsp;
+            <span class='nodesc'>No description.</span>
       </div>
   
     </div>
@@ -285,12 +299,15 @@ using <code>set</code> or using <code>opt_extraParams</code>.
 
         <span class="entryName">sendEvent<span class="args">(<span class="arg">category</span>,&nbsp;<span class="arg">action</span>,&nbsp;<span class="arg">opt_label</span>,&nbsp;<span class="arg">opt_value</span>)</span>
         </span>
-        &#8658; <div class="fullType"><span class="type">goog.async.Deferred</span></div>
+        &#8658; <span>!</span><span class="type">goog.async.Deferred</span>
       </div>
 
 
      <div class="entryOverview">
        Sends an Event hit to Google Analytics.
+
+
+
      </div>
 
 
@@ -310,7 +327,7 @@ using <code>set</code> or using <code>opt_extraParams</code>.
    <tr class="even">
      <td>
         <span class="entryName">category</span>
-        : <div class="fullType"><span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span></div>
+        : <span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span>
         <div class="entryOverview">Specifies the event category.</div>
      </td>
    </tr>
@@ -318,7 +335,7 @@ using <code>set</code> or using <code>opt_extraParams</code>.
    <tr class="odd">
      <td>
         <span class="entryName">action</span>
-        : <div class="fullType"><span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span></div>
+        : <span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span>
         <div class="entryOverview">Specifies the event action.</div>
      </td>
    </tr>
@@ -326,7 +343,7 @@ using <code>set</code> or using <code>opt_extraParams</code>.
    <tr class="even">
      <td>
         <span class="entryName">opt_label</span>
-        : <div class="fullType">(<span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span><span>&nbsp;|&nbsp;</span><span class="type">undefined</span>)</div>
+        : <span class="type">string=</span>
         <div class="entryOverview">Specifies the event label.</div>
      </td>
    </tr>
@@ -334,16 +351,17 @@ using <code>set</code> or using <code>opt_extraParams</code>.
    <tr class="odd">
      <td>
         <span class="entryName">opt_value</span>
-        : <div class="fullType">(<span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FNumber">number</a></span><span>&nbsp;|&nbsp;</span><span class="type">undefined</span>)</div>
-        <div class="entryOverview">Specifies the event value. Values must be non-negative.</div>
+        : <span class="type">number=</span>
+        <div class="entryOverview">Specifies the event value.
+    Values must be non-negative.</div>
      </td>
    </tr>
   </table>
       </div>
    
       <div class="detailsSection">
-        <b>Returns:</b>&nbsp;<div class="fullType"><span class="type">goog.async.Deferred</span></div>&nbsp;
-            goog.async.Deferred
+        <b>Returns:</b>&nbsp;<span>!</span><span class="type">goog.async.Deferred</span>&nbsp;
+            <span class='nodesc'>No description.</span>
       </div>
   
     </div>
@@ -371,12 +389,15 @@ using <code>set</code> or using <code>opt_extraParams</code>.
 
         <span class="entryName">sendException<span class="args">(<span class="arg">opt_description</span>,&nbsp;<span class="arg">opt_fatal</span>)</span>
         </span>
-        &#8658; <div class="fullType"><span class="type">goog.async.Deferred</span></div>
+        &#8658; <span>!</span><span class="type">goog.async.Deferred</span>
       </div>
 
 
      <div class="entryOverview">
        Sends an Exception hit to Google Analytics.
+
+
+
      </div>
 
 
@@ -396,7 +417,7 @@ using <code>set</code> or using <code>opt_extraParams</code>.
    <tr class="even">
      <td>
         <span class="entryName">opt_description</span>
-        : <div class="fullType">(<span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span><span>&nbsp;|&nbsp;</span><span class="type">undefined</span>)</div>
+        : <span class="type">string=</span>
         <div class="entryOverview">Specifies the description of an exception.</div>
      </td>
    </tr>
@@ -404,7 +425,7 @@ using <code>set</code> or using <code>opt_extraParams</code>.
    <tr class="odd">
      <td>
         <span class="entryName">opt_fatal</span>
-        : <div class="fullType">(<span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FBoolean">boolean</a></span><span>&nbsp;|&nbsp;</span><span class="type">undefined</span>)</div>
+        : <span class="type">boolean=</span>
         <div class="entryOverview">Was the exception fatal.</div>
      </td>
    </tr>
@@ -412,8 +433,8 @@ using <code>set</code> or using <code>opt_extraParams</code>.
       </div>
    
       <div class="detailsSection">
-        <b>Returns:</b>&nbsp;<div class="fullType"><span class="type">goog.async.Deferred</span></div>&nbsp;
-            goog.async.Deferred
+        <b>Returns:</b>&nbsp;<span>!</span><span class="type">goog.async.Deferred</span>&nbsp;
+            <span class='nodesc'>No description.</span>
       </div>
   
     </div>
@@ -441,12 +462,15 @@ using <code>set</code> or using <code>opt_extraParams</code>.
 
         <span class="entryName">sendSocial<span class="args">(<span class="arg">network</span>,&nbsp;<span class="arg">action</span>,&nbsp;<span class="arg">target</span>)</span>
         </span>
-        &#8658; <div class="fullType"><span class="type">goog.async.Deferred</span></div>
+        &#8658; <span>!</span><span class="type">goog.async.Deferred</span>
       </div>
 
 
      <div class="entryOverview">
        Sends a Social hit to Google Analytics.
+
+
+
      </div>
 
 
@@ -466,32 +490,36 @@ using <code>set</code> or using <code>opt_extraParams</code>.
    <tr class="even">
      <td>
         <span class="entryName">network</span>
-        : <div class="fullType"><span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span></div>
-        <div class="entryOverview">Specifies the social network, for example Facebook or Google Plus.</div>
+        : <span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span>
+        <div class="entryOverview">Specifies the social network, for example Facebook
+    or Google Plus.</div>
      </td>
    </tr>
      
    <tr class="odd">
      <td>
         <span class="entryName">action</span>
-        : <div class="fullType"><span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span></div>
-        <div class="entryOverview">Specifies the social interaction action. For example on Google Plus when a user clicks the +1 button, the social action is 'plus'.</div>
+        : <span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span>
+        <div class="entryOverview">Specifies the social interaction action.
+    For example on Google Plus when a user clicks the +1 button,
+    the social action is 'plus'.</div>
      </td>
    </tr>
      
    <tr class="even">
      <td>
         <span class="entryName">target</span>
-        : <div class="fullType"><span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span></div>
-        <div class="entryOverview">Specifies the target of a social interaction. This value is typically a URL but can be any text.</div>
+        : <span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span>
+        <div class="entryOverview">Specifies the target of a social interaction.
+    This value is typically a URL but can be any text.</div>
      </td>
    </tr>
   </table>
       </div>
    
       <div class="detailsSection">
-        <b>Returns:</b>&nbsp;<div class="fullType"><span class="type">goog.async.Deferred</span></div>&nbsp;
-            goog.async.Deferred
+        <b>Returns:</b>&nbsp;<span>!</span><span class="type">goog.async.Deferred</span>&nbsp;
+            <span class='nodesc'>No description.</span>
       </div>
   
     </div>
@@ -523,10 +551,13 @@ using <code>set</code> or using <code>opt_extraParams</code>.
 
 
      <div class="entryOverview">
-       Sets an individual value on the <code>Tracker</code>, replacing any previously
+       Sets an individual value on the <code> Tracker</code>, replacing any previously
 set values with the same param. The value is persistent for the life
-of the <code>Tracker</code> instance, or until replaced with another call
-to <code>set</code>.
+of the <code> Tracker</code> instance, or until replaced with another call
+to <code> set</code>.
+
+
+
      </div>
 
 
@@ -546,16 +577,16 @@ to <code>set</code>.
    <tr class="even">
      <td>
         <span class="entryName">param</span>
-        : <div class="fullType">(<span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span><span>&nbsp;|&nbsp;</span><span class="type">{defaultValue: (string</span><span>&nbsp;|&nbsp;</span><span class="type">undefined), id: string, maxLength: (number</span><span>&nbsp;|&nbsp;</span><span class="type">undefined), name: string, ...}</span>)</div>
-        <div class="entryOverview">param</div>
+        : <span>!</span><span class="type">analytics.Parameter</span><span>&nbsp;|&nbsp;</span><span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span>
+        <div class="entryOverview"><span class='nodesc'>No description.</span></div>
      </td>
    </tr>
      
    <tr class="odd">
      <td>
         <span class="entryName">value</span>
-        : <div class="fullType">(<span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FBoolean">boolean</a></span><span>&nbsp;|&nbsp;</span><span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FNumber">number</a></span><span>&nbsp;|&nbsp;</span><span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span>)</div>
-        <div class="entryOverview">value</div>
+        : <span>!</span><span class="type">analytics.Value</span>
+        <div class="entryOverview"><span class='nodesc'>No description.</span></div>
      </td>
    </tr>
   </table>

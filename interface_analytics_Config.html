@@ -63,7 +63,9 @@
     Provides support for reading and manipulating the configuration of the
 library.
 
-Obtain a instance using the <code>analytics.Service#getConfig</code>.
+Obtain a instance using the <code> analytics.Service#getConfig</code>.
+
+
   </div>
 
 
@@ -141,12 +143,14 @@ Obtain a instance using the <code>analytics.Service#getConfig</code>.
 
         <span class="entryName">isTrackingPermitted<span class="args">()</span>
         </span>
-        &#8658; <div class="fullType"><span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FBoolean">boolean</a></span></div>
+        &#8658; <span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FBoolean">boolean</a></span>
       </div>
 
 
      <div class="entryOverview">
        Returns true if tracking is enabled.
+
+
      </div>
 
 
@@ -155,7 +159,7 @@ Obtain a instance using the <code>analytics.Service#getConfig</code>.
 
    
       <div class="detailsSection">
-        <b>Returns:</b>&nbsp;<div class="fullType"><span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FBoolean">boolean</a></span></div>&nbsp;
+        <b>Returns:</b>&nbsp;<span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FBoolean">boolean</a></span>&nbsp;
             True if tracking is permitted.
       </div>
   
@@ -191,6 +195,8 @@ Obtain a instance using the <code>analytics.Service#getConfig</code>.
        Sets the user sample rate. This can be used if you need to reduce the
 number of users reporting analytics information to Google Analytics.
 Most clients will not need to set this.
+
+
      </div>
 
 
@@ -210,8 +216,9 @@ Most clients will not need to set this.
    <tr class="even">
      <td>
         <span class="entryName">sampleRate</span>
-        : <div class="fullType"><span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FNumber">number</a></span></div>
-        <div class="entryOverview">User sample rate. An integer from 1 to 100. If not set defaults to 100.</div>
+        : <span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FNumber">number</a></span>
+        <div class="entryOverview">User sample rate. An integer from 1 to 100.
+    If not set defaults to 100.</div>
      </td>
    </tr>
   </table>
@@ -251,14 +258,16 @@ Most clients will not need to set this.
 This method provides support for persistently enabling or disabling tracking
 for the current user on the current device.
 
-<p>When your code calls <code>setTrackingPermitted(false)</code> this library
+<p>When your code calls <code> setTrackingPermitted(false)</code> this library
 will dynamically disable tracking. This means you are free to instrument
 your application with analytics tracking code, then enable/disable
 the sending of tracking information with this method. You do NOT need to
 guard calls to tracking in your code.
 
 <p>For further information on how to support opt-out in your application see
-<a href="https://github.com/GoogleChrome/chrome-platform-analytics/wiki/Respecting-User-Privacy">https://github.com/GoogleChrome/chrome-platform-analytics/wiki/Respecting-User-Privacy</a></p></p>
+<a href="https://github.com/GoogleChrome/chrome-platform-analytics/wiki/Respecting-User-Privacy">https://github.com/GoogleChrome/chrome-platform-analytics/wiki/Respecting-User-Privacy</a>
+
+</p></p>
      </div>
 
 
@@ -278,7 +287,7 @@ guard calls to tracking in your code.
    <tr class="even">
      <td>
         <span class="entryName">permitted</span>
-        : <div class="fullType"><span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FBoolean">boolean</a></span></div>
+        : <span class="type"><a href="http://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FBoolean">boolean</a></span>
         <div class="entryOverview">True if tracking is permitted.</div>
      </td>
    </tr>
