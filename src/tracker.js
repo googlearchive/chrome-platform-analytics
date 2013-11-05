@@ -82,7 +82,7 @@ analytics.Tracker.prototype.send;
  *     or "place, or "view") within your application. This is should more
  *     specific than your app name, but generally not include any runtime
  *     data. In most cases all "screens" should be known at the time
- *     the app is build. Examples: "MainScreen" or "SettingsView".
+ *     the app is built. Examples: "MainScreen" or "SettingsView".
  * @return {!goog.async.Deferred}
  */
 analytics.Tracker.prototype.sendAppView;
