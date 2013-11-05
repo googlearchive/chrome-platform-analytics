@@ -93,7 +93,7 @@ analytics.resetForTesting = function() {
  * Returns a service instance for the named Chrome Platform App/Extension.
  * Generally you'll only ever want to call this with a single name that
  * identifies the host Chrome Platform App/Extension or extension using the
- * library. This name is used to scoped hits to your app on Google Analytics.
+ * library. This name is used to scope hits to your app on Google Analytics.
  *
  * @param {string} appName The name of your Chrome Platform App/Extension.
  *     Though library could read the name of the app from the chrome manifest
