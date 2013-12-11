@@ -103,13 +103,12 @@ analytics.resetForTesting = function() {
  * @return {!analytics.GoogleAnalytics}
  */
 analytics.getService = function(appName) {
-  var service = /** @type {analytics.GoogleAnalytics} */ (
-      analytics.serviceInstances_.get(appName, null));
+  var service = analytics.serviceInstances_.get(appName, null);
   if (goog.isNull(service)) {
     service = analytics.createService_(appName);
     analytics.serviceInstances_.set(appName, service);
   }
-  return /** @type {!analytics.GoogleAnalytics} */ (service);
+  return service;
 };
 
 
