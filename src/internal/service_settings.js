@@ -178,8 +178,8 @@ analytics.internal.ServiceSettings.prototype.getSampleRate = function() {
 /** @override */
 analytics.internal.ServiceSettings.prototype.getUserId = function() {
   goog.asserts.assert(this.ready_.hasFired());
-  goog.asserts.assert(!goog.isNull(this.userId));
-  return /** @type {string} */ (this.userId_);
+  goog.asserts.assertString(this.userId_);
+  return this.userId_;
 };
 
 
