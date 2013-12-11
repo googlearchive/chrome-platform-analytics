@@ -144,7 +144,75 @@ analytics.internal.ServiceTracker.prototype.sendException =
 
 
 /** @override */
+analytics.internal.ServiceTracker.prototype.sendTiming =
+    function(category, variable, value, opt_label) {
+  return this.send(
+      analytics.HitTypes.TIMING, {
+        'timingCategory': category,
+        'timingVar': variable,
+        'timingLabel': opt_label,
+        'timingValue': value
+      });
+
+};
+
+
+/** @override */
 analytics.internal.ServiceTracker.prototype.forceSessionStart =
     function() {
   this.startSession_ = true;
+};
+
+
+/** @override */
+analytics.internal.ServiceTracker.prototype.startTiming =
+    function(category, variable, opt_label) {
+  return new analytics.internal.ServiceTracker.Timing(
+      this, category, variable, opt_label);
+};
+
+
+
+/**
+ * Tracks timing information and send information to Google Analytics.
+ *
+ * @constructor
+ * @implements {analytics.Tracker.Timing}
+ *
+ * @param {!analytics.Tracker} tracker
+ * @param {string} category
+ * @param {string} variable
+ * @param {string=} opt_label
+ */
+analytics.internal.ServiceTracker.Timing =
+    function(tracker, category, variable, opt_label) {
+
+  /** @private {?analytics.Tracker} */
+  this.tracker_ = tracker;
+
+  /** @private {string} */
+  this.category_ = category;
+
+    /** @private {string} */
+  this.variable_ = variable;
+
+  /** @private {string|undefined} */
+  this.label_ = opt_label;
+
+  /** @private {number} */
+  this.startTime_ = goog.now();
+};
+
+
+/** @override */
+analytics.internal.ServiceTracker.Timing.prototype.send = function() {
+  var deferred = this.tracker_.sendTiming(
+      this.category_,
+      this.variable_,
+      goog.now() - this.startTime_,
+      this.label_);
+
+  // The timing instance can only be used once.
+  this.tracker_ = null;
+  return deferred;
 };

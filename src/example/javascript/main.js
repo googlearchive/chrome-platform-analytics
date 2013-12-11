@@ -37,6 +37,14 @@ function startApp() {
   // screen within the app.
   tracker.sendAppView('MainView');
 
+  var timing = tracker.startTiming('Analytics Performance', 'Send Event');
+
+  // Record an "event".
+  tracker.sendEvent('Browsing', 'Browsed the app');
+
+  // Send the timing information.
+  timing.send();
+
   var button1 = document.getElementById('chocolate');
   var button2 = document.getElementById('vanilla');
   out = document.getElementById('out');

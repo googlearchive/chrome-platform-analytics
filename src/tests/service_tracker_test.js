@@ -28,7 +28,9 @@ goog.require('analytics.internal.parameters');
 goog.require('analytics.testing.TestChannel');
 
 goog.require('goog.object');
+goog.require('goog.testing.PropertyReplacer');
 goog.require('goog.testing.jsunit');
+
 
 
 /** @const {!analytics.internal.ParameterMap} */
@@ -64,6 +66,18 @@ var EXCEPTION_HIT = {
   exFatal: true};
 
 
+/** @const {!analytics.TimingHit} */
+var TIMING_HIT = {
+  timingCategory: 'Performance',
+  timingVar: 'Busy Loop',
+  timingLabel: 'bzzz',
+  timingValue: 11};
+
+
+/** @type {goog.testing.PropertyReplacer} */
+var replacer;
+
+
 /** @type {!analytics.testing.TestChannel} */
 var channel;
 
@@ -76,9 +90,14 @@ var tracker;
 var extraParams;
 
 function setUp() {
+  replacer = new goog.testing.PropertyReplacer();
   channel = new analytics.testing.TestChannel();
   tracker = new analytics.internal.ServiceTracker(channel);
   extraParams = {};
+}
+
+function tearDown() {
+  replacer.reset();
 }
 
 function testSend() {
@@ -183,6 +202,47 @@ function testSendSocial() {
       SOCIAL_HIT.socialAction,
       SOCIAL_HIT.socialTarget);
   assertTypedHitSent(SOCIAL_HIT);
+}
+
+function testSendTiming() {
+  tracker.sendTiming(
+      TIMING_HIT.timingCategory,
+      TIMING_HIT.timingVar,
+      TIMING_HIT.timingValue,
+      TIMING_HIT.timingLabel);
+
+  assertTypedHitSent(TIMING_HIT);
+}
+
+function testTiming() {
+  replacer.set(goog, 'now',
+      function() {
+        return 0;
+      });
+
+  var timing = tracker.startTiming(
+      TIMING_HIT.timingCategory,
+      TIMING_HIT.timingVar,
+      TIMING_HIT.timingLabel);
+
+  replacer.set(goog, 'now',
+      function() {
+        return TIMING_HIT.timingValue;
+      });
+  timing.send();
+
+  assertTypedHitSent(TIMING_HIT);
+}
+
+
+function testTiming_InstancesNotReusable() {
+  var timing = tracker.startTiming(
+      TIMING_HIT.timingCategory,
+      TIMING_HIT.timingVar,
+      TIMING_HIT.timingLabel);
+  timing.send();
+
+  assertThrows(timing.send);
 }
 
 

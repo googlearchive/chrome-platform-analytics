@@ -159,15 +159,9 @@ analytics.ExceptionHit;
 /**
  * Typedef for analytics.HitTypes.TIMING hit types.
  * @typedef {{
- *   pageLoadTime: (number|undefined),
- *   dnsTime: (number|undefined),
- *   tcpConnectTime: (number|undefined),
- *   serverResponseTime: (number|undefined),
- *   pageDownloadTime: (number|undefined),
- *   redirectResponseTime: (number|undefined),
- *   timingCategory: (string|undefined),
- *   timingVar: (string|undefined),
- *   timingValue: (number|undefined),
+ *   timingCategory: (string),
+ *   timingVar: (string),
+ *   timingValue: (number),
  *   timingLabel: (string|undefined)
  * }}
  */

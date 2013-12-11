@@ -59,6 +59,14 @@ goog.exportSymbol('analytics.internal.ServiceTracker.prototype.sendSocial',
     analytics.internal.ServiceTracker.prototype.sendSocial);
 goog.exportSymbol('analytics.internal.ServiceTracker.prototype.sendException',
     analytics.internal.ServiceTracker.prototype.sendException);
+goog.exportSymbol('analytics.internal.ServiceTracker.prototype.sendTiming',
+    analytics.internal.ServiceTracker.prototype.sendTiming);
+goog.exportSymbol('analytics.internal.ServiceTracker.prototype.startTiming',
+    analytics.internal.ServiceTracker.prototype.startTiming);
+goog.exportSymbol('analytics.internal.ServiceTracker.Timing',
+    analytics.internal.ServiceTracker.Timing);
+goog.exportSymbol('analytics.internal.ServiceTracker.Timing.prototype.send',
+    analytics.internal.ServiceTracker.Timing.prototype.send);
 
 goog.exportSymbol('analytics.HitTypes.APPVIEW', analytics.HitTypes.APPVIEW);
 goog.exportSymbol('analytics.HitTypes.EVENT', analytics.HitTypes.EVENT);

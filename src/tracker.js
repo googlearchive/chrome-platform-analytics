@@ -17,6 +17,7 @@
  * @author tbreisacher@google.com (Tyler Breisacher)
  */
 
+goog.provide('analytics.Timing');
 goog.provide('analytics.Tracker');
 
 goog.require('analytics.HitType');
@@ -124,8 +125,58 @@ analytics.Tracker.prototype.sendException;
 
 
 /**
+ * Sends a Timing hit to Google Analytics.
+ *
+ * @see analytics.Tracker.startTiming for another handy way to send
+ *     timing events.
+ *
+ * @param {string} category Specifies the category of the timing.
+ * @param {string} variable Specifies the variable name of the timing.
+ * @param {number} value Specifies the value of the timing.
+ * @param {string=} opt_label Specifies the optional label of the timing.
+ * @return {!goog.async.Deferred}
+ */
+analytics.Tracker.prototype.sendTiming;
+
+
+/**
  * Forces the tracker up to start a new session on the next hit.  Note that
  * clients should not usually need to call this as Google Analytics provides
  * automatic session management.
  */
 analytics.Tracker.prototype.forceSessionStart;
+
+
+/**
+ * Creates a new timing object that tracks elapsed time for you.
+ *
+ * @see analytics.Tracker.sendTiming for a way to send timing events
+ *     where callers supply the timing value.
+ *
+ * @param {string} category
+ * @param {string} variable
+ * @param {string=} opt_label
+ * @return {!analytics.Tracker.Timing}
+ */
+analytics.Tracker.prototype.startTiming;
+
+
+
+/**
+ * Provides support for timing operations and sending the results to
+ * Google Analytics.
+ *
+ * Obtain an instance using {@code analytics.Service#createTimer}.
+ *
+ * @interface
+ */
+analytics.Tracker.Timing = function() {};
+
+
+/**
+ * Calculates the final timing and sends the information to Google Analytics.
+ *
+ * @return {!goog.async.Deferred}
+ */
+analytics.Tracker.Timing.prototype.send;
+
