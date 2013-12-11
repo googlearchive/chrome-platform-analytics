@@ -124,6 +124,18 @@ function testSend_CustomParameters() {
   channel.assertLastHitHasEntry('dimension33', 'beta');
 }
 
+function testStartNewSession() {
+  tracker.send(analytics.HitTypes.EVENT);
+  assertUndefined(channel.findValue('sessionControl'));
+
+  tracker.forceSessionStart();
+  tracker.send(analytics.HitTypes.EVENT);
+  channel.assertLastHitHasEntry('sessionControl', 'start');
+
+  tracker.send(analytics.HitTypes.EVENT);
+  assertUndefined(channel.findValue('sessionControl'));
+}
+
 function testSendAppView() {
   tracker.sendAppView(APPVIEW_HIT.description);
   assertTypedHitSent(APPVIEW_HIT);

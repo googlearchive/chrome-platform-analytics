@@ -48,7 +48,6 @@ analytics.Tracker = function() {};
  * set values with the same param. The value is persistent for the life
  * of the {@code Tracker} instance, or until replaced with another call
  * to {@code set}.
-
  *
  * @param {!analytics.Parameter|string} param
  * @param {!analytics.Value} value
@@ -63,7 +62,6 @@ analytics.Tracker.prototype.set;
  *
  * <p>Whenever possible use a named method like {@code sendAppView} or
  * {@code sendEvent}.
-
  *
  * @param {!analytics.HitType} hitType
  * @param {!Object=} opt_extraParams An optional object containing
@@ -76,7 +74,6 @@ analytics.Tracker.prototype.send;
 
 /**
  * Sends an AppView hit to Google Analytics.
-
  *
  * @param {string} description A unique description of the "screen" (
  *     or "place, or "view") within your application. This is should more
@@ -90,7 +87,6 @@ analytics.Tracker.prototype.sendAppView;
 
 /**
  * Sends an Event hit to Google Analytics.
-
  *
  * @param {string} category Specifies the event category.
  * @param {string} action Specifies the event action.
@@ -104,7 +100,6 @@ analytics.Tracker.prototype.sendEvent;
 
 /**
  * Sends a Social hit to Google Analytics.
-
  *
  * @param {string} network Specifies the social network, for example Facebook
  *     or Google Plus.
@@ -120,7 +115,6 @@ analytics.Tracker.prototype.sendSocial;
 
 /**
  * Sends an Exception hit to Google Analytics.
-
  *
  * @param {string=} opt_description Specifies the description of an exception.
  * @param {boolean=} opt_fatal Was the exception fatal.
@@ -128,3 +122,10 @@ analytics.Tracker.prototype.sendSocial;
  */
 analytics.Tracker.prototype.sendException;
 
+
+/**
+ * Forces the tracker up to start a new session on the next hit.  Note that
+ * clients should not usually need to call this as Google Analytics provides
+ * automatic session management.
+ */
+analytics.Tracker.prototype.forceSessionStart;

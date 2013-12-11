@@ -50,6 +50,9 @@ analytics.internal.ServiceTracker = function(channel) {
 
   /** @private {!analytics.internal.ParameterMap} */
   this.params_ = new analytics.internal.ParameterMap();
+
+  /** @private {boolean} */
+  this.startSession_ = false;
 };
 
 
@@ -72,6 +75,11 @@ analytics.internal.ServiceTracker.prototype.send =
             hit.set(analytics.internal.parameters.asParameter(key), value);
           }
         }, this);
+  }
+
+  if (this.startSession_) {
+    this.startSession_ = false;
+    hit.set(analytics.Parameters.SESSION_CONTROL, 'start');
   }
 
   return this.channel_.send(hitType, hit);
@@ -132,4 +140,11 @@ analytics.internal.ServiceTracker.prototype.sendException =
     'exFatal': opt_fatal
   };
   return this.send(analytics.HitTypes.EXCEPTION, hit);
+};
+
+
+/** @override */
+analytics.internal.ServiceTracker.prototype.forceSessionStart =
+    function() {
+  this.startSession_ = true;
 };
