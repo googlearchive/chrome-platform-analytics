@@ -54,7 +54,7 @@ analytics.GA_SERVER_ = 'https://www.google-analytics.com/collect';
  * major change to the library.
  * @private {string}
  */
-analytics.LIBRARY_VERSION_ = 'ca1';
+analytics.LIBRARY_VERSION_ = 'ca2';
 
 
 /** @private {string} */
