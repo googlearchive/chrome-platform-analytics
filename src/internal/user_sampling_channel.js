@@ -36,6 +36,7 @@ goog.require('goog.async.Deferred');
  * @param {!analytics.internal.Settings} settings
  * @param {!analytics.internal.Channel} delegate
  * @implements {analytics.internal.Channel}
+ * @struct
  */
 analytics.internal.UserSamplingChannel = function(settings, delegate) {
 

@@ -33,6 +33,7 @@ goog.require('goog.async.Deferred');
  * @constructor
  * @param {!Array.<!analytics.internal.DivertingChannel.Capture>} destination
  * @implements {analytics.internal.Channel}
+ * @struct
  */
 analytics.internal.DivertingChannel = function(destination) {
 

@@ -31,6 +31,7 @@ goog.require('goog.async.Deferred');
 /**
  * @constructor
  * @extends {analytics.internal.TokenBucket}
+ * @struct
  */
 analytics.testing.TestTokenBucket = function() {
   goog.base(this, 0, 100, 0);

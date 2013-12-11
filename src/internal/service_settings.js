@@ -37,6 +37,7 @@ goog.require('goog.async.Deferred');
  * @constructor
  * @param {!analytics.internal.AsyncStorage} storage
  * @implements {analytics.internal.Settings}
+ * @struct
  */
 analytics.internal.ServiceSettings = function(storage) {
   /** @private {!analytics.internal.AsyncStorage} */

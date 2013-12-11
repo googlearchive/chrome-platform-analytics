@@ -31,6 +31,7 @@ goog.require('analytics.testing.TestChannel');
 /**
  * @constructor
  * @extends {analytics.internal.ServiceTracker}
+ * @struct
  */
 analytics.testing.TestTracker = function() {
   /** @private {!analytics.testing.TestChannel} */

@@ -37,6 +37,7 @@ goog.require('goog.testing.asserts');
  * @param {string=} opt_name A name useful for identifying the channel during
  *     testing.
  * @extends {analytics.internal.DivertingChannel}
+ * @struct
  */
 analytics.testing.TestChannel = function(opt_name) {
 

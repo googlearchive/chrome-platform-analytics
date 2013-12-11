@@ -30,6 +30,7 @@ goog.require('goog.string.format');
 /**
  * @constructor
  * @template T
+ * @struct
  */
 analytics.testing.SingleArgRecorder = function() {
 

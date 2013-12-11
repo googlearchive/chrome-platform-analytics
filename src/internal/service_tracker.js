@@ -41,6 +41,7 @@ goog.require('goog.string.format');
  * @constructor
  * @implements {analytics.Tracker}
  * @param {!analytics.internal.Channel} channel
+ * @struct
  */
 analytics.internal.ServiceTracker = function(channel) {
 

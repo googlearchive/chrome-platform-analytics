@@ -32,6 +32,7 @@ goog.require('goog.async.Deferred');
 /**
  * @constructor
  * @implements {analytics.internal.Channel}
+ * @struct
  */
 analytics.internal.DummyChannel = function() {
 };

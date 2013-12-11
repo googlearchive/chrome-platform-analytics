@@ -48,6 +48,7 @@ goog.require('goog.structs.Map');
  * @constructor
  * @param {...analytics.Parameter|analytics.Value} var_args
  *     An optional list of alternating key, value pairs.
+ * @struct
  */
 analytics.internal.ParameterMap = function(var_args) {
   /** @private {!goog.structs.Map.<

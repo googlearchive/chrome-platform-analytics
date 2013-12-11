@@ -33,6 +33,7 @@ goog.require('goog.async.Deferred');
 /**
  * @constructor
  * @implements {analytics.internal.Settings}
+ * @struct
  */
 analytics.testing.TestSettings = function() {
 

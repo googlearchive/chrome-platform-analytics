@@ -36,6 +36,7 @@ goog.require('analytics.internal.Settings');
  * @param {!analytics.internal.Settings} settings A "ready" settings object.
  * @param {!analytics.internal.Channel} delegate
  * @implements {analytics.internal.Channel}
+ * @struct
  */
 analytics.internal.AsyncSettingsChannel = function(settings, delegate) {
 

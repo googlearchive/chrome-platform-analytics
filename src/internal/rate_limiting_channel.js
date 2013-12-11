@@ -36,6 +36,7 @@ goog.require('goog.async.Deferred');
  * @param {!analytics.internal.TokenBucket} tokens
  * @param {!analytics.internal.Channel} delegate
  * @implements {analytics.internal.Channel}
+ * @struct
  */
 analytics.internal.RateLimitingChannel = function(tokens, delegate) {
 

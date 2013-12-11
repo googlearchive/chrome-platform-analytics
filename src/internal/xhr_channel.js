@@ -43,6 +43,7 @@ goog.require('goog.string.format');
  *     in characters.
  * @param {!goog.net.NetworkStatusMonitor} networkStatus
  * @implements {analytics.internal.Channel}
+ * @struct
  */
 analytics.internal.XhrChannel =
     function(serverUrl, maxPostLength, networkStatus) {

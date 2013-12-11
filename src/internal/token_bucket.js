@@ -35,6 +35,7 @@ goog.require('goog.asserts');
  *     the current time in milliseconds. Useful for testing or warping
  *     the reality of time. Stick with the former case.
  * @constructor
+ * @struct
  */
 analytics.internal.TokenBucket = function(
     initialTokens, maxTokens, fillRate, opt_timeSource) {

@@ -31,6 +31,7 @@ goog.require('goog.structs.Map');
  * In memory "storage" class.
  * @constructor
  * @implements {analytics.internal.AsyncStorage}
+ * @struct
  */
 analytics.testing.TestStorage = function() {
   this.storage_ = new goog.structs.Map();

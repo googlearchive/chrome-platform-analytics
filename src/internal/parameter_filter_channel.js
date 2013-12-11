@@ -33,6 +33,7 @@ goog.require('goog.async.Deferred');
  * @constructor
  * @param {!analytics.internal.Channel} delegate
  * @implements {analytics.internal.Channel}
+ * @struct
  */
 analytics.internal.ParameterFilterChannel = function(delegate) {
   /** @private {!analytics.internal.Channel} */

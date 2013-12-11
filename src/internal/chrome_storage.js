@@ -39,6 +39,7 @@ goog.require('goog.async.Deferred');
  * @param {string=} opt_namespace Namespace to prevent key collisions.
  * @constructor
  * @implements {analytics.internal.AsyncStorage}
+ * @struct
  */
 analytics.internal.ChromeStorage = function(storage, opt_namespace) {
   /** @private {!StorageArea} */
