@@ -20,22 +20,33 @@ goog.require('analytics.internal.ServiceTracker');
 goog.require('goog.async.Deferred');
 goog.require('goog.object');
 
-goog.exportSymbol('goog.async.Deferred', goog.async.Deferred);
-goog.exportSymbol('goog.async.Deferred.prototype.addCallback',
+goog.exportSymbol(
+    'goog.async.Deferred',
+    goog.async.Deferred);
+goog.exportSymbol(
+    'goog.async.Deferred.prototype.addCallback',
     goog.async.Deferred.prototype.addCallback);
 
-goog.exportSymbol('analytics.getService', analytics.getService);
+goog.exportSymbol(
+    'analytics.getService',
+    analytics.getService);
 
-goog.exportSymbol('analytics.internal.ServiceChannel',
+goog.exportSymbol(
+    'analytics.internal.ServiceChannel',
     analytics.internal.ServiceChannel);
-goog.exportSymbol('analytics.internal.ServiceChannel.prototype.getTracker',
+goog.exportSymbol(
+    'analytics.internal.ServiceChannel.prototype.getTracker',
     analytics.internal.ServiceChannel.prototype.getTracker);
-goog.exportSymbol('analytics.internal.ServiceChannel.prototype.getConfig',
+goog.exportSymbol(
+    'analytics.internal.ServiceChannel.prototype.getConfig',
     analytics.internal.ServiceChannel.prototype.getConfig);
 
-// Only export the methods that come from analytics.Config -- methods on
-// analytics.internal.Settings are internal to the analytics library.
-goog.exportSymbol('analytics.internal.ServiceSettings',
+// Only export the methods that come from analytics.Config -- other methods on
+// analytics.internal.ServiceSettings are internal to the analytics library.
+
+// ServiceSettings...
+goog.exportSymbol(
+    'analytics.internal.ServiceSettings',
     analytics.internal.ServiceSettings);
 goog.exportSymbol(
     'analytics.internal.ServiceSettings.prototype.setTrackingPermitted',
@@ -47,37 +58,71 @@ goog.exportSymbol(
     'analytics.internal.ServiceSettings.prototype.setSampleRate',
     analytics.internal.ServiceSettings.prototype.setSampleRate);
 
-goog.exportSymbol('analytics.internal.ServiceTracker',
+// ServiceTracker...
+goog.exportSymbol(
+    'analytics.internal.ServiceTracker',
     analytics.internal.ServiceTracker);
-goog.exportSymbol('analytics.internal.ServiceTracker.prototype.send',
+goog.exportSymbol(
+    'analytics.internal.ServiceTracker.prototype.send',
     analytics.internal.ServiceTracker.prototype.send);
-goog.exportSymbol('analytics.internal.ServiceTracker.prototype.sendAppView',
+goog.exportSymbol(
+    'analytics.internal.ServiceTracker.prototype.sendAppView',
     analytics.internal.ServiceTracker.prototype.sendAppView);
-goog.exportSymbol('analytics.internal.ServiceTracker.prototype.sendEvent',
+goog.exportSymbol(
+    'analytics.internal.ServiceTracker.prototype.sendEvent',
     analytics.internal.ServiceTracker.prototype.sendEvent);
-goog.exportSymbol('analytics.internal.ServiceTracker.prototype.sendSocial',
+goog.exportSymbol(
+    'analytics.internal.ServiceTracker.prototype.sendSocial',
     analytics.internal.ServiceTracker.prototype.sendSocial);
-goog.exportSymbol('analytics.internal.ServiceTracker.prototype.sendException',
+goog.exportSymbol(
+    'analytics.internal.ServiceTracker.prototype.sendException',
     analytics.internal.ServiceTracker.prototype.sendException);
-goog.exportSymbol('analytics.internal.ServiceTracker.prototype.sendTiming',
+goog.exportSymbol(
+    'analytics.internal.ServiceTracker.prototype.sendTiming',
     analytics.internal.ServiceTracker.prototype.sendTiming);
-goog.exportSymbol('analytics.internal.ServiceTracker.prototype.startTiming',
+goog.exportSymbol(
+    'analytics.internal.ServiceTracker.prototype.startTiming',
     analytics.internal.ServiceTracker.prototype.startTiming);
-goog.exportSymbol('analytics.internal.ServiceTracker.Timing',
+goog.exportSymbol(
+    'analytics.internal.ServiceTracker.Timing',
     analytics.internal.ServiceTracker.Timing);
-goog.exportSymbol('analytics.internal.ServiceTracker.Timing.prototype.send',
+goog.exportSymbol(
+    'analytics.internal.ServiceTracker.Timing.prototype.send',
     analytics.internal.ServiceTracker.Timing.prototype.send);
+goog.exportSymbol(
+    'analytics.internal.ServiceTracker.prototype.forceSessionStart',
+    analytics.internal.ServiceTracker.prototype.forceSessionStart);
 
-goog.exportSymbol('analytics.HitTypes.APPVIEW', analytics.HitTypes.APPVIEW);
-goog.exportSymbol('analytics.HitTypes.EVENT', analytics.HitTypes.EVENT);
-goog.exportSymbol('analytics.HitTypes.SOCIAL', analytics.HitTypes.SOCIAL);
-goog.exportSymbol('analytics.HitTypes.TRANSACTION',
+// HitTypes ...
+goog.exportSymbol(
+    'analytics.HitTypes.APPVIEW',
+    analytics.HitTypes.APPVIEW);
+goog.exportSymbol(
+    'analytics.HitTypes.EVENT',
+    analytics.HitTypes.EVENT);
+goog.exportSymbol(
+    'analytics.HitTypes.SOCIAL',
+    analytics.HitTypes.SOCIAL);
+goog.exportSymbol(
+    'analytics.HitTypes.TRANSACTION',
     analytics.HitTypes.TRANSACTION);
-goog.exportSymbol('analytics.HitTypes.ITEM', analytics.HitTypes.ITEM);
-goog.exportSymbol('analytics.HitTypes.TIMING', analytics.HitTypes.TIMING);
-goog.exportSymbol('analytics.HitTypes.EXCEPTION', analytics.HitTypes.EXCEPTION);
+goog.exportSymbol(
+    'analytics.HitTypes.ITEM',
+    analytics.HitTypes.ITEM);
+goog.exportSymbol(
+    'analytics.HitTypes.TIMING',
+    analytics.HitTypes.TIMING);
+goog.exportSymbol(
+    'analytics.HitTypes.EXCEPTION',
+    analytics.HitTypes.EXCEPTION);
 
-goog.object.forEach(analytics.Parameters, function(value) {
-  var name = value.id.replace(/[A-Z]/, '_$&').toUpperCase();
-  goog.exportSymbol('analytics.Parameters.' + name, value);
-});
+// Params ...
+goog.object.forEach(
+    analytics.Parameters,
+    function(value) {
+      var name = value.id.replace(/[A-Z]/, '_$&').toUpperCase();
+      goog.exportSymbol(
+          'analytics.Parameters.' + name,
+          value);
+    });
+
