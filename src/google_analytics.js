@@ -99,15 +99,10 @@ analytics.getService = function(appName) {
  * @private
  */
 analytics.createSettings_ = function() {
-  /** @type {analytics.internal.AsyncStorage} */
+  /** @type {!analytics.internal.AsyncStorage} */
   var storage = new analytics.internal.ChromeStorage(
       chrome.storage.local,
       analytics.STORAGE_NAMESPACE_);
-
-  // TODO(smckay): storage will be null if no persistent key/value
-  // storage is available. In that case create a *DisabledUser* settings,
-  // and use that bad boy.
-  goog.asserts.assert(!goog.isNull(storage));
 
   return new analytics.internal.ServiceSettings(storage);
 };

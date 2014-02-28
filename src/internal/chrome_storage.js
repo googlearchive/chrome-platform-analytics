@@ -42,6 +42,10 @@ goog.require('goog.async.Deferred');
  * @struct
  */
 analytics.internal.ChromeStorage = function(storage, opt_namespace) {
+  if (!goog.isObject(storage)) {
+    throw new Error("'storage' argument must be defined and not null.");
+  }
+
   /** @private {!StorageArea} */
   this.storage_ = storage;
 
