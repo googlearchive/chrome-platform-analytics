@@ -35,6 +35,7 @@ goog.require('analytics.internal.UserSamplingChannel');
 goog.require('analytics.internal.XhrChannel');
 
 goog.require('goog.dom');
+goog.require('goog.events.OnlineHandler');
 
 
 
