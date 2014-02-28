@@ -25,7 +25,6 @@ goog.require('analytics.HitType');
 goog.require('analytics.HitTypes');
 goog.require('analytics.Parameter');
 goog.require('analytics.Tracker');
-goog.require('analytics.Tracker.HitEvent');
 goog.require('analytics.Value');
 goog.require('analytics.internal.Channel');
 goog.require('analytics.internal.ParameterMap');

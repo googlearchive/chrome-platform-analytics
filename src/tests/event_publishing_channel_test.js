@@ -62,6 +62,7 @@ function testPublishesEvent() {
   assertEquals(1, events.length);
   var event = events[0];
   assertEquals(analytics.HitTypes.EVENT, event.getHitType());
-  assertEquals(HIT_0.toString(), event.getHit());
+  assertEquals(
+      JSON.stringify(HIT_0.toObject()),
+      JSON.stringify(event.getHit()));
 }
-

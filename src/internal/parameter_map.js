@@ -141,6 +141,30 @@ analytics.internal.ParameterMap.prototype.forEachEntry = function(receiver) {
 
 
 /**
+ * Returns an object representation of the parameter map. Callers are free
+ * to manipulate the returned object.
+ *
+ * @return {!Object.<string, analytics.Value>}
+ */
+analytics.internal.ParameterMap.prototype.toObject = function() {
+  /** @type {!Object.<string, analytics.Value>} */
+  var params = {};
+  this.forEachEntry(
+      /**
+       * @param {!analytics.Parameter} key
+       * @param {!analytics.Value} value
+       */
+      function(key, value) {
+        // Oddly enough the "id" is the readable name,
+        // and the "name" is the short form.
+        // e.g. id=description, name=cd.
+        params[key.id] = value;
+      });
+  return params;
+};
+
+
+/**
  * Create a copy of *this*.
  * @return {!analytics.internal.ParameterMap}
  */

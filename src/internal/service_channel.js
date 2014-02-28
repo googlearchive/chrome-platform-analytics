@@ -25,7 +25,6 @@
 
 goog.provide('analytics.internal.ServiceChannel');
 
-goog.require('analytics.Tracker.HitEvent');
 goog.require('analytics.internal.Channel');
 goog.require('analytics.internal.DivertingChannel');
 goog.require('analytics.internal.Parameters');

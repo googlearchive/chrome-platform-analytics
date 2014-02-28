@@ -219,11 +219,11 @@ analytics.Tracker.HitEvent.prototype.getHitType = function() {
 
 
 /**
- * @return {string} A JSON string encoding an object that holds key-value pairs,
- *     representing the data in the hit.
+ * @return {!Object.<string, analytics.Value>}
+ *     An object representation of the hit data.
  */
 analytics.Tracker.HitEvent.prototype.getHit = function() {
-  return this.hit_.toString();
+  return this.hit_.toObject();
 };
 
 
