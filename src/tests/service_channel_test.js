@@ -32,7 +32,7 @@ goog.require('goog.structs.Map');
 goog.require('goog.testing.jsunit');
 
 
-/** @const {string} */var LIB_VERSION = 'ca2';
+/** @const {string} */var LIB_VERSION = 'ca3';
 
 
 /** @const {string} */

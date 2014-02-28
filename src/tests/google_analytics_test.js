@@ -233,5 +233,5 @@ function testSend_DeliversPayload() {
   assertTrue(sent.content, goog.array.contains(entries, 'ea=Melt'));
   assertTrue(sent.content, goog.array.contains(entries, 'el=Strawberry'));
   assertTrue(sent.content, goog.array.contains(entries, 'ev=100'));
-  assertTrue(sent.content, goog.array.contains(entries, '_v=ca2'));
+  assertTrue(sent.content, goog.array.contains(entries, '_v=ca3'));
 }

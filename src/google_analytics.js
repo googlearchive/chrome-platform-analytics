@@ -48,7 +48,7 @@ goog.require('goog.structs.Map');
  * major change to the library.
  * @private {string}
  */
-analytics.LIBRARY_VERSION_ = 'ca2';
+analytics.LIBRARY_VERSION_ = 'ca3';
 
 
 /** @private {string} */
