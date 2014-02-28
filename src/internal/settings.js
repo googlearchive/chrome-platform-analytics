@@ -35,9 +35,8 @@ analytics.internal.Settings = function() {};
 
 
 /**
- * @return {!goog.async.Deferred} A deferred
- *     {@code !analytics.internal.Settings} firing when the settings object
- *     is ready to handle method calls.
+ * @return {!goog.async.Deferred.<!analytics.internal.Settings>} A deferred
+ *     firing when the settings object is ready to handle method calls.
  */
 analytics.internal.Settings.prototype.whenReady;
 

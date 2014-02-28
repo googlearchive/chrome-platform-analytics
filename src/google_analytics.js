@@ -164,7 +164,7 @@ analytics.GoogleAnalytics.prototype.getTracker;
  * Provides read/write access to the runtime configuration information used
  * by the Google Analytics service classes.
  *
- * @return {!goog.async.Deferred} A deferred {@code !analytics.Config}
+ * @return {!goog.async.Deferred.<!analytics.Config>} A deferred
  *     that fires when the object is ready to handle method calls.
  *     Deferred is necessary to allow for object initialization from
  *     asynchronous storage.
