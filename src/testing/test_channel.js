@@ -153,7 +153,7 @@ analytics.testing.TestChannel.prototype.assertLastHitHasEntry =
         'Call to assertLastHitHasEntry failed.',
         goog.string.format(msg,
             last['parameters'].toString(),
-            param.id, (value).toString()));
+            param.name, (value).toString()));
   }
 };
 
