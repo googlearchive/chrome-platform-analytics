@@ -206,7 +206,7 @@ analytics.internal.ServiceSettings.prototype.loadUserId_ = function() {
             d.callback();
           },
           function(error) {
-            d.errback();
+            d.errback(error);
           },
           this);
   return d;
