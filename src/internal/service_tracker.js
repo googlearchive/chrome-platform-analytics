@@ -42,23 +42,23 @@ goog.require('goog.string.format');
 /**
  * @constructor
  * @implements {analytics.Tracker}
- * @param {!analytics.internal.Channel} channel
- * @param {!goog.events.EventTarget=} opt_eventTarget
  * @struct
- * @suppress {checkStructDictInheritance}
+ *
+ * @param {!analytics.internal.Channel} channel
+ * @param {!goog.events.EventTarget} eventTarget
  */
-analytics.internal.ServiceTracker = function(channel, opt_eventTarget) {
+analytics.internal.ServiceTracker = function(channel, eventTarget) {
   /** @private {!analytics.internal.Channel} */
   this.channel_ = channel;
+
+  /** @private {!goog.events.EventTarget} */
+  this.eventTarget_ = eventTarget;
 
   /** @private {!analytics.internal.ParameterMap} */
   this.params_ = new analytics.internal.ParameterMap();
 
   /** @private {boolean} */
   this.startSession_ = false;
-
-  /** @private {?goog.events.EventTarget} */
-  this.eventTarget_ = opt_eventTarget || null;
 };
 
 

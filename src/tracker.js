@@ -165,8 +165,9 @@ analytics.Tracker.prototype.startTiming;
 
 
 /**
- * @return {?goog.events.EventTarget} An event target that emits events for each
- * hit that this tracker receives.
+ * @return {!goog.events.EventTarget} An event target that emits events for each
+ *     hit that is "sent" via the tracker. Events will only be published when
+ *     analytics reporting is enabled.
  */
 analytics.Tracker.prototype.getEventTarget;
 
@@ -202,11 +203,11 @@ analytics.Tracker.Timing.prototype.send;
 analytics.Tracker.HitEvent = function(type, hit) {
   goog.base(this, analytics.Tracker.HitEvent.EVENT_TYPE);
 
-  /** @private {!analytics.internal.ParameterMap} */
-  this.hit_ = hit;
-
   /** @private {!analytics.HitType} */
   this.hitType_ = type;
+
+  /** @private {!analytics.internal.ParameterMap} */
+  this.hit_ = hit;
 };
 goog.inherits(analytics.Tracker.HitEvent, goog.events.Event);
 

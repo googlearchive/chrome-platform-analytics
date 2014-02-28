@@ -38,11 +38,13 @@ goog.require('goog.events.EventTarget');
 
 /**
  * @constructor
+ * @implements {analytics.internal.Channel}
+ * @struct
+ *
  * @param {!analytics.internal.Settings} settings
  * @param {function(!analytics.internal.Settings): !analytics.internal.Channel}
  *     enabledChannelFactory
  * @param {!analytics.internal.Channel} disabledChannel
- * @implements {analytics.internal.Channel}
  */
 analytics.internal.ServiceChannel = function(
     settings,
@@ -63,6 +65,8 @@ analytics.internal.ServiceChannel = function(
   /**
    * All known delegate channels. When a user opts-in/out or is sampled in/out
    * we'll select the appropriate channel from this map.
+   *
+   * <p>DO NOT CALL THESE CHANNELS DIRECTLY. Call this.channel_.
    * @private {!analytics.internal.ServiceChannel.Channels_}
    */
   this.channels_ = {
@@ -76,16 +80,13 @@ analytics.internal.ServiceChannel = function(
     disabled: disabledChannel
   };
 
-  this.eventTarget_ = new goog.events.EventTarget();
-
   /**
-   * Whether or not tracking is enabled.  The value of this comes from the
-   * settings (when they get loaded).  The channel is enabled by default because
-   * this causes hits to be buffered up (see above) until the settings are
-   * loaded.
-   * @private {boolean}
+   * The active delegate channel. This channel is updated when the user
+   * opts in/out. We default to the enabled channel knowing that prior
+   * to settings being ready it diverts hits to a queue.
+   * @private {analytics.internal.Channel}
    */
-  this.enabled_ = true;
+  this.channel_ = this.channels_.enabled;
 
   this.settings_.whenReady().addCallbacks(
       goog.partial(this.onSettingsReady_, enabledChannelFactory),
@@ -118,10 +119,14 @@ analytics.internal.ServiceChannel.prototype.onSettingsReady_ =
       'Channel setup already completed.');
   goog.asserts.assert(settings == this.settings_);
 
+  // Get the "enabled" channel from the factory
   this.channels_.enabled = enabledChannelFactory(this.settings_);
-  this.setEnabledState_();
+  this.pickChannel_();
 
-  goog.array.forEach(this.diverted_,
+  // Drain all hits that were sent prior to now (those that were sent
+  // before the settings were available).
+  goog.array.forEach(
+      this.diverted_,
       /** @param {!analytics.internal.DivertingChannel.Capture} capture */
       function(capture) {
         this.send(capture.hitType, capture.parameters);
@@ -133,14 +138,17 @@ analytics.internal.ServiceChannel.prototype.onSettingsReady_ =
 
 
 /**
- * If settings fail to load, switch to a dummy channel.
+ * If settings fail to load, switch to the disabled channel and replace the
+ * temp-enabled channel we were using with the disabled channel.
+ *
  * @private
  */
 analytics.internal.ServiceChannel.prototype.onSettingsLoadFailed_ = function() {
   goog.asserts.assert(!goog.isNull(this.diverted_),
       'Channel setup already completed.');
-  this.enabled_ = false;
-  this.channels_.enabled = analytics.internal.DummyChannel.getInstance();
+
+  this.channels_.enabled = this.channels_.disabled;
+  this.channel_ = this.channels_.disabled;
   this.diverted_ = null;
 };
 
@@ -148,13 +156,7 @@ analytics.internal.ServiceChannel.prototype.onSettingsLoadFailed_ = function() {
 /** @override */
 analytics.internal.ServiceChannel.prototype.send =
     function(hitType, parameters) {
-  if (this.enabled_) {
-    this.eventTarget_.dispatchEvent(
-        new analytics.Tracker.HitEvent(hitType, parameters));
-    return this.channels_.enabled.send(hitType, parameters);
-  } else {
-    return this.channels_.disabled.send(hitType, parameters);
-  }
+  return this.channel_.send(hitType, parameters);
 };
 
 
@@ -162,8 +164,10 @@ analytics.internal.ServiceChannel.prototype.send =
  * Updates the selected channel to reflect current settings.
  * @private
  */
-analytics.internal.ServiceChannel.prototype.setEnabledState_ = function() {
-  this.enabled_ = this.settings_.isTrackingPermitted();
+analytics.internal.ServiceChannel.prototype.pickChannel_ = function() {
+  this.channel_ = this.settings_.isTrackingPermitted() ?
+      this.channels_.enabled :
+      this.channels_.disabled;
 };
 
 
@@ -175,16 +179,7 @@ analytics.internal.ServiceChannel.prototype.onSettingsChanged_ =
     function(property) {
   switch (property) {
     case analytics.internal.Settings.Properties.TRACKING_PERMITTED:
-      this.setEnabledState_();
+      this.pickChannel_();
       break;
   }
-};
-
-
-/**
- * @return {!goog.events.EventTarget}
- */
-analytics.internal.ServiceChannel.prototype.getEventTarget =
-    function() {
-  return this.eventTarget_;
 };

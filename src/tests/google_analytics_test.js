@@ -171,6 +171,11 @@ function testOptOut_HitsNotSent() {
  * Google Analytics service is disabled.
  */
 function testOptOut_EventsNotSent() {
+
+  // Test code is currently fully synchronous so this call must be made
+  // before our call to continueTesting.
+  asyncTestCase.waitForAsync();
+
   // Set up an event listener.
   var hitEventCount = 0;
   goog.events.listen(tracker.getEventTarget(),
@@ -185,22 +190,17 @@ function testOptOut_EventsNotSent() {
   // Check that we got the expected event.
   assertEquals(1, hitEventCount);
 
-  // Test code is currently fully synchronous so this call must be made
-  // before our call to continueTesting.
-  asyncTestCase.waitForAsync();
-
   // Disable the analytics service, then send another hit.
   service.getConfig().addCallback(
       /** @param {!analytics.Config} config */
       function(config) {
         config.setTrackingPermitted(false);
+        tracker.sendAppView('foo');
+
+        // Make sure we didn't send another event.
+        assertEquals(1, hitEventCount);
         asyncTestCase.continueTesting();
       });
-
-  tracker.sendAppView('foo');
-
-  // Make sure we didn't send another event.
-  assertEquals(1, hitEventCount);
 }
 
 function testSend_DeferredFires() {

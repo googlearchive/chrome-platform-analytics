@@ -26,6 +26,8 @@ goog.provide('analytics.testing.TestTracker');
 goog.require('analytics.internal.ServiceTracker');
 goog.require('analytics.testing.TestChannel');
 
+goog.require('goog.events.EventTarget');
+
 
 
 /**
@@ -37,7 +39,7 @@ analytics.testing.TestTracker = function() {
   /** @private {!analytics.testing.TestChannel} */
   this.testChannel_ = new analytics.testing.TestChannel();
 
-  goog.base(this, this.testChannel_);
+  goog.base(this, this.testChannel_, new goog.events.EventTarget());
 };
 goog.inherits(
     analytics.testing.TestTracker,

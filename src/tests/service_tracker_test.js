@@ -27,6 +27,7 @@ goog.require('analytics.internal.ServiceTracker');
 goog.require('analytics.internal.parameters');
 goog.require('analytics.testing.TestChannel');
 
+goog.require('goog.events.EventTarget');
 goog.require('goog.object');
 goog.require('goog.testing.PropertyReplacer');
 goog.require('goog.testing.jsunit');
@@ -91,7 +92,9 @@ var extraParams;
 function setUp() {
   replacer = new goog.testing.PropertyReplacer();
   channel = new analytics.testing.TestChannel();
-  tracker = new analytics.internal.ServiceTracker(channel);
+  tracker = new analytics.internal.ServiceTracker(
+      channel,
+      new goog.events.EventTarget());
   extraParams = {};
 }
 
