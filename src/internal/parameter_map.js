@@ -177,18 +177,17 @@ analytics.internal.ParameterMap.prototype.equals = function(that) {
 };
 
 
-if (goog.DEBUG) {
-  /** @override */
-  analytics.internal.ParameterMap.prototype.toString = function() {
-    var fields = [];
-    this.forEachEntry(
-        /**
-         * @param {!analytics.Parameter} key
-         * @param {!analytics.Value} value
-         */
-        function(key, value) {
-          fields.push([key.name, value].join('='));
-        });
-    return goog.string.format('{%s}', fields.join(', '));
-  };
-}
+/** @override */
+analytics.internal.ParameterMap.prototype.toString = function() {
+  /** @type {!Object.<string, !analytics.Value>} */
+  var fields = new Object();
+  this.forEachEntry(
+      /**
+       * @param {!analytics.Parameter} key
+       * @param {!analytics.Value} value
+       */
+      function(key, value) {
+        fields[key.id] = value;
+      });
+  return JSON.stringify(fields);
+};

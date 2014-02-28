@@ -28,6 +28,7 @@ goog.require('analytics.internal.AsyncSettingsChannel');
 goog.require('analytics.internal.Channel');
 goog.require('analytics.internal.ChromeStorage');
 goog.require('analytics.internal.DummyChannel');
+goog.require('analytics.internal.GoogleAnalyticsService');
 goog.require('analytics.internal.ParameterFilterChannel');
 goog.require('analytics.internal.RateLimitingChannel');
 goog.require('analytics.internal.ServiceChannel');
@@ -43,13 +44,6 @@ goog.require('goog.structs.Map');
 
 
 /**
- * The URL of the GA server. This library only communicates over SSL.
- * @private {string}
- */
-analytics.GA_SERVER_ = 'https://www.google-analytics.com/collect';
-
-
-/**
  * The current version of this library. Should be increased whenever we make a
  * major change to the library.
  * @private {string}
@@ -62,22 +56,10 @@ analytics.STORAGE_NAMESPACE_ = 'google-analytics';
 
 
 /**
- * The maximum number of characters that can be included in the POST payload.
- * @private {number}
+ * @private {!goog.structs.Map.<string,
+ *     analytics.internal.GoogleAnalyticsService>}
  */
-analytics.MAX_POST_LENGTH_ = 8192;
-
-
-/** @private {!goog.structs.Map.<string, analytics.internal.ServiceChannel>} */
 analytics.serviceInstances_ = new goog.structs.Map();
-
-
-/**
- * The channel that handles hits sent from a tracker instance. All
- * tracker instances share this single, lazily initialized, channel instance.
- * @private {!analytics.internal.Channel|undefined}
- */
-analytics.channelPipeline_;
 
 
 /**
@@ -133,69 +115,16 @@ analytics.createSettings_ = function() {
 
 /**
  * @param {string} appName
- * @return {!analytics.internal.ServiceChannel}
+ * @return {!analytics.internal.GoogleAnalyticsService}
  * @private
  */
 analytics.createService_ = function(appName) {
-
   var appVersion = analytics.getAppVersion_();
-  return new analytics.internal.ServiceChannel(
+  return new analytics.internal.GoogleAnalyticsService(
       analytics.LIBRARY_VERSION_,
       appName,
       appVersion,
-      analytics.createSettings_(),
-      analytics.internal.ChannelPipelineFactory_,
-      analytics.internal.DummyChannel.getInstance());
-};
-
-
-/**
- * Returns a factory that lazily creates the runtime Channel pipeline that
- * handles requests for users with tracking enabled. The use of a factory
- * enables delayed initialization of the pipeline. Deferred initialization is
- * necessitated by asynchronous loading of settings from local storage.
- * @param {!analytics.internal.Settings} settings A ready settings object.
- * @return {!analytics.internal.Channel} The channel.
- * @private
- */
-analytics.internal.ChannelPipelineFactory_ = function(settings) {
-  if (!analytics.channelPipeline_) {
-
-    /** @type {!goog.net.NetworkStatusMonitor} */
-    var networkStatus = new goog.events.OnlineHandler();
-
-    /** @type {!analytics.internal.Channel} */
-    var xhrChannel =
-        new analytics.internal.XhrChannel(
-            analytics.GA_SERVER_,
-            analytics.MAX_POST_LENGTH_,
-            networkStatus);
-
-    /** @type {!analytics.internal.Channel} */
-    var paramFilterChannel = new analytics.internal.ParameterFilterChannel(
-        xhrChannel);
-
-    /** @type {!analytics.internal.TokenBucket} */
-    var tokenBucket = new analytics.internal.TokenBucket(
-        60, 500, analytics.internal.TokenBucket.FillRate.ONE_EVERY_TWO_SECONDS);
-
-    /** @type {!analytics.internal.Channel} */
-    var limitingChannel = new analytics.internal.RateLimitingChannel(
-        tokenBucket, paramFilterChannel);
-
-    /** @type {!analytics.internal.Channel} */
-    var samplerChannel = new analytics.internal.UserSamplingChannel(
-        settings,
-        limitingChannel);
-
-    /** @type {!analytics.internal.Channel} */
-    var asyncSettingsChannel = new analytics.internal.AsyncSettingsChannel(
-        settings, samplerChannel);
-
-    analytics.channelPipeline_ = asyncSettingsChannel;
-  }
-
-  return analytics.channelPipeline_;
+      analytics.createSettings_());
 };
 
 

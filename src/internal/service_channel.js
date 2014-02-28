@@ -25,45 +25,29 @@
 
 goog.provide('analytics.internal.ServiceChannel');
 
+goog.require('analytics.Tracker.HitEvent');
 goog.require('analytics.internal.Channel');
 goog.require('analytics.internal.DivertingChannel');
 goog.require('analytics.internal.Parameters');
-goog.require('analytics.internal.ServiceTracker');
 goog.require('analytics.internal.Settings');
 
 goog.require('goog.dom');
+goog.require('goog.events.EventTarget');
 
 
 
 /**
  * @constructor
- * @param {string} libVersion The string that identifies this version of this
- *     library.
- * @param {string} appName The Chromium Platform App name.
- * @param {string} appVersion The version of the platform app.
  * @param {!analytics.internal.Settings} settings
  * @param {function(!analytics.internal.Settings): !analytics.internal.Channel}
  *     enabledChannelFactory
  * @param {!analytics.internal.Channel} disabledChannel
- * @implements {analytics.GoogleAnalytics}
  * @implements {analytics.internal.Channel}
  */
 analytics.internal.ServiceChannel = function(
-    libVersion,
-    appName,
-    appVersion,
     settings,
     enabledChannelFactory,
     disabledChannel) {
-
-  /** @private {string} */
-  this.libVersion_ = libVersion;
-
-  /** @private {string} */
-  this.appName_ = appName;
-
-  /** @private {string} */
-  this.appVersion_ = appVersion;
 
   /** @private {!analytics.internal.Settings} */
   this.settings_ = settings;
@@ -79,8 +63,6 @@ analytics.internal.ServiceChannel = function(
   /**
    * All known delegate channels. When a user opts-in/out or is sampled in/out
    * we'll select the appropriate channel from this map.
-   *
-   * <p>DO NOT CALL THESE CHANNELS DIRECTLY. Call this.channel_.
    * @private {!analytics.internal.ServiceChannel.Channels_}
    */
   this.channels_ = {
@@ -94,20 +76,22 @@ analytics.internal.ServiceChannel = function(
     disabled: disabledChannel
   };
 
+  this.eventTarget_ = new goog.events.EventTarget();
+
   /**
-   * The active delegate channel. This channel is updated when the user
-   * opts in/out. We default to the enabled channel knowing that prior
-   * to settings being ready it diverts hits to a queue.
-   * @private {analytics.internal.Channel}
+   * Whether or not tracking is enabled.  The value of this comes from the
+   * settings (when they get loaded).  The channel is enabled by default because
+   * this causes hits to be buffered up (see above) until the settings are
+   * loaded.
+   * @private {boolean}
    */
-  this.channel_ = this.channels_.enabled;
+  this.enabled_ = true;
 
   this.settings_.whenReady().addCallbacks(
       goog.partial(this.onSettingsReady_, enabledChannelFactory),
       this.onSettingsLoadFailed_,
       this);
 };
-goog.addSingletonGetter(analytics.internal.ServiceChannel);
 
 
 /**
@@ -135,7 +119,7 @@ analytics.internal.ServiceChannel.prototype.onSettingsReady_ =
   goog.asserts.assert(settings == this.settings_);
 
   this.channels_.enabled = enabledChannelFactory(this.settings_);
-  this.pickChannel_();
+  this.setEnabledState_();
 
   goog.array.forEach(this.diverted_,
       /** @param {!analytics.internal.DivertingChannel.Capture} capture */
@@ -155,8 +139,8 @@ analytics.internal.ServiceChannel.prototype.onSettingsReady_ =
 analytics.internal.ServiceChannel.prototype.onSettingsLoadFailed_ = function() {
   goog.asserts.assert(!goog.isNull(this.diverted_),
       'Channel setup already completed.');
+  this.enabled_ = false;
   this.channels_.enabled = analytics.internal.DummyChannel.getInstance();
-  this.channel_ = this.channels_.disabled;
   this.diverted_ = null;
 };
 
@@ -164,28 +148,13 @@ analytics.internal.ServiceChannel.prototype.onSettingsLoadFailed_ = function() {
 /** @override */
 analytics.internal.ServiceChannel.prototype.send =
     function(hitType, parameters) {
-  // TODO(smckay): Add fields to the hit that should *automatically*
-  // added. E.g. system information, user id, ....
-  return this.channel_.send(hitType, parameters);
-};
-
-
-/** @override */
-analytics.internal.ServiceChannel.prototype.getTracker = function(trackingId) {
-  var tracker = new analytics.internal.ServiceTracker(this);
-  tracker.set(analytics.internal.Parameters.LIBRARY_VERSION, this.libVersion_);
-  tracker.set(analytics.internal.Parameters.API_VERSION, 1);
-  tracker.set(analytics.internal.Parameters.APP_NAME, this.appName_);
-  tracker.set(analytics.internal.Parameters.APP_VERSION, this.appVersion_);
-  tracker.set(analytics.internal.Parameters.TRACKING_ID, trackingId);
-  this.addEnvironmentalParams_(tracker);
-  return tracker;
-};
-
-
-/** @override */
-analytics.internal.ServiceChannel.prototype.getConfig = function() {
-  return this.settings_.whenReady();
+  if (this.enabled_) {
+    this.eventTarget_.dispatchEvent(
+        new analytics.Tracker.HitEvent(hitType, parameters));
+    return this.channels_.enabled.send(hitType, parameters);
+  } else {
+    return this.channels_.disabled.send(hitType, parameters);
+  }
 };
 
 
@@ -193,10 +162,8 @@ analytics.internal.ServiceChannel.prototype.getConfig = function() {
  * Updates the selected channel to reflect current settings.
  * @private
  */
-analytics.internal.ServiceChannel.prototype.pickChannel_ = function() {
-  this.channel_ = this.settings_.isTrackingPermitted() ?
-      this.channels_.enabled :
-      this.channels_.disabled;
+analytics.internal.ServiceChannel.prototype.setEnabledState_ = function() {
+  this.enabled_ = this.settings_.isTrackingPermitted();
 };
 
 
@@ -208,31 +175,16 @@ analytics.internal.ServiceChannel.prototype.onSettingsChanged_ =
     function(property) {
   switch (property) {
     case analytics.internal.Settings.Properties.TRACKING_PERMITTED:
-      this.pickChannel_();
+      this.setEnabledState_();
       break;
   }
 };
 
 
 /**
- * Adds environmental details like screen size, color depth.
- * @param {!analytics.Tracker} tracker
- * @private
+ * @return {!goog.events.EventTarget}
  */
-analytics.internal.ServiceChannel.prototype.addEnvironmentalParams_ =
-    function(tracker) {
-  var value = window.navigator.language;
-  tracker.set(analytics.internal.Parameters.LANGUAGE, value);
-
-  // Note: We're using ['foo'] notation to avoid issues with missing
-  // externs and the possibility of the closure compiler renaming fields.
-  value = screen['colorDepth'] + '-bit';
-  tracker.set(analytics.internal.Parameters.SCREEN_COLORS, value);
-
-  value = [screen['width'], screen['height']].join('x');
-  tracker.set(analytics.internal.Parameters.SCREEN_RESOLUTION, value);
-
-  var size = goog.dom.getViewportSize();
-  value = [size.width, size.height].join('x');
-  tracker.set(analytics.internal.Parameters.VIEWPORT_SIZE, value);
+analytics.internal.ServiceChannel.prototype.getEventTarget =
+    function() {
+  return this.eventTarget_;
 };

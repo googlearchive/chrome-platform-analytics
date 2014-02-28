@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-var service, tracker, out;
+var service, tracker, previous, currentChoice, previousChoice;
 
 function initAnalyticsConfig(config) {
   document.getElementById('settings-loading').hidden = true;
@@ -47,14 +47,37 @@ function startApp() {
 
   var button1 = document.getElementById('chocolate');
   var button2 = document.getElementById('vanilla');
-  out = document.getElementById('out');
+  currentChoice = document.getElementById('currentChoice');
+  previousChoice = document.getElementById('previousChoice');
   [button1, button2].forEach(addButtonListener);
+
+  setupAnalyticsListener();
+}
+
+// Set up an event listener to capture events that are generated when analytics
+// receives a hit.  Useful for keeping track of what's happening in your app.
+function setupAnalyticsListener() {
+  // Listen for event hits of the 'Flavor' category, and record them.
+  previous = [];
+  var onTrackerEvent = function(event) {
+    if (event.getHitType() == analytics.HitTypes.EVENT) {
+      var hit = JSON.parse(event.getHit());
+      if (hit[analytics.Parameters.EVENT_CATEGORY.id] == 'Flavor') {
+        previous.push(hit[analytics.Parameters.EVENT_LABEL.id]);
+      }
+    }
+  };
+
+  // Install the event listener.
+  var eventTarget = tracker.getEventTarget();
+  eventTarget.listen(analytics.Tracker.HitEvent.EVENT_TYPE, onTrackerEvent);
 }
 
 function addButtonListener(button) {
   button.addEventListener('click', function() {
     tracker.sendEvent('Flavor', 'Choose', button.id);
-    out.textContent = 'You chose: ' + button.textContent;
+    currentChoice.textContent = 'You chose: ' + button.textContent;
+    previousChoice.textContent = 'Your previous choices were: ' + previous;
   });
 }
 

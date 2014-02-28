@@ -47,12 +47,10 @@ analytics.internal.ServiceSettings = function(storage) {
   this.sampleRate_ = 100;
 
   /**
-   * Change listening on this class is a private implementation detail.
-   * For that reason we only currently (and likely ever) support a single
-   * listener.
-   * @private {!function(!analytics.internal.Settings.Property)}
+   * Callbacks to trigger when settings change.
+   * @private {!Array.<!function(!analytics.internal.Settings.Property)>}
    */
-  this.changeListener_ = goog.nullFunction;
+  this.changeListeners_ = [];
 
   /** @private {!goog.async.Deferred} */
   this.ready_ = new goog.async.Deferred();
@@ -132,8 +130,7 @@ analytics.internal.ServiceSettings.prototype.whenReady = function() {
 analytics.internal.ServiceSettings.prototype.addChangeListener =
     function(listener) {
   goog.asserts.assert(this.ready_.hasFired());
-  goog.asserts.assert(this.changeListener_ == goog.nullFunction);
-  this.changeListener_ = listener;
+  this.changeListeners_.push(listener);
 };
 
 
@@ -146,8 +143,14 @@ analytics.internal.ServiceSettings.prototype.setTrackingPermitted =
       permitted);
   d.addBoth(function() {
     this.permitted_ = permitted;
-    this.changeListener_(
-        analytics.internal.Settings.Properties.TRACKING_PERMITTED);
+    goog.array.forEach(this.changeListeners_,
+        /**
+         * @param {!function(!analytics.internal.Settings.Property)} listener
+         */
+        function(listener) {
+          listener(
+              analytics.internal.Settings.Properties.TRACKING_PERMITTED);
+        });
   }, this);
 };
 

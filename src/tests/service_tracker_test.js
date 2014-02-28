@@ -32,7 +32,6 @@ goog.require('goog.testing.PropertyReplacer');
 goog.require('goog.testing.jsunit');
 
 
-
 /** @const {!analytics.internal.ParameterMap} */
 var HIT_0 = new analytics.internal.ParameterMap(
     analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768',

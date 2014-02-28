@@ -126,6 +126,7 @@ function setUpChromeEnv() {
 }
 
 function tearDown() {
+  goog.events.removeAll(tracker.getEventTarget());
   replacer.reset();
 }
 
@@ -162,6 +163,44 @@ function testOptOut_HitsNotSent() {
       EVENT_HIT.eventValue);
 
   assertEquals(sent, EMPTY_XHR);
+}
+
+
+/**
+ * Tests that HitEvents are not dispatched for hits that are sent when the
+ * Google Analytics service is disabled.
+ */
+function testOptOut_EventsNotSent() {
+  // Set up an event listener.
+  var hitEventCount = 0;
+  goog.events.listen(tracker.getEventTarget(),
+      analytics.Tracker.HitEvent.EVENT_TYPE,
+      function(event) {
+        hitEventCount++;
+      });
+
+  // Send one event first, to make sure things are working.
+  tracker.sendAppView('foo');
+
+  // Check that we got the expected event.
+  assertEquals(1, hitEventCount);
+
+  // Test code is currently fully synchronous so this call must be made
+  // before our call to continueTesting.
+  asyncTestCase.waitForAsync();
+
+  // Disable the analytics service, then send another hit.
+  service.getConfig().addCallback(
+      /** @param {!analytics.Config} config */
+      function(config) {
+        config.setTrackingPermitted(false);
+        asyncTestCase.continueTesting();
+      });
+
+  tracker.sendAppView('foo');
+
+  // Make sure we didn't send another event.
+  assertEquals(1, hitEventCount);
 }
 
 function testSend_DeferredFires() {

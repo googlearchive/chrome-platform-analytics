@@ -13,11 +13,13 @@
 // limitations under the License.
 
 goog.require('analytics.GoogleAnalytics');
+goog.require('analytics.internal.GoogleAnalyticsService');
 goog.require('analytics.internal.ServiceChannel');
 goog.require('analytics.internal.ServiceSettings');
 goog.require('analytics.internal.ServiceTracker');
 
 goog.require('goog.async.Deferred');
+goog.require('goog.events.EventTarget');
 goog.require('goog.object');
 
 goog.exportSymbol(
@@ -28,18 +30,26 @@ goog.exportSymbol(
     goog.async.Deferred.prototype.addCallback);
 
 goog.exportSymbol(
+    'goog.events.EventTarget',
+    goog.events.EventTarget);
+goog.exportSymbol(
+    'goog.events.EventTarget.prototype.listen',
+    goog.events.EventTarget.prototype.listen);
+
+goog.exportSymbol(
     'analytics.getService',
     analytics.getService);
 
+// GoogleAnalyticsService...
 goog.exportSymbol(
-    'analytics.internal.ServiceChannel',
-    analytics.internal.ServiceChannel);
+    'analytics.internal.GoogleAnalyticsService',
+    analytics.internal.GoogleAnalyticsService);
 goog.exportSymbol(
-    'analytics.internal.ServiceChannel.prototype.getTracker',
-    analytics.internal.ServiceChannel.prototype.getTracker);
+    'analytics.internal.GoogleAnalyticsService.prototype.getTracker',
+    analytics.internal.GoogleAnalyticsService.prototype.getTracker);
 goog.exportSymbol(
-    'analytics.internal.ServiceChannel.prototype.getConfig',
-    analytics.internal.ServiceChannel.prototype.getConfig);
+    'analytics.internal.GoogleAnalyticsService.prototype.getConfig',
+    analytics.internal.GoogleAnalyticsService.prototype.getConfig);
 
 // Only export the methods that come from analytics.Config -- other methods on
 // analytics.internal.ServiceSettings are internal to the analytics library.
@@ -92,8 +102,11 @@ goog.exportSymbol(
 goog.exportSymbol(
     'analytics.internal.ServiceTracker.prototype.forceSessionStart',
     analytics.internal.ServiceTracker.prototype.forceSessionStart);
+goog.exportSymbol(
+    'analytics.internal.ServiceTracker.prototype.getEventTarget',
+    analytics.internal.ServiceTracker.prototype.getEventTarget);
 
-// HitTypes ...
+// HitTypes...
 goog.exportSymbol(
     'analytics.HitTypes.APPVIEW',
     analytics.HitTypes.APPVIEW);
@@ -116,7 +129,21 @@ goog.exportSymbol(
     'analytics.HitTypes.EXCEPTION',
     analytics.HitTypes.EXCEPTION);
 
-// Params ...
+// HitEvent...
+goog.exportSymbol(
+    'analytics.Tracker.HitEvent',
+    analytics.Tracker.HitEvent);
+goog.exportSymbol(
+    'analytics.Tracker.HitEvent.EVENT_TYPE',
+    analytics.Tracker.HitEvent.EVENT_TYPE);
+goog.exportSymbol(
+    'analytics.Tracker.HitEvent.prototype.getHitType',
+    analytics.Tracker.HitEvent.prototype.getHitType);
+goog.exportSymbol(
+    'analytics.Tracker.HitEvent.prototype.getHit',
+    analytics.Tracker.HitEvent.prototype.getHit);
+
+// Params...
 goog.object.forEach(
     analytics.Parameters,
     function(value) {
@@ -125,4 +152,3 @@ goog.object.forEach(
           'analytics.Parameters.' + name,
           value);
     });
-

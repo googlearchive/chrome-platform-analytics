@@ -82,9 +82,6 @@ var tracker;
 function setUp() {
   enabledChannel = new analytics.testing.TestChannel('EnabledTestChannel');
   disabledChannel = new analytics.testing.TestChannel('DisabledTestChannel');
-
-  initSettings(true, true);
-  initChannel();
 }
 
 function testSettingsReady_ConstructsChannelPipeline() {
@@ -122,6 +119,8 @@ function testSettingsReady_SendsDivertedHits() {
 }
 
 function testHonorsInitialSettings_TrackingPermitted() {
+  initSettings(true, true);
+  initChannel();
   channel.send(analytics.HitTypes.TRANSACTION, HIT_0);
   enabledChannel.assertHitSent(HIT_0);
 }
@@ -133,21 +132,10 @@ function testHonorsInitialSettings_TrackingNotPermitted() {
   disabledChannel.assertHitSent(HIT_0);
 }
 
-function testAppliesSettingsChangesMadePriorToReady() {
-  initSettings(false, false);
-  initChannel();
-  channel.getConfig().addCallback(
-      /** @param {!analytics.Config} config */
-      function(config) {
-        config.setTrackingPermitted(true);
-      });
-  assertFalse(settings.isTrackingPermitted());
-  settings.becomeReady();
-  assertTrue(settings.isTrackingPermitted());
-}
-
 function testDisableTracking_RoutesHitsToDisabledChannel() {
-  channel.getConfig().addCallback(
+  initSettings(true, true);
+  initChannel();
+  settings.whenReady().addCallback(
       /** @param {!analytics.Config} config */
       function(config) {
         config.setTrackingPermitted(false);
@@ -159,7 +147,7 @@ function testDisableTracking_RoutesHitsToDisabledChannel() {
 function testEnableTracking_RoutesHitsToEnabledChannel() {
   initSettings(true, false);
   initChannel();
-  channel.getConfig().addCallback(
+  settings.whenReady().addCallback(
       /** @param {!analytics.Config} config */
       function(config) {
         config.setTrackingPermitted(true);
@@ -168,69 +156,95 @@ function testEnableTracking_RoutesHitsToEnabledChannel() {
   enabledChannel.assertHitSent(HIT_0);
 }
 
-function testDisableTracking_PersistsSetting() {
-  channel.getConfig().addCallback(
-      /** @param {!analytics.Config} config */
-      function(config) {
-        config.setTrackingPermitted(false);
+
+/**
+ * Tests that the channel's EventTarget receives the appropriate
+ * events when hits are sent.
+ */
+function testHitEvents() {
+  initSettings(true, true);
+  initChannel();
+  var metricParam = analytics.internal.parameters.asParameter('metric11');
+  var metric11 = 1234;
+  var dimensionParam = analytics.internal.parameters.asParameter('dimension33');
+  var dimension33 = 'beta';
+
+  var eventHitReceived = false;
+  var itemHitReceived = false;
+
+  goog.events.listen(channel.getEventTarget(),
+      analytics.Tracker.HitEvent.EVENT_TYPE,
+      /** @param {!analytics.Tracker.HitEvent} event */
+      function(event) {
+        var hit = JSON.parse(event.getHit());
+        switch (event.getHitType()) {
+          case analytics.HitTypes.EVENT:
+            assertEquals(metric11, hit[metricParam.id]);
+            eventHitReceived = true;
+            break;
+          case analytics.HitTypes.ITEM:
+            assertEquals(dimension33, hit[dimensionParam.id]);
+            itemHitReceived = true;
+            break;
+          default:
+            fail('Unexpected hit type received');
+            break;
+        }
       });
-  assertFalse(settings.isTrackingPermitted());
+
+  var eventHit = new analytics.internal.ParameterMap(metricParam, metric11);
+  var itemHit =
+      new analytics.internal.ParameterMap(dimensionParam, dimension33);
+
+  channel.send(analytics.HitTypes.EVENT, eventHit);
+  channel.send(analytics.HitTypes.ITEM, itemHit);
+
+  assertTrue(eventHitReceived);
+  assertTrue(itemHitReceived);
 }
 
-function testEnableTracking_PersistsSetting() {
+
+/**
+ * Tests that the channel's EventTarget receives no events when hits are sent,
+ * but the user opts out of analytics.
+ */
+function testHitEvents_optOut() {
   initSettings(true, false);
   initChannel();
-  channel.getConfig().addCallback(
-      /** @param {!analytics.Config} config */
-      function(config) {
-        config.setTrackingPermitted(true);
+  var metricParam = analytics.internal.parameters.asParameter('metric11');
+  var metric11 = 1234;
+  var dimensionParam = analytics.internal.parameters.asParameter('dimension33');
+  var dimension33 = 'beta';
+
+  var eventHitReceived = false;
+  var itemHitReceived = false;
+
+  goog.events.listen(channel.getEventTarget(),
+      analytics.Tracker.HitEvent.EVENT_TYPE,
+      /** @param {!analytics.Tracker.HitEvent} event */
+      function(event) {
+        switch (event.getHitType()) {
+          case analytics.HitTypes.EVENT:
+            eventHitReceived = true;
+            break;
+          case analytics.HitTypes.ITEM:
+            itemHitReceived = true;
+            break;
+          default:
+            fail('Unexpected hit type received');
+            break;
+        }
       });
-  assertTrue(settings.isTrackingPermitted());
-}
 
-function testGetTracker_ReturnsNonNull() {
-  tracker = channel.getTracker(TRACKING_ID);
-  assertNotNull(tracker);
-}
+  var eventHit = new analytics.internal.ParameterMap(metricParam, metric11);
+  var itemHit =
+      new analytics.internal.ParameterMap(dimensionParam, dimension33);
 
-// TODO(smckay): In a future CL default value init
-// will be moved to another Channel. This test will move
-// elsewhere.
-function testGetTracker_InstallsLibrarayAndAppAndTrackingFields() {
-  tracker = channel.getTracker(TRACKING_ID);
-  tracker.send(analytics.HitTypes.EVENT);
+  channel.send(analytics.HitTypes.EVENT, eventHit);
+  channel.send(analytics.HitTypes.ITEM, itemHit);
 
-  enabledChannel.assertLastHitHasEntry(
-      analytics.internal.Parameters.LIBRARY_VERSION, LIB_VERSION);
-  enabledChannel.assertLastHitHasEntry(
-      analytics.internal.Parameters.API_VERSION, 1);
-  enabledChannel.assertLastHitHasEntry(
-      analytics.internal.Parameters.API_VERSION, 1);
-  enabledChannel.assertLastHitHasEntry(
-      analytics.internal.Parameters.TRACKING_ID, TRACKING_ID);
-  enabledChannel.assertLastHitHasEntry(
-      analytics.internal.Parameters.APP_NAME, APP_NAME);
-  enabledChannel.assertLastHitHasEntry(
-      analytics.internal.Parameters.APP_VERSION, APP_VERSION);
-}
-
-
-// TODO(smckay): In a future CL default value init
-// will be moved to another Channel. This test will move
-// elsewhere.
-function testGetTracker_AutofillsEnvironmentalParams() {
-  tracker = channel.getTracker(TRACKING_ID);
-  tracker.send(analytics.HitTypes.EVENT);
-
-  assertTrue(/^[a-z]+-[A-Z]+$/.test(
-      enabledChannel.findValue(analytics.internal.Parameters.LANGUAGE)));
-  assertTrue(/^[0-9]+-bit$/.test(
-      enabledChannel.findValue(analytics.internal.Parameters.SCREEN_COLORS)));
-  assertTrue(/^[0-9]+x[0-9]+$/.test(
-      enabledChannel.findValue(
-          analytics.internal.Parameters.SCREEN_RESOLUTION)));
-  assertTrue(/^[0-9]+x[0-9]+$/.test(
-      enabledChannel.findValue(analytics.internal.Parameters.VIEWPORT_SIZE)));
+  assertFalse(eventHitReceived);
+  assertFalse(itemHitReceived);
 }
 
 
@@ -257,7 +271,6 @@ function initChannel(opt_channelFactory) {
         return enabledChannel;
       };
   channel = new analytics.internal.ServiceChannel(
-      LIB_VERSION, APP_NAME, APP_VERSION,
       settings,
       channelFactory,
       disabledChannel);

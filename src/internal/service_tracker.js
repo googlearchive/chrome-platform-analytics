@@ -25,6 +25,7 @@ goog.require('analytics.HitType');
 goog.require('analytics.HitTypes');
 goog.require('analytics.Parameter');
 goog.require('analytics.Tracker');
+goog.require('analytics.Tracker.HitEvent');
 goog.require('analytics.Value');
 goog.require('analytics.internal.Channel');
 goog.require('analytics.internal.ParameterMap');
@@ -32,6 +33,7 @@ goog.require('analytics.internal.parameters');
 
 goog.require('goog.asserts');
 goog.require('goog.async.Deferred');
+goog.require('goog.events.EventTarget');
 goog.require('goog.object');
 goog.require('goog.string.format');
 
@@ -41,10 +43,11 @@ goog.require('goog.string.format');
  * @constructor
  * @implements {analytics.Tracker}
  * @param {!analytics.internal.Channel} channel
+ * @param {!goog.events.EventTarget=} opt_eventTarget
  * @struct
+ * @suppress {checkStructDictInheritance}
  */
-analytics.internal.ServiceTracker = function(channel) {
-
+analytics.internal.ServiceTracker = function(channel, opt_eventTarget) {
   /** @private {!analytics.internal.Channel} */
   this.channel_ = channel;
 
@@ -53,6 +56,9 @@ analytics.internal.ServiceTracker = function(channel) {
 
   /** @private {boolean} */
   this.startSession_ = false;
+
+  /** @private {?goog.events.EventTarget} */
+  this.eventTarget_ = opt_eventTarget || null;
 };
 
 
@@ -172,6 +178,12 @@ analytics.internal.ServiceTracker.prototype.startTiming =
 };
 
 
+/** @override */
+analytics.internal.ServiceTracker.prototype.getEventTarget = function() {
+  return this.eventTarget_;
+};
+
+
 
 /**
  * Tracks timing information and send information to Google Analytics.
@@ -193,7 +205,7 @@ analytics.internal.ServiceTracker.Timing =
   /** @private {string} */
   this.category_ = category;
 
-    /** @private {string} */
+  /** @private {string} */
   this.variable_ = variable;
 
   /** @private {string|undefined} */

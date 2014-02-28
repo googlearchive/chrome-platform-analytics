@@ -49,11 +49,10 @@ analytics.testing.TestSettings = function() {
   this.ready_ = new goog.async.Deferred();
 
   /**
-   * Change listening on this class is an implementation details. For that
-   * reason we only currently (and likely ever) support a single listener.
-   * @private {!function(!analytics.internal.Settings.Property)}
+   * Callbacks to trigger when settings change.
+   * @private {!Array.<!function(!analytics.internal.Settings.Property)>}
    */
-  this.changeListener_ = goog.nullFunction;
+  this.changeListeners_ = [];
 };
 
 
@@ -75,8 +74,7 @@ analytics.testing.TestSettings.prototype.whenReady = function() {
 analytics.testing.TestSettings.prototype.addChangeListener =
     function(listener) {
   goog.asserts.assert(this.ready_.hasFired());
-  goog.asserts.assert(this.changeListener_ == goog.nullFunction);
-  this.changeListener_ = listener;
+  this.changeListeners_.push(listener);
 };
 
 
@@ -122,5 +120,8 @@ analytics.testing.TestSettings.prototype.getUserId =
  */
 analytics.testing.TestSettings.prototype.dispatchPropertyChangedEvent_ =
     function(property) {
-  this.changeListener_(property);
+  goog.array.forEach(this.changeListeners_,
+      function(listener) {
+        listener(property);
+      });
 };

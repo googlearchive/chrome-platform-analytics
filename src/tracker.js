@@ -19,10 +19,13 @@
 
 goog.provide('analytics.Timing');
 goog.provide('analytics.Tracker');
+goog.provide('analytics.Tracker.HitEvent');
 
 goog.require('analytics.HitType');
 goog.require('analytics.Parameter');
 goog.require('analytics.Value');
+
+goog.require('goog.events.EventTarget');
 
 
 
@@ -161,6 +164,13 @@ analytics.Tracker.prototype.forceSessionStart;
 analytics.Tracker.prototype.startTiming;
 
 
+/**
+ * @return {?goog.events.EventTarget} An event target that emits events for each
+ * hit that this tracker receives.
+ */
+analytics.Tracker.prototype.getEventTarget;
+
+
 
 /**
  * Provides support for timing operations and sending the results to
@@ -180,3 +190,43 @@ analytics.Tracker.Timing = function() {};
  */
 analytics.Tracker.Timing.prototype.send;
 
+
+
+/**
+ * An event that is sent whenever a hit is recorded.
+ * @constructor
+ * @extends {goog.events.Event}
+ * @param {!analytics.HitType} type
+ * @param {!analytics.internal.ParameterMap} hit
+ */
+analytics.Tracker.HitEvent = function(type, hit) {
+  goog.base(this, analytics.Tracker.HitEvent.EVENT_TYPE);
+
+  /** @private {!analytics.internal.ParameterMap} */
+  this.hit_ = hit;
+
+  /** @private {!analytics.HitType} */
+  this.hitType_ = type;
+};
+goog.inherits(analytics.Tracker.HitEvent, goog.events.Event);
+
+
+/** @return {!analytics.HitType} */
+analytics.Tracker.HitEvent.prototype.getHitType = function() {
+  return this.hitType_;
+};
+
+
+/**
+ * @return {string} A JSON string encoding an object that holds key-value pairs,
+ *     representing the data in the hit.
+ */
+analytics.Tracker.HitEvent.prototype.getHit = function() {
+  return this.hit_.toString();
+};
+
+
+/**
+ * @const {string} The event type for {@code analytics.Tracker.HitEvent}.
+ */
+analytics.Tracker.HitEvent.EVENT_TYPE = goog.events.getUniqueId('HitEvent');
