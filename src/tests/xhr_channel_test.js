@@ -48,7 +48,7 @@ var HIT_0 = new analytics.internal.ParameterMap(
 
 
 /** @const {string} */
-var URL = 'http://poodles.woowoo';
+var EXAMPLE_URL = 'http://poodles.woowoo';
 
 
 /** @const {number} */
@@ -69,7 +69,8 @@ var channel;
 function setUp() {
   replacer = new goog.testing.PropertyReplacer();
   netMonitor = new goog.testing.events.OnlineHandler(true);
-  channel = new analytics.internal.XhrChannel(URL, MAX_POST_LENGTH, netMonitor);
+  channel = new analytics.internal.XhrChannel(
+      EXAMPLE_URL, MAX_POST_LENGTH, netMonitor);
 }
 
 function tearDown() {
@@ -78,7 +79,7 @@ function tearDown() {
 
 function testSendsHit() {
   var sent = send(analytics.HitTypes.EVENT, HIT_0);
-  assertEquals(URL, sent.url);
+  assertEquals(EXAMPLE_URL, sent.url);
   assertEquals('POST', sent.method);
   assertSameElements(['t=event', 'ci=789', 'sr=1024x768'],
       sent.content.split('&'));
