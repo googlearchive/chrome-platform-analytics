@@ -37,8 +37,10 @@ goog.require('goog.testing.jsunit');
  * @param {number|undefined} sampleRate
  * @param {string} clientIdPart A four hex digit string.
  * @param {boolean} expectHitSent
+ * @param {number=} opt_sampleRateOverride
  */
-function assertSampled(sampleRate, clientIdPart, expectHitSent) {
+function assertSampled(
+    sampleRate, clientIdPart, expectHitSent, opt_sampleRateOverride) {
   var settings = new analytics.testing.TestSettings();
   if (goog.isDef(sampleRate)) {
     settings.setSampleRate(sampleRate);
@@ -50,7 +52,15 @@ function assertSampled(sampleRate, clientIdPart, expectHitSent) {
       analytics.internal.Parameters.CLIENT_ID,
       '04D25678-' + clientIdPart + '-4321-y123-04D256789012');
 
-  channel.send(analytics.HitTypes.APPVIEW, params);
+  var hitType = analytics.HitTypes.APPVIEW;
+  if (opt_sampleRateOverride) {
+    hitType = analytics.HitTypes.TIMING;
+    params.set(
+        analytics.internal.Parameters.SAMPLE_RATE_OVERRIDE,
+        opt_sampleRateOverride);
+  }
+
+  channel.send(hitType, params);
   assertEquals('Failed with sample rate ' + sampleRate +
       ' and client id code ' + clientIdPart,
       expectHitSent, delegate.hitWasSent(params));
@@ -117,6 +127,22 @@ function testSend_sampleRate0() {
   assertSampled(0, 'FFFF', false);
 }
 
+function testSend_sampleRateOverride() {
+  assertSampled(5, '0000', true);
+  assertSampled(5, '0000', true, 50);
+  assertSampled(5, '0CCC', true);
+  assertSampled(5, '0CCC', true, 50);
+  // --- cutoff point w/o overrides ---
+  assertSampled(5, '0CCD', false);
+  assertSampled(5, '0CCD', true, 50);
+  assertSampled(5, '7FFF', false);
+  assertSampled(5, '7FFF', true, 50);
+  // --- cutoff point with overrides ---
+  assertSampled(5, '8000', false);
+  assertSampled(5, '8000', false, 50);
+  assertSampled(5, 'FFFF', false);
+  assertSampled(5, 'FFFF', false, 50);
+}
 
 /**
  * Randomly generate 1,000 client ids (using the actual id generator) and

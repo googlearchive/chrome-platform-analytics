@@ -137,6 +137,7 @@ analytics.Tracker.prototype.sendException;
  * @param {string} variable Specifies the variable name of the timing.
  * @param {number} value Specifies the value of the timing.
  * @param {string=} opt_label Specifies the optional label of the timing.
+ * @param {number=} opt_sampleRate
  * @return {!goog.async.Deferred}
  */
 analytics.Tracker.prototype.sendTiming;
@@ -159,6 +160,7 @@ analytics.Tracker.prototype.forceSessionStart;
  * @param {string} category
  * @param {string} variable
  * @param {string=} opt_label
+ * @param {number=} opt_sampleRate
  * @return {!analytics.Tracker.Timing}
  */
 analytics.Tracker.prototype.startTiming;

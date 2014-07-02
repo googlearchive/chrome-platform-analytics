@@ -22,7 +22,10 @@
 
 goog.provide('analytics.internal.UserSamplingChannel');
 
+goog.require('analytics.HitType');
+goog.require('analytics.HitTypes');
 goog.require('analytics.Results');
+goog.require('analytics.Value');
 goog.require('analytics.internal.Channel');
 goog.require('analytics.internal.Parameters');
 goog.require('analytics.internal.Settings');
@@ -62,9 +65,37 @@ analytics.internal.UserSamplingChannel.prototype.send =
   // sample rate we test against is scaled up to be proportionate with this
   // range.
   var idPart = parseInt(clientId.split('-')[1], 16);
-  var base16SampleRate = (this.settings_.getSampleRate() *
+  var base16SampleRate = (this.getSampleRate_(hitType, parameters) *
       analytics.internal.UserSamplingChannel.SAMPLE_RATE_SCALE_);
   return idPart < base16SampleRate ?
       this.delegate_.send(hitType, parameters) :
       goog.async.Deferred.succeed(analytics.Results.SAMPLED_OUT);
+};
+
+/**
+ * Return the sample rate for the channel. The default value is part of the
+ * tracker's state, but may be overridden in the parameters map. If an override
+ * is found in the parameters map, it is removed so that it won't be passed to
+ * GA erroneously.
+ *
+ * Note that the override functionality is currently only supported for TIMING
+ * hits. For other hit types, the default value from the tracker's settings is
+ * returned.
+ *
+ * @param {!analytics.HitType} hitType The hit type.
+ * @param {!analytics.internal.ParameterMap} parameters The parameters to send.
+ * @return {analytics.Value}
+ * @private
+ */
+analytics.internal.UserSamplingChannel.prototype.getSampleRate_ =
+    function(hitType, parameters) {
+  if (hitType != analytics.HitTypes.TIMING) {
+    return this.settings_.getSampleRate();
+  }
+  var sampleRateOverride =
+      parameters.get(analytics.internal.Parameters.SAMPLE_RATE_OVERRIDE);
+  if (sampleRateOverride) {
+    parameters.remove(analytics.internal.Parameters.SAMPLE_RATE_OVERRIDE);
+  }
+  return sampleRateOverride || this.settings_.getSampleRate();
 };

@@ -80,6 +80,14 @@ analytics.internal.Parameters = {
     maxLength: undefined,
     defaultValue: undefined
   },
+  /* User sample rate override */
+  SAMPLE_RATE_OVERRIDE: {
+    id: 'sampleRateOverride',
+    name: 'usro',
+    valueType: analytics.ValueTypes.INTEGER,
+    maxLength: undefined,
+    defaultValue: undefined
+  },
   /* Screen Colors */
   SCREEN_COLORS: {
     id: 'screenColors',

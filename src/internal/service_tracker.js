@@ -150,13 +150,14 @@ analytics.internal.ServiceTracker.prototype.sendException =
 
 /** @override */
 analytics.internal.ServiceTracker.prototype.sendTiming =
-    function(category, variable, value, opt_label) {
+    function(category, variable, value, opt_label, opt_sampleRate) {
   return this.send(
       analytics.HitTypes.TIMING, {
         'timingCategory': category,
         'timingVar': variable,
         'timingLabel': opt_label,
-        'timingValue': value
+        'timingValue': value,
+        'sampleRateOverride': opt_sampleRate
       });
 
 };
@@ -171,9 +172,9 @@ analytics.internal.ServiceTracker.prototype.forceSessionStart =
 
 /** @override */
 analytics.internal.ServiceTracker.prototype.startTiming =
-    function(category, variable, opt_label) {
+    function(category, variable, opt_label, opt_sampleRate) {
   return new analytics.internal.ServiceTracker.Timing(
-      this, category, variable, opt_label);
+      this, category, variable, opt_label, opt_sampleRate);
 };
 
 
@@ -194,9 +195,10 @@ analytics.internal.ServiceTracker.prototype.getEventTarget = function() {
  * @param {string} category
  * @param {string} variable
  * @param {string=} opt_label
+ * @param {number=} opt_sampleRate
  */
 analytics.internal.ServiceTracker.Timing =
-    function(tracker, category, variable, opt_label) {
+    function(tracker, category, variable, opt_label, opt_sampleRate) {
 
   /** @private {?analytics.Tracker} */
   this.tracker_ = tracker;
@@ -210,6 +212,9 @@ analytics.internal.ServiceTracker.Timing =
   /** @private {string|undefined} */
   this.label_ = opt_label;
 
+  /** @private {number|undefined} */
+  this.sampleRate_ = opt_sampleRate;
+
   /** @private {number} */
   this.startTime_ = goog.now();
 };
@@ -221,7 +226,8 @@ analytics.internal.ServiceTracker.Timing.prototype.send = function() {
       this.category_,
       this.variable_,
       goog.now() - this.startTime_,
-      this.label_);
+      this.label_,
+      this.sampleRate_);
 
   // The timing instance can only be used once.
   this.tracker_ = null;
