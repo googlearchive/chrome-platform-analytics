@@ -115,7 +115,7 @@ function setUp() {
 }
 
 
-/** @suppress {checkTypes} */
+/** @suppress {const|checkTypes} */
 function setUpChromeEnv() {
   chrome.runtime = {};
   replacer.set(chrome.runtime, 'getManifest',
