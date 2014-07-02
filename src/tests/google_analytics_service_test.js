@@ -18,6 +18,8 @@
  * @author kenobi@google.com (Ben Kwa)
  */
 
+goog.setTestOnly();
+
 goog.require('analytics.GoogleAnalytics');
 goog.require('analytics.HitTypes');
 goog.require('analytics.Tracker');

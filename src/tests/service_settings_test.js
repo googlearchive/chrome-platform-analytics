@@ -19,6 +19,8 @@
  * @author tbreisacher@google.com (Tyler Breisacher)
  */
 
+goog.setTestOnly();
+
 goog.require('analytics.internal.ServiceSettings');
 goog.require('analytics.internal.Settings.Properties');
 goog.require('analytics.testing.SingleArgRecorder');

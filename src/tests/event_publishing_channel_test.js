@@ -19,6 +19,8 @@
  * @author kenobi@google.com (Ben Kwa)
  */
 
+goog.setTestOnly();
+
 goog.require('analytics.HitTypes');
 goog.require('analytics.Parameters');
 goog.require('analytics.internal.EventPublishingChannel');

@@ -19,6 +19,8 @@
  * @author tbreisacher@google.com (Tyler Breisacher)
  */
 
+goog.setTestOnly();
+
 goog.require('analytics.HitType');
 goog.require('analytics.Parameter');
 goog.require('analytics.Parameters');

@@ -19,6 +19,8 @@
  * @author tbreisacher@google.com (Tyler Breisacher)
  */
 
+goog.setTestOnly();
+
 goog.require('analytics.internal.TokenBucket');
 
 goog.require('goog.testing.jsunit');
