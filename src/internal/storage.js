@@ -23,6 +23,7 @@
 goog.provide('analytics.internal.AsyncStorage');
 
 goog.require('goog.async.Deferred');
+goog.require('goog.events');
 
 
 
@@ -30,6 +31,7 @@ goog.require('goog.async.Deferred');
  * Interface for asynchronous persistent storage.
  * TODO(tbreisacher): Move this to Closure?
  * @interface
+ * @extends {goog.events.Listenable}
  */
 analytics.internal.AsyncStorage = function() {};
 
@@ -48,3 +50,12 @@ analytics.internal.AsyncStorage.prototype.get;
  * @return {!goog.async.Deferred} A deferred firing when the value is set.
  */
 analytics.internal.AsyncStorage.prototype.set;
+
+
+/**
+ * Event supported by AsyncStorage instances.
+ * @enum {string}
+ */
+analytics.internal.AsyncStorage.Event = {
+  STORAGE_CHANGED: goog.events.getUniqueId('storage-changed')
+};

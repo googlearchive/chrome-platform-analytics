@@ -62,7 +62,8 @@ analytics.Config.prototype.isTrackingPermitted;
 /**
  * Sets the user sample rate. This can be used if you need to reduce the
  * number of users reporting analytics information to Google Analytics.
- * Most clients will not need to set this.
+ * Most clients will not need to set this. Value is NOT persisted
+ * across sessions.
  *
  * @param {number} sampleRate User sample rate. An integer from 1 to 100.
  *     If not set defaults to 100.

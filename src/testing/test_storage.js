@@ -23,19 +23,29 @@ goog.provide('analytics.testing.TestStorage');
 
 goog.require('analytics.internal.AsyncStorage');
 
+goog.require('goog.Timer');
+goog.require('goog.events.EventTarget');
 goog.require('goog.structs.Map');
 
 
 
 /**
  * In memory "storage" class.
+ *
  * @constructor
  * @implements {analytics.internal.AsyncStorage}
- * @struct
+ * @extends {goog.events.EventTarget}
+ * @struct @suppress {checkStructDictInheritance}
  */
 analytics.testing.TestStorage = function() {
+  goog.base(this);
+
+  /** @private {!goog.structs.Map} */
   this.storage_ = new goog.structs.Map();
 };
+goog.inherits(
+    analytics.testing.TestStorage,
+    goog.events.EventTarget);
 
 
 /** @override */
@@ -47,5 +57,16 @@ analytics.testing.TestStorage.prototype.get = function(key) {
 /** @override */
 analytics.testing.TestStorage.prototype.set = function(key, value) {
   this.storage_.set(key, value);
+  // chrome.storage.local fires the change event BEFORE it returns
+  // from a write operation. So we do the same here.
+  this.fireStorageChangedEvent();
   return goog.async.Deferred.succeed();
+};
+
+
+/**
+ * Dispatches the STORAGE_CHANGED event on {@code this} event target.
+ */
+analytics.testing.TestStorage.prototype.fireStorageChangedEvent = function() {
+  this.dispatchEvent(analytics.internal.AsyncStorage.Event.STORAGE_CHANGED);
 };

@@ -23,6 +23,7 @@ goog.setTestOnly();
 
 goog.require('analytics.HitTypes');
 goog.require('analytics.Parameters');
+goog.require('analytics.internal.DummyChannel');
 goog.require('analytics.internal.EventPublishingChannel');
 goog.require('analytics.internal.ParameterMap');
 goog.require('analytics.internal.Parameters');

@@ -32,18 +32,16 @@ goog.require('goog.object');
  * @extends {StorageArea}
  */
 analytics.testing.TestChromeStorageArea = function() {
-
   /**
    * An object used to store key/value pairs in memory.
-   * @type {!Object}
-   * @private
+   * @private {!Object}
    */
   this.storage_ = {};
 
   /**
    * Event listener for settings change events.
-   * @type {?function(Object.<string, {oldValue, newValue}>)}
-   * @private
+   *
+   * @private {?function(Object.<string, {oldValue, newValue}>, string)}
    */
   this.listenCallback_ = null;
 };
@@ -58,12 +56,12 @@ analytics.testing.TestChromeStorageArea.prototype.set = function(keys,
   }, this);
   goog.object.extend(this.storage_, keys);
 
-  if (opt_callback) {
-    opt_callback();
+  if (this.listenCallback_) {
+    this.listenCallback_(diff, 'local');
   }
 
-  if (this.listenCallback_) {
-    this.listenCallback_(diff);
+  if (opt_callback) {
+    opt_callback();
   }
 };
 

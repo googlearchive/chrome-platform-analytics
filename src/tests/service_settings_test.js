@@ -26,10 +26,16 @@ goog.require('analytics.internal.Settings.Properties');
 goog.require('analytics.testing.SingleArgRecorder');
 goog.require('analytics.testing.TestStorage');
 
+goog.require('goog.testing.AsyncTestCase');
 goog.require('goog.testing.jsunit');
 
 
-/** @type {!analytics.internal.AsyncStorage} */
+/** @type {!goog.testing.AsyncTestCase} */
+var asyncTestCase = goog.testing.AsyncTestCase.createAndInstall(
+    'ServiceSettings');
+
+
+/** @type {!analytics.testing.TestStorage} */
 var storage;
 
 
@@ -76,6 +82,7 @@ function testNotifiesListener_WhenTrackingPermittedPropertyChanges() {
   var recorder = new analytics.testing.SingleArgRecorder();
   settings = new analytics.internal.ServiceSettings(storage);
   settings.addChangeListener(recorder.get());
+  recorder.assertTimesCalled(0);
   settings.setTrackingPermitted(false);
   recorder.assertRecorded(
       analytics.internal.Settings.Properties.TRACKING_PERMITTED);
@@ -91,6 +98,20 @@ function testTrackingNotPermittedIfPluginInstalled() {
   assertFalse(settings.isTrackingPermitted());
 
   delete goog.global._gaUserPrefs;
+}
+
+function testTrackingPermitting_UpdatedWhenUnderlyingStorageChanges() {
+  asyncTestCase.waitForAsync();
+
+  settings = new analytics.internal.ServiceSettings(storage);
+  settings.addChangeListener(
+      function() {
+        assertFalse(settings.isTrackingPermitted());
+        asyncTestCase.continueTesting();
+      });
+
+  var naughtySettings = new analytics.internal.ServiceSettings(storage);
+  naughtySettings.setTrackingPermitted(false);
 }
 
 function testPersistsTrackingPermittingValue() {

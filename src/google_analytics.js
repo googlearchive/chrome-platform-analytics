@@ -101,7 +101,6 @@ analytics.getService = function(appName) {
 analytics.createSettings_ = function() {
   /** @type {!analytics.internal.AsyncStorage} */
   var storage = new analytics.internal.ChromeStorage(
-      chrome.storage.local,
       analytics.STORAGE_NAMESPACE_);
 
   return new analytics.internal.ServiceSettings(storage);

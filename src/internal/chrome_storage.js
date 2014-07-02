@@ -25,31 +25,81 @@ goog.provide('analytics.internal.ChromeStorage');
 goog.require('analytics.internal.AsyncStorage');
 
 goog.require('goog.async.Deferred');
+goog.require('goog.events.EventTarget');
+goog.require('goog.object');
+goog.require('goog.string');
 
 
 
 /**
- * A thin wrapper around chrome.storage.{sync|local} which produces Deferreds
- * instead of taking callbacks. Inspired by
- * //photos/chromeapp/src/data/storage_area_utilities.js
- * The storage is shared between all the code (in the same app) that requests
- * it, so using an optional namespace is recommended. This provides separation
- * and makes key collisions unlikely.
- * @param {!StorageArea} storage The storage: chrome.storage.{sync|local}.
- * @param {string=} opt_namespace Namespace to prevent key collisions.
+ * A thin wrapper around chrome.storage.local which produces Deferreds
+ * instead of taking callbacks. The storage is shared between all the
+ * code (in the same app) that requests it necessitating a namespace.
+ *
  * @constructor
  * @implements {analytics.internal.AsyncStorage}
- * @struct
+ * @extends {goog.events.EventTarget}
+ * @struct @suppress {checkStructDictInheritance}
+ *
+ * @param {string} namespace Namespace to prevent key collisions.
  */
-analytics.internal.ChromeStorage = function(storage, opt_namespace) {
-  if (!goog.isObject(storage)) {
-    throw new Error("'storage' argument must be defined and not null.");
-  }
+analytics.internal.ChromeStorage = function(namespace) {
+  goog.base(this);
+
+  /** @private {string} */
+  this.namespace_ = namespace;
 
   /** @private {!StorageArea} */
-  this.storage_ = storage;
+  this.storage_ = chrome.storage.local;
 
-  this.namespace_ = opt_namespace || '';
+  // Get notified when our underlying storage changes.
+  chrome.storage.onChanged.addListener(
+      goog.bind(this.onStorageChanged_, this));
+};
+goog.inherits(
+    analytics.internal.ChromeStorage,
+    goog.events.EventTarget);
+
+
+/**
+ * Notifies listeners when underlying storage changes.
+ *
+ * @see https://developer.chrome.com/extensions/storage#type-StorageArea
+ *
+ * @param {!Object} changes
+ * @param {string} areaName "sync", "local" or "managed"
+ * @private
+ */
+analytics.internal.ChromeStorage.prototype.onStorageChanged_ =
+    function(changes, areaName) {
+  goog.asserts.assert(areaName == 'local');
+  if (this.hasChangesInNamespace_(changes)) {
+    this.dispatchEvent(analytics.internal.AsyncStorage.Event.STORAGE_CHANGED);
+  }
+};
+
+
+/**
+ * Returns true if any of the given changes is in our namespace.
+ * Namespaces, mind you, aren't protected, so take this answer
+ * with a grain of salt.
+ *
+ * @param {!Object} changes
+ * @return {boolean}
+ * @private
+ */
+analytics.internal.ChromeStorage.prototype.hasChangesInNamespace_ =
+    function(changes) {
+  return goog.array.some(
+      goog.object.getKeys(changes),
+      /**
+       * @param {string} key
+       * @this {analytics.internal.ChromeStorage}
+       */
+      function(key) {
+        return goog.string.startsWith(key, this.namespace_);
+      },
+      this);
 };
 
 

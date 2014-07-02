@@ -30,6 +30,8 @@ goog.require('analytics.internal.Settings.Properties');
 
 goog.require('goog.asserts');
 goog.require('goog.async.Deferred');
+goog.require('goog.async.DeferredList');
+goog.require('goog.events');
 
 
 
@@ -52,16 +54,26 @@ analytics.internal.ServiceSettings = function(storage) {
    */
   this.changeListeners_ = [];
 
-  /** @private {!goog.async.Deferred} */
-  this.ready_ = new goog.async.Deferred();
-
   /** @private {?string} */
   this.userId_ = null;
 
   /** @private {?boolean} */
   this.permitted_ = null;
 
-  this.init_();
+  /** @private {!goog.async.Deferred} */
+  this.ready_ = this.init_();
+
+  // Finally, once we're initialized, add a change listener
+  // on the underlying storage in case a settings instance
+  // in another script context changes the settings.
+  this.ready_.addCallback(
+      function() {
+        goog.events.listen(
+            this.storage_,
+            analytics.internal.AsyncStorage.Event.STORAGE_CHANGED,
+            goog.bind(this.handleStorageChanged_, this));
+      },
+      this);
 };
 
 
@@ -80,43 +92,38 @@ analytics.internal.ServiceSettings.OPTOUT_FUNCTION_ = 'ioo';
 
 
 /**
- * Initializes this.userId_ and this.permitted_ from storage, and fires
- * this.ready_ when they're both initialized.
+ * Initializes this.userId_ and this.permitted_ from storage, firing the
+ * this.ready_ deferred when both are done loading.
+ *
+ * @return {!goog.async.Deferred.<!analytics.Config>}
+ *     Fires when settings is fully initialized.
  * @private
  */
 analytics.internal.ServiceSettings.prototype.init_ = function() {
-  var d = this.storage_.get(
-      analytics.internal.Settings.Properties.TRACKING_PERMITTED);
-  d.addCallbacks(
-      function(value) {
-        // Tracking is permitted by default.
-        this.permitted_ = goog.isDef(value) ? value : true;
-        this.fireIfReady_();
+  return this.loadSettings_().addCallback(
+      /**
+       * @return {!analytics.Config}
+       * @this {analytics.internal.ServiceSettings}
+       */
+      function() {
+        return this;
       },
-      this.handleStorageError_,
-      this);
-  this.loadUserId_().addCallbacks(
-      this.fireIfReady_,
-      this.handleStorageError_,
       this);
 };
 
 
 /**
- * @param {*} error
+ * Initializes this.userId_ and this.permitted_ from storage, then
+ * fires a deferred.
+ *
+ * @return {!goog.async.Deferred} Fires when settings is fully initialized.
  * @private
  */
-analytics.internal.ServiceSettings.prototype.handleStorageError_ =
-    function(error) {
-  this.ready_.errback(error);
-};
-
-
-/** @private */
-analytics.internal.ServiceSettings.prototype.fireIfReady_ = function() {
-  if (!goog.isNull(this.permitted_) && !goog.isNull(this.userId_)) {
-    this.ready_.callback(this);
-  }
+analytics.internal.ServiceSettings.prototype.loadSettings_ = function() {
+  return goog.async.DeferredList.gatherResults([
+    this.loadTrackingPermitted_(),
+    this.loadUserId_()
+  ]);
 };
 
 
@@ -126,10 +133,38 @@ analytics.internal.ServiceSettings.prototype.whenReady = function() {
 };
 
 
+/**
+ * Called when the chrome.storage area changes underneath us. This
+ * could happen if there are multiple script contexts (multiple
+ * pages) with separate settings instances. We want to honor
+ * changes in settings from other scripts that are part of the
+ * same app.
+ *
+ * @private
+ */
+analytics.internal.ServiceSettings.prototype.handleStorageChanged_ =
+    function() {
+  var userId = this.getUserId();
+  var trackingPermitted = this.isTrackingPermitted();
+  this.loadSettings_().addCallback(
+      function() {
+        if (userId != this.getUserId()) {
+          throw new Error('User ID changed unexpectedly!');
+        }
+        if (trackingPermitted != this.isTrackingPermitted()) {
+          this.firePropertyChangedEvent_(
+              analytics.internal.Settings.Properties.TRACKING_PERMITTED);
+        }
+      },
+      this);
+};
+
+
 /** @override */
 analytics.internal.ServiceSettings.prototype.addChangeListener =
     function(listener) {
   goog.asserts.assert(this.ready_.hasFired());
+
   this.changeListeners_.push(listener);
 };
 
@@ -138,20 +173,14 @@ analytics.internal.ServiceSettings.prototype.addChangeListener =
 analytics.internal.ServiceSettings.prototype.setTrackingPermitted =
     function(permitted) {
   goog.asserts.assert(this.ready_.hasFired());
-  var d = this.storage_.set(
+
+  this.storage_.set(
       analytics.internal.Settings.Properties.TRACKING_PERMITTED,
-      permitted);
-  d.addBoth(function() {
-    this.permitted_ = permitted;
-    goog.array.forEach(this.changeListeners_,
-        /**
-         * @param {!function(!analytics.internal.Settings.Property)} listener
-         */
-        function(listener) {
-          listener(
-              analytics.internal.Settings.Properties.TRACKING_PERMITTED);
-        });
-  }, this);
+      permitted).addCallback(
+      function() {
+        this.permitted_ = permitted;
+      },
+      this);
 };
 
 
@@ -163,18 +192,36 @@ analytics.internal.ServiceSettings.prototype.isTrackingPermitted =
 };
 
 
-/** @override */
-analytics.internal.ServiceSettings.prototype.setSampleRate =
-    function(sampleRate) {
-  goog.asserts.assert(this.ready_.hasFired());
-  this.sampleRate_ = sampleRate;
+/**
+ * Loads the tracking permitted setting.
+ * @return {!goog.async.Deferred} A deferred firing when the setting is loaded.
+ * @private
+ */
+analytics.internal.ServiceSettings.prototype.loadTrackingPermitted_ =
+    function() {
+  return this.storage_.get(
+      analytics.internal.Settings.Properties.TRACKING_PERMITTED).addCallback(
+      function(value) {
+        // Tracking is permitted by default.
+        this.permitted_ = goog.isDef(value) ? value : true;
+      },
+      this);
 };
 
 
-/** @override */
-analytics.internal.ServiceSettings.prototype.getSampleRate = function() {
-  goog.asserts.assert(this.ready_.hasFired());
-  return this.sampleRate_;
+/**
+ * Check whether the user is opted out via the plugin which adds a function to
+ * the global scope. This only works on web pages (i.e. not in a Chrome app). We
+ * do not intend this code to be used outside of Chrome apps, but this check is
+ * included, just in case someone decides to do that.
+ * @return {boolean} True if the user should be considered to have opted out
+ *     because they installed the GA opt-out plugin.
+ * @private
+ */
+analytics.internal.ServiceSettings.prototype.isOptOutViaPlugin_ = function() {
+  var optoutFunction = analytics.internal.ServiceSettings.OPTOUT_FUNCTION_;
+  var prefs = goog.global[analytics.internal.ServiceSettings.USER_PREFS_];
+  return prefs && prefs[optoutFunction] && prefs[optoutFunction]();
 };
 
 
@@ -193,9 +240,8 @@ analytics.internal.ServiceSettings.prototype.getUserId = function() {
  * @private
  */
 analytics.internal.ServiceSettings.prototype.loadUserId_ = function() {
-  var d = new goog.async.Deferred();
-  this.storage_.get(analytics.internal.Settings.Properties.USER_ID).
-      addCallbacks(
+  return this.storage_.get(analytics.internal.Settings.Properties.USER_ID).
+      addCallback(
           function(id) {
             if (!id) {
               id = analytics.internal.Identifier.generateUuid();
@@ -203,27 +249,39 @@ analytics.internal.ServiceSettings.prototype.loadUserId_ = function() {
                   analytics.internal.Settings.Properties.USER_ID, id);
             }
             this.userId_ = id;
-            d.callback();
-          },
-          function(error) {
-            d.errback(error);
           },
           this);
-  return d;
+};
+
+
+/** @override */
+analytics.internal.ServiceSettings.prototype.setSampleRate =
+    function(sampleRate) {
+  goog.asserts.assert(this.ready_.hasFired());
+  this.sampleRate_ = sampleRate;
+};
+
+
+/** @override */
+analytics.internal.ServiceSettings.prototype.getSampleRate = function() {
+  goog.asserts.assert(this.ready_.hasFired());
+  return this.sampleRate_;
 };
 
 
 /**
- * Check whether the user is opted out via the plugin which adds a function to
- * the global scope. This only works on web pages (i.e. not in a Chrome app). We
- * do not intend this code to be used outside of Chrome apps, but this check is
- * included, just in case someone decides to do that.
- * @return {boolean} True if the user should be considered to have opted out
- *     because they installed the GA opt-out plugin.
+ * Fires the property changed event for the supplied property.
+ *
+ * @param {!analytics.internal.Settings.Property} property
  * @private
  */
-analytics.internal.ServiceSettings.prototype.isOptOutViaPlugin_ = function() {
-  var optoutFunction = analytics.internal.ServiceSettings.OPTOUT_FUNCTION_;
-  var prefs = goog.global[analytics.internal.ServiceSettings.USER_PREFS_];
-  return prefs && prefs[optoutFunction] && prefs[optoutFunction]();
+analytics.internal.ServiceSettings.prototype.firePropertyChangedEvent_ =
+    function(property) {
+  goog.array.forEach(
+      this.changeListeners_,
+      /** @param {function(!analytics.internal.Settings.Property)} listener */
+      function(listener) {
+        listener(
+            analytics.internal.Settings.Properties.TRACKING_PERMITTED);
+      });
 };

@@ -71,7 +71,7 @@ var replacer;
 
 
 /** @type {!analytics.testing.TestChromeStorageArea} */
-var storage;
+var chromeStorage;
 
 
 /** @type {!analytics.GoogleAnalytics} */
@@ -88,7 +88,7 @@ var sent;
 
 function setUp() {
   analytics.resetForTesting();
-  storage = new analytics.testing.TestChromeStorageArea();
+  chromeStorage = new analytics.testing.TestChromeStorageArea();
 
   replacer = new goog.testing.PropertyReplacer();
   setUpChromeEnv();
@@ -117,13 +117,21 @@ function setUp() {
 
 /** @suppress {checkTypes} */
 function setUpChromeEnv() {
-  // define global chrome objects
   chrome.runtime = {};
-  chrome.storage = {};
-  replacer.set(chrome.storage, 'local', storage);
   replacer.set(chrome.runtime, 'getManifest',
       function() {
         return CHROME_MANIFEST;
+      });
+
+  chrome.storage = {};
+  replacer.set(chrome.storage, 'local', chromeStorage);
+
+  chrome.storage.onChanged = {};
+  replacer.set(
+      chrome.storage.onChanged,
+      'addListener',
+      function(listener) {
+        chromeStorage.addListener(listener);
       });
 }
 
@@ -148,7 +156,7 @@ function testGetConfig() {
       });
 }
 
-function testOptOut_HitsNotSent() {
+function testOptOut_SubsequentHitsNotSent() {
   // Test code is currently fully synchronous so this call must be made
   // before our call to continueTesting.
   asyncTestCase.waitForAsync();
@@ -172,7 +180,7 @@ function testOptOut_HitsNotSent() {
  * Tests that HitEvents are not dispatched for hits that are sent when the
  * Google Analytics service is disabled.
  */
-function testOptOut_EventsNotSent() {
+function testOptOut_SubsequentEventsNotSent() {
 
   // Test code is currently fully synchronous so this call must be made
   // before our call to continueTesting.
@@ -196,12 +204,16 @@ function testOptOut_EventsNotSent() {
   service.getConfig().addCallback(
       /** @param {!analytics.Config} config */
       function(config) {
-        config.setTrackingPermitted(false);
-        tracker.sendAppView('foo');
+        config.addChangeListener(
+            function() {
+              tracker.sendAppView('foo');
 
-        // Make sure we didn't send another event.
-        assertEquals(1, hitEventCount);
-        asyncTestCase.continueTesting();
+              // Make sure we didn't send another event.
+              assertEquals(1, hitEventCount);
+              asyncTestCase.continueTesting();
+            });
+
+        config.setTrackingPermitted(false);
       });
 }
 
