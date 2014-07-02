@@ -46,9 +46,9 @@ goog.require('goog.structs.Map');
 /**
  * The current version of this library. Should be increased whenever we make a
  * major change to the library.
- * @private {string}
+ * @const {string}
  */
-analytics.LIBRARY_VERSION_ = 'ca3';
+analytics.LIBRARY_VERSION = 'ca3';
 
 
 /** @private {string} */
@@ -116,7 +116,7 @@ analytics.createSettings_ = function() {
 analytics.createService_ = function(appName) {
   var appVersion = analytics.getAppVersion_();
   return new analytics.internal.GoogleAnalyticsService(
-      analytics.LIBRARY_VERSION_,
+      analytics.LIBRARY_VERSION,
       appName,
       appVersion,
       analytics.createSettings_());

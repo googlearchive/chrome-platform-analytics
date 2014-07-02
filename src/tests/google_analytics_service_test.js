@@ -177,7 +177,7 @@ function initSettings(ready, trackingEnabled) {
 
 function initService() {
   service = new analytics.internal.GoogleAnalyticsService(
-      analytics.LIBRARY_VERSION_,
+      analytics.LIBRARY_VERSION,
       APP_NAME,
       APP_VERSION,
       settings);
