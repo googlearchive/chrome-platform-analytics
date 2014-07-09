@@ -226,6 +226,14 @@ analytics.Parameters = {
     maxLength: undefined,
     defaultValue: undefined
   },
+  /* User ID */
+  USER_ID: {
+    id: 'userId',
+    name: 'uid',
+    valueType: analytics.ValueTypes.TEXT,
+    maxLength: undefined,
+    defaultValue: undefined
+  },
   /* Non-Interaction Hit */
   NON_INTERACTION: {
     id: 'nonInteraction',
