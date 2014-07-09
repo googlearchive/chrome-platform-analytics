@@ -34,21 +34,6 @@ goog.require('goog.structs.Map');
 goog.require('goog.testing.jsunit');
 
 
-/** @const {string} */var LIB_VERSION = 'ca3';
-
-
-/** @const {string} */
-var APP_NAME = 'TestApp';
-
-
-/** @const {string} */
-var APP_VERSION = 'egpcciddnadbknkjpmdoaiqnbcoeplja';
-
-
-/** @const {string} */
-var TRACKING_ID = 'UA-12344-56779';
-
-
 /** @const {!analytics.internal.ParameterMap} */
 var HIT_0 = new analytics.internal.ParameterMap(
     analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768',
