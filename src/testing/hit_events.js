@@ -21,6 +21,7 @@
 goog.provide('analytics.testing.HitEvents');
 
 goog.require('analytics.ParameterMap');
+goog.require('analytics.Tracker.Hit');
 goog.require('analytics.Tracker.HitEvent');
 
 
@@ -30,7 +31,9 @@ goog.require('analytics.Tracker.HitEvent');
  * @return {!analytics.Tracker.HitEvent}
  */
 analytics.testing.HitEvents.createHitEvent = function(description) {
-  var hit = new analytics.ParameterMap(
-      analytics.Parameters.DESCRIPTION, description);
-  return new analytics.Tracker.HitEvent(analytics.HitTypes.APPVIEW, hit);
+  var hit = new analytics.Tracker.Hit(
+      analytics.HitTypes.APPVIEW,
+      new analytics.ParameterMap(
+          analytics.Parameters.DESCRIPTION, description));
+  return new analytics.Tracker.HitEvent(hit);
 };

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @fileoverview Tests for analytics.GoogleAnalytics.
+ * @fileoverview Integration tests for analytics.GoogleAnalytics.
  *
  * @author smckay@google.com (Steve McKay)
  * @author tbreisacher@google.com (Tyler Breisacher)
@@ -28,9 +28,11 @@ goog.require('analytics.resetForTesting');
 goog.require('analytics.testing.TestChromeStorageArea');
 
 goog.require('goog.array');
+goog.require('goog.events');
 goog.require('goog.testing.AsyncTestCase');
 goog.require('goog.testing.PropertyReplacer');
 goog.require('goog.testing.jsunit');
+goog.require('goog.testing.recordFunction');
 
 
 /** @type {!goog.testing.AsyncTestCase} */
@@ -85,8 +87,11 @@ var tracker;
 /** @type {!Object} */
 var sent;
 
+var recorder;
+
 
 function setUp() {
+  recorder = goog.testing.recordFunction();
   analytics.resetForTesting();
   chromeStorage = new analytics.testing.TestChromeStorageArea();
 
@@ -105,12 +110,6 @@ function setUp() {
           content: content
         };
         callback();
-      });
-
-  asyncTestCase.waitForAsync();
-  service.getConfig().addCallback(
-      function(config) {
-        asyncTestCase.continueTesting();
       });
 }
 
@@ -217,35 +216,103 @@ function testOptOut_SubsequentEventsNotSent() {
       });
 }
 
-function testSend_DeferredFires() {
+function testSend_DeferredFires_TrackingEnabled() {
   var succeeded = false;
   asyncTestCase.waitForAsync();
-  tracker.sendEvent(
-      EVENT_HIT.eventCategory,
-      EVENT_HIT.eventAction,
-      EVENT_HIT.eventLabel,
-      EVENT_HIT.eventValue).addCallbacks(
-      function() {
-        succeeded = true;
-        asyncTestCase.continueTesting();
-      },
-      function() {
-        fail('Received error trying to send event.');
+  service.getConfig().addCallback(
+      function(config) {
+        config.setTrackingPermitted(true);
+        tracker.sendEvent(
+            EVENT_HIT.eventCategory,
+            EVENT_HIT.eventAction,
+            EVENT_HIT.eventLabel,
+            EVENT_HIT.eventValue).addCallbacks(
+            function() {
+              succeeded = true;
+              asyncTestCase.continueTesting();
+            },
+            function() {
+              fail('Received error trying to send event.');
+            });
+      });
+  assertTrue(succeeded);
+}
+
+function testSend_DeferredFires_TrackingDisabled() {
+  var succeeded = false;
+  asyncTestCase.waitForAsync();
+  service.getConfig().addCallback(
+      function(config) {
+        config.setTrackingPermitted(false);
+        tracker.sendEvent(
+            EVENT_HIT.eventCategory,
+            EVENT_HIT.eventAction,
+            EVENT_HIT.eventLabel,
+            EVENT_HIT.eventValue).addCallbacks(
+            function() {
+              succeeded = true;
+              asyncTestCase.continueTesting();
+            },
+            function() {
+              fail('Received error trying to send event.');
+            });
       });
   assertTrue(succeeded);
 }
 
 function testSend_DeliversPayload() {
-  tracker.sendEvent(
-      EVENT_HIT.eventCategory,
-      EVENT_HIT.eventAction,
-      EVENT_HIT.eventLabel,
-      EVENT_HIT.eventValue);
-  var entries = sent.content.split('&');
-  assertTrue(entries.length > 0);
-  assertTrue(sent.content, goog.array.contains(entries, 'ec=IceCream'));
-  assertTrue(sent.content, goog.array.contains(entries, 'ea=Melt'));
-  assertTrue(sent.content, goog.array.contains(entries, 'el=Strawberry'));
-  assertTrue(sent.content, goog.array.contains(entries, 'ev=100'));
-  assertTrue(sent.content, goog.array.contains(entries, '_v=ca1.4.0'));
+  asyncTestCase.waitForAsync();
+  service.getConfig().addCallback(
+      function(config) {
+        config.setTrackingPermitted(true);
+        tracker.sendEvent(
+            EVENT_HIT.eventCategory,
+            EVENT_HIT.eventAction,
+            EVENT_HIT.eventLabel,
+            EVENT_HIT.eventValue);
+        var entries = sent.content.split('&');
+        assertTrue(entries.length > 0);
+        assertTrue(sent.content, goog.array.contains(entries, 'ec=IceCream'));
+        assertTrue(sent.content, goog.array.contains(entries, 'ea=Melt'));
+        assertTrue(sent.content, goog.array.contains(entries, 'el=Strawberry'));
+        assertTrue(sent.content, goog.array.contains(entries, 'ev=100'));
+        assertTrue(sent.content, goog.array.contains(entries, '_v=ca1.4.0'));
+        asyncTestCase.continueTesting();
+      });
+}
+
+// The EventTarget business is deprecated, and the
+// EventPublishingChannel has been deleted. The
+// deprecated support is implemented using a filter
+// (installed by service tracker). Since the test
+// for EventPublishingChannel went away along with the
+// channel. We have a little coverage here until the
+// support is removed.
+function testDeprecatedEventPublishing() {
+  asyncTestCase.waitForAsync();
+  service.getConfig().addCallback(
+      function(config) {
+        config.setTrackingPermitted(true);
+
+        goog.events.listen(
+            tracker.getEventTarget(),
+            analytics.Tracker.HitEvent.EVENT_TYPE,
+            recorder);
+
+        tracker.sendEvent(
+            EVENT_HIT.eventCategory,
+            EVENT_HIT.eventAction,
+            EVENT_HIT.eventLabel,
+            EVENT_HIT.eventValue);
+
+        recorder.assertCallCount(1);
+        var event = recorder.getLastCall().getArgument(0);
+        var params = event.getHit();
+        assertEquals(analytics.HitTypes.EVENT, event.getHitType());
+        assertEquals(EVENT_HIT.eventCategory, params['eventCategory']);
+        assertEquals(EVENT_HIT.eventAction, params['eventAction']);
+        assertEquals(EVENT_HIT.eventLabel, params['eventLabel']);
+        assertEquals(EVENT_HIT.eventValue, params['eventValue']);
+        asyncTestCase.continueTesting();
+      });
 }

@@ -23,17 +23,22 @@ goog.provide('analytics.testing.TestChannelManager');
 
 goog.require('analytics.internal.ChannelManager');
 goog.require('analytics.testing.TestChannel');
+goog.require('goog.testing.recordFunction');
 
 
 
 /**
  * @constructor
  * @implements {analytics.internal.ChannelManager}
+ * @implements {analytics.internal.ChannelManager.Factory}
  * @struct
  */
 analytics.testing.TestChannelManager = function() {
   /** @private {!analytics.testing.TestChannel} */
   this.channel_ = new analytics.testing.TestChannel();
+
+  /** @override */
+  this.addFilter = goog.testing.recordFunction();
 };
 
 
@@ -45,7 +50,12 @@ analytics.testing.TestChannelManager.prototype.getTestChannel =
 
 
 /** @override */
-analytics.testing.TestChannelManager.prototype.createServiceChannel =
-    function(settings, eventTarget) {
+analytics.testing.TestChannelManager.prototype.getChannel = function() {
   return this.getTestChannel();
+};
+
+
+/** @override */
+analytics.testing.TestChannelManager.prototype.create = function() {
+  return this;
 };

@@ -46,13 +46,15 @@ goog.require('goog.string.format');
  * @param {!analytics.internal.ChannelManager} channelManager
  */
 analytics.internal.ServiceTracker = function(settings, channelManager) {
+
   /** @private {!goog.events.EventTarget} */
-  this.eventTarget_ = new goog.events.EventTarget();
+  this.eventTarget_;
+
+  /** @private {!analytics.internal.ChannelManager} */
+  this.channelManager_ = channelManager;
 
   /** @private {!analytics.internal.Channel} */
-  this.channel_ = channelManager.createServiceChannel(
-      settings,
-      this.eventTarget_);
+  this.channel_ = channelManager.getChannel();
 
   /** @private {!analytics.ParameterMap} */
   this.params_ = new analytics.ParameterMap();
@@ -66,6 +68,12 @@ analytics.internal.ServiceTracker = function(settings, channelManager) {
 analytics.internal.ServiceTracker.prototype.set = function(param, value) {
   var parameter = analytics.internal.parameters.asParameter(param);
   this.params_.set(parameter, value);
+};
+
+
+/** @override */
+analytics.internal.ServiceTracker.prototype.addFilter = function(filter) {
+  this.channelManager_.addFilter(filter);
 };
 
 
@@ -181,6 +189,20 @@ analytics.internal.ServiceTracker.prototype.startTiming =
 
 /** @override */
 analytics.internal.ServiceTracker.prototype.getEventTarget = function() {
+  if (!this.eventTarget_) {
+    this.eventTarget_ = new goog.events.EventTarget();
+    this.addFilter(
+        goog.bind(
+            /**
+             * @param {!analytics.Tracker.Hit} hit
+             * @this {analytics.internal.ServiceTracker}
+             */
+            function(hit) {
+              this.eventTarget_.dispatchEvent(
+                  new analytics.Tracker.HitEvent(hit));
+            },
+            this));
+  }
   return this.eventTarget_;
 };
 

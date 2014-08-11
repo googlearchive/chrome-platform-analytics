@@ -19,6 +19,7 @@
 
 goog.provide('analytics.Timing');
 goog.provide('analytics.Tracker');
+goog.provide('analytics.Tracker.Hit');
 goog.provide('analytics.Tracker.HitEvent');
 
 goog.require('analytics.HitType');
@@ -166,14 +167,6 @@ analytics.Tracker.prototype.forceSessionStart;
 analytics.Tracker.prototype.startTiming;
 
 
-/**
- * @return {!goog.events.EventTarget} An event target that emits events for each
- *     hit that is "sent" via the tracker. Events will only be published when
- *     analytics reporting is enabled.
- */
-analytics.Tracker.prototype.getEventTarget;
-
-
 
 /**
  * Provides support for timing operations and sending the results to
@@ -194,21 +187,108 @@ analytics.Tracker.Timing = function() {};
 analytics.Tracker.Timing.prototype.send;
 
 
+/**
+ * @deprecated Use {@code analytics.Tracker#addFilter}
+ *
+ * @return {!goog.events.EventTarget} An event target that emits events for each
+ *     hit that is "sent" via the tracker. Events will only be published when
+ *     analytics reporting is enabled.
+ */
+analytics.Tracker.prototype.getEventTarget;
+
+
+/**
+ * Adds a {@code analytics.Tracker.Filter} to the request
+ * handling pipeline. The filter will be called once for each hit,
+ * immediately after the hit is sent.
+ *
+ * <li>Filters will not be applied when tracking is disabled by the user.
+ * <li>Filters are applied in the order they are added.
+ *
+ * @param {!analytics.Tracker.Filter} filter
+ */
+analytics.Tracker.prototype.addFilter;
+
+
+/**
+ * A {@code function} that processes a hit.
+ *
+ * @typedef {function(!analytics.Tracker.Hit)}
+ */
+analytics.Tracker.Filter;
+
+
+
+/**
+ * A mutable representation of a hit being sent by client code.
+ * This is the payload given to filters, and the means by which
+ * a filter can manipulate or terminate ("cancel") a hit.
+ *
+ * @constructor
+ * @struct
+ *
+ * @param {!analytics.HitType} type
+ * @param {!analytics.ParameterMap} parameters
+ */
+analytics.Tracker.Hit = function(type, parameters) {
+  /** @private {!analytics.HitType} */
+  this.type_ = type;
+
+  /** @private {!analytics.ParameterMap} */
+  this.parameters_ = parameters;
+
+  /** @private {boolean} */
+  this.canceled_ = false;
+};
+
+
+/** @return {!analytics.HitType} */
+analytics.Tracker.Hit.prototype.getHitType = function() {
+  return this.type_;
+};
+
+
+/**
+ * @return {!analytics.ParameterMap} A map of the individual parameters
+ *     and their values.
+ */
+analytics.Tracker.Hit.prototype.getParameters = function() {
+  return this.parameters_;
+};
+
+
+/**
+ * Marks the hit as canceled. The hit will endure no further
+ * processing once it has been marked as canceled.
+ */
+analytics.Tracker.Hit.prototype.cancel = function() {
+  this.canceled_ = true;
+};
+
+
+/**
+ * @return {boolean} True if the hit was canceled by the previous
+ *     filter. A filter will never be given a previously canceled hit.
+ */
+analytics.Tracker.Hit.prototype.canceled = function() {
+  return this.canceled_;
+};
+
+
 
 /**
  * An event that is sent whenever a hit is recorded.
+ *
  * @constructor
  * @extends {goog.events.Event}
- * @param {!analytics.HitType} type
- * @param {!analytics.ParameterMap} hit
+ * @deprecated Use {@code analytics.Tracker#addFilter}
+ *
+ * @param {!analytics.Tracker.Hit} hit
  */
-analytics.Tracker.HitEvent = function(type, hit) {
+analytics.Tracker.HitEvent = function(hit) {
   goog.base(this, analytics.Tracker.HitEvent.EVENT_TYPE);
 
-  /** @private {!analytics.HitType} */
-  this.hitType_ = type;
-
-  /** @private {!analytics.ParameterMap} */
+  /** @private {!analytics.Tracker.Hit} */
   this.hit_ = hit;
 };
 goog.inherits(analytics.Tracker.HitEvent, goog.events.Event);
@@ -216,7 +296,7 @@ goog.inherits(analytics.Tracker.HitEvent, goog.events.Event);
 
 /** @return {!analytics.HitType} */
 analytics.Tracker.HitEvent.prototype.getHitType = function() {
-  return this.hitType_;
+  return this.hit_.getHitType();
 };
 
 
@@ -225,11 +305,13 @@ analytics.Tracker.HitEvent.prototype.getHitType = function() {
  *     An object representation of the hit data.
  */
 analytics.Tracker.HitEvent.prototype.getHit = function() {
-  return this.hit_.toObject();
+  return this.hit_.getParameters().toObject();
 };
 
 
 /**
+ * @deprecated Use {@code analytics.Tracker#addFilter}
  * @const {string} The event type for {@code analytics.Tracker.HitEvent}.
  */
 analytics.Tracker.HitEvent.EVENT_TYPE = goog.events.getUniqueId('HitEvent');
+

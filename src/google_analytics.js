@@ -27,8 +27,10 @@ goog.require('analytics.Tracker');
 goog.require('analytics.internal.Channel');
 goog.require('analytics.internal.ChromeStorage');
 goog.require('analytics.internal.GoogleAnalyticsService');
-goog.require('analytics.internal.RuntimeChannelManager');
+goog.require('analytics.internal.ServiceChannelManager.Factory');
 goog.require('analytics.internal.ServiceSettings');
+goog.require('analytics.internal.SharedChannelFactory');
+
 
 goog.require('goog.structs.Map');
 
@@ -67,6 +69,18 @@ analytics.serviceInstances_ = new goog.structs.Map();
 
 
 /**
+ * @private {!analytics.internal.Settings}
+ */
+analytics.settings_;
+
+
+/**
+ * @private {!analytics.internal.ChannelManager.Factory}
+ */
+analytics.channelFactory_;
+
+
+/**
  * Resets the global runtime state for the purposes of testing.
  */
 analytics.resetForTesting = function() {
@@ -102,12 +116,16 @@ analytics.getService = function(appName) {
  * @return {!analytics.internal.Settings}
  * @private
  */
-analytics.createSettings_ = function() {
-  /** @type {!analytics.internal.AsyncStorage} */
-  var storage = new analytics.internal.ChromeStorage(
-      analytics.STORAGE_NAMESPACE_);
+analytics.getSettings_ = function() {
+  if (!analytics.settings_) {
+    /** @type {!analytics.internal.AsyncStorage} */
+    var storage = new analytics.internal.ChromeStorage(
+        analytics.STORAGE_NAMESPACE_);
 
-  return new analytics.internal.ServiceSettings(storage);
+    analytics.settings_ = new analytics.internal.ServiceSettings(storage);
+  }
+  return analytics.settings_;
+
 };
 
 
@@ -121,10 +139,8 @@ analytics.createService_ = function(appName) {
       analytics.LIBRARY_VERSION,
       appName,
       analytics.getAppVersion_(),
-      analytics.createSettings_(),
-      analytics.internal.RuntimeChannelManager.get(
-          analytics.GA_SERVER_,
-          analytics.MAX_POST_LENGTH_));
+      analytics.getSettings_(),
+      analytics.getChannelFactory_());
 };
 
 
@@ -135,6 +151,25 @@ analytics.createService_ = function(appName) {
 analytics.getAppVersion_ = function() {
   var manifest = chrome.runtime.getManifest();
   return manifest.version;
+};
+
+
+/**
+ * @return {!analytics.internal.ChannelManager.Factory}
+ * @private
+ */
+analytics.getChannelFactory_ = function() {
+  if (!analytics.channelFactory_) {
+    var settings = analytics.getSettings_();
+    analytics.channelFactory_ =
+        new analytics.internal.ServiceChannelManager.Factory(
+            settings,
+            new analytics.internal.SharedChannelFactory(
+                settings,
+                analytics.GA_SERVER_,
+                analytics.MAX_POST_LENGTH_));
+  }
+  return analytics.channelFactory_;
 };
 
 

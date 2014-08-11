@@ -21,22 +21,11 @@
 
 goog.provide('analytics.internal.GoogleAnalyticsService');
 
-goog.require('analytics.Parameter');
-goog.require('analytics.internal.AsyncSettingsChannel');
-goog.require('analytics.internal.Channel');
-goog.require('analytics.internal.DummyChannel');
-goog.require('analytics.internal.EventPublishingChannel');
-goog.require('analytics.internal.ParameterFilterChannel');
-goog.require('analytics.internal.RateLimitingChannel');
-goog.require('analytics.internal.ServiceChannel');
+goog.require('analytics.internal.Parameters');
 goog.require('analytics.internal.ServiceTracker');
 goog.require('analytics.internal.Settings');
-goog.require('analytics.internal.TokenBucket');
-goog.require('analytics.internal.UserSamplingChannel');
-goog.require('analytics.internal.XhrChannel');
 
 goog.require('goog.dom');
-goog.require('goog.events.OnlineHandler');
 
 
 
@@ -51,14 +40,14 @@ goog.require('goog.events.OnlineHandler');
  * @param {string} appName The Chromium Platform App name.
  * @param {string} appVersion The version of the platform app.
  * @param {!analytics.internal.Settings} settings
- * @param {!analytics.internal.ChannelManager} channelManager
+ * @param {!analytics.internal.ChannelManager.Factory} channelFactory
  */
 analytics.internal.GoogleAnalyticsService = function(
     libVersion,
     appName,
     appVersion,
     settings,
-    channelManager) {
+    channelFactory) {
 
   /** @private {string} */
   this.libVersion_ = libVersion;
@@ -72,8 +61,8 @@ analytics.internal.GoogleAnalyticsService = function(
   /** @private {!analytics.internal.Settings} */
   this.settings_ = settings;
 
-  /** @private {!analytics.internal.ChannelManager} */
-  this.channelManager_ = channelManager;
+  /** @private {!analytics.internal.ChannelManager.Factory} */
+  this.channelFactory_ = channelFactory;
 };
 
 
@@ -83,7 +72,7 @@ analytics.internal.GoogleAnalyticsService.prototype.getTracker =
 
   var tracker = new analytics.internal.ServiceTracker(
       this.settings_,
-      this.channelManager_);
+      this.channelFactory_.create());
 
   tracker.set(analytics.internal.Parameters.LIBRARY_VERSION, this.libVersion_);
   tracker.set(analytics.internal.Parameters.API_VERSION, 1);

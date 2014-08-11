@@ -20,31 +20,46 @@
  * @author smckay@google.com (Steve McKay)
  */
 goog.provide('analytics.internal.ChannelManager');
+goog.provide('analytics.internal.ChannelManager.Factory');
+
+goog.require('analytics.internal.HasChannel');
 
 
 
 /**
- * A ChannelManager manages a pipeline of {@code Channels}.
+ * A ChannelManager provides support for runtime manipulation
+ * of the {@code Channel} that processes requests.
  *
  * @interface
+ * @extends {analytics.internal.HasChannel}
  */
 analytics.internal.ChannelManager = function() {};
 
 
 /**
- * Returns a service channel suitable for use with a single tracker instance.
- * Each tracker instance is paired with a specific service channel providing
+ * Installs the supplied filter.
+ *
+ * @param {!analytics.Tracker.Filter} filter
+ */
+analytics.internal.ChannelManager.prototype.addFilter;
+
+
+
+/**
+ * A ChannelManager.Factory provides for the creation
+ * of {@code ChannelManager} instances.
+ *
+ * @interface
+ */
+analytics.internal.ChannelManager.Factory = function() {};
+
+
+/**
+ * Returns a service channel manager suitable for use with
+ * a single tracker instance. Each tracker instance is paired
+ * with a specific service channel providing
  * runtime processing of hits.
  *
- * @param {!analytics.internal.Settings} settings A settings instance which
- *     need not yet be in a *ready* state.
- * @param {!goog.events.EventTarget} eventTarget This event target is
- *     shared by the event publishing channel and the tracker as a means
- *     of exposing support for monitoring of events by client code.
- *     This slightly funky arrangement allows us to only report events when
- *     analytics is enabled (by way of including event publishing at the
- *     head of the channel pipeline.)
- *
- * @return {!analytics.internal.Channel}
+ * @return {!analytics.internal.ChannelManager}
  */
-analytics.internal.ChannelManager.prototype.createServiceChannel;
+analytics.internal.ChannelManager.Factory.prototype.create;
