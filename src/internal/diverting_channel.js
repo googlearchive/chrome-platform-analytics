@@ -45,7 +45,7 @@ analytics.internal.DivertingChannel = function(destination) {
 /**
  * @typedef {{
  *   hitType: !analytics.HitType,
- *   parameters: !analytics.internal.ParameterMap
+ *   parameters: !analytics.ParameterMap
  * }}
  */
 analytics.internal.DivertingChannel.Capture;

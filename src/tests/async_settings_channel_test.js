@@ -22,12 +22,11 @@
 goog.setTestOnly();
 
 goog.require('analytics.HitTypes');
+goog.require('analytics.ParameterMap');
 goog.require('analytics.internal.AsyncSettingsChannel');
-goog.require('analytics.internal.ParameterMap');
 goog.require('analytics.internal.Parameters');
 goog.require('analytics.testing.TestChannel');
 goog.require('analytics.testing.TestSettings');
-
 goog.require('goog.structs.Map');
 goog.require('goog.testing.jsunit');
 
@@ -44,14 +43,14 @@ var tester;
 var channel;
 
 
-/** @type {!analytics.internal.ParameterMap} */
+/** @type {!analytics.ParameterMap} */
 var params;
 
 function setUp() {
   settings = new analytics.testing.TestSettings();
   tester = new analytics.testing.TestChannel();
   channel = new analytics.internal.AsyncSettingsChannel(settings, tester);
-  params = new analytics.internal.ParameterMap();
+  params = new analytics.ParameterMap();
 }
 
 function testSend_AddsClientId() {

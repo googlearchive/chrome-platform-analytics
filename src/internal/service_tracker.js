@@ -24,12 +24,11 @@ goog.provide('analytics.internal.ServiceTracker');
 goog.require('analytics.HitType');
 goog.require('analytics.HitTypes');
 goog.require('analytics.Parameter');
+goog.require('analytics.ParameterMap');
 goog.require('analytics.Tracker');
 goog.require('analytics.Value');
 goog.require('analytics.internal.Channel');
-goog.require('analytics.internal.ParameterMap');
 goog.require('analytics.internal.parameters');
-
 goog.require('goog.asserts');
 goog.require('goog.async.Deferred');
 goog.require('goog.events.EventTarget');
@@ -55,8 +54,8 @@ analytics.internal.ServiceTracker = function(settings, channelManager) {
       settings,
       this.eventTarget_);
 
-  /** @private {!analytics.internal.ParameterMap} */
-  this.params_ = new analytics.internal.ParameterMap();
+  /** @private {!analytics.ParameterMap} */
+  this.params_ = new analytics.ParameterMap();
 
   /** @private {boolean} */
   this.startSession_ = false;

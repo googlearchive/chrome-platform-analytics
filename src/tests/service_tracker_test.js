@@ -22,22 +22,21 @@
 goog.setTestOnly();
 
 goog.require('analytics.HitTypes');
+goog.require('analytics.ParameterMap');
 goog.require('analytics.Parameters');
-goog.require('analytics.internal.ParameterMap');
 goog.require('analytics.internal.Parameters');
 goog.require('analytics.internal.ServiceTracker');
 goog.require('analytics.internal.parameters');
 goog.require('analytics.testing.TestChannelManager');
 goog.require('analytics.testing.TestSettings');
-
 goog.require('goog.events.EventTarget');
 goog.require('goog.object');
 goog.require('goog.testing.PropertyReplacer');
 goog.require('goog.testing.jsunit');
 
 
-/** @const {!analytics.internal.ParameterMap} */
-var HIT_0 = new analytics.internal.ParameterMap(
+/** @const {!analytics.ParameterMap} */
+var HIT_0 = new analytics.ParameterMap(
     analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768',
     analytics.Parameters.CAMPAIGN_ID, '789'
     );
@@ -142,7 +141,7 @@ function testSend_OmitsNullAndUndefinedValues() {
   tracker.set(analytics.Parameters.DESCRIPTION, screenName);
   tracker.send(analytics.HitTypes.EVENT);
 
-  var expected = new analytics.internal.ParameterMap(
+  var expected = new analytics.ParameterMap(
       analytics.Parameters.DESCRIPTION, screenName
       );
   channel.assertHitSent(expected);

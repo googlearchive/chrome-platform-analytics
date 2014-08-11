@@ -23,7 +23,7 @@
 goog.provide('analytics.internal.Channel');
 
 goog.require('analytics.HitType');
-goog.require('analytics.internal.ParameterMap');
+goog.require('analytics.ParameterMap');
 
 goog.require('goog.async.Deferred');
 
@@ -38,7 +38,7 @@ analytics.internal.Channel = function() {};
 /**
  * Send the data to Google Analytics for processing.
  * @param {!analytics.HitType} hitType
- * @param {!analytics.internal.ParameterMap} parameters The parameters to send.
+ * @param {!analytics.ParameterMap} parameters The parameters to send.
  * @return {!goog.async.Deferred} A Deferred that fires once the hit has
  *     been sent.
  */

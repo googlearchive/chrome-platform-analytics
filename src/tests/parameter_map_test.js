@@ -23,19 +23,18 @@ goog.setTestOnly();
 
 goog.require('analytics.HitType');
 goog.require('analytics.Parameter');
+goog.require('analytics.ParameterMap');
 goog.require('analytics.Parameters');
-goog.require('analytics.internal.ParameterMap');
 goog.require('analytics.internal.Parameters');
-
 goog.require('goog.testing.jsunit');
 
 
-/** @type {!analytics.internal.ParameterMap} */
+/** @type {!analytics.ParameterMap} */
 var map;
 
 
 function setUp() {
-  map = new analytics.internal.ParameterMap();
+  map = new analytics.ParameterMap();
 }
 
 function testSetGetSingleValue() {
@@ -63,8 +62,8 @@ function testEquality() {
   map.set(analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768');
   map.set(analytics.Parameters.CAMPAIGN_ID, '789');
 
-  /** @type {!analytics.internal.ParameterMap} */
-  var other = new analytics.internal.ParameterMap(
+  /** @type {!analytics.ParameterMap} */
+  var other = new analytics.ParameterMap(
       analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768',
       analytics.Parameters.CAMPAIGN_ID, '789'
       );
@@ -75,8 +74,8 @@ function testInequality() {
   map.set(analytics.internal.Parameters.SCREEN_RESOLUTION, 'Bedazzler');
   map.set(analytics.Parameters.CAMPAIGN_ID, '789');
 
-  /** @type {!analytics.internal.ParameterMap} */
-  var other = new analytics.internal.ParameterMap(
+  /** @type {!analytics.ParameterMap} */
+  var other = new analytics.ParameterMap(
       analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768',
       analytics.Parameters.CAMPAIGN_ID, '789'
       );
@@ -85,7 +84,7 @@ function testInequality() {
 
 function testConstructorDisallowsUnevenNumberOfArguments() {
   try {
-    new analytics.internal.ParameterMap(
+    new analytics.ParameterMap(
         analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768',
         analytics.Parameters.CAMPAIGN_ID);
     fail('Should have thrown exception.');
@@ -112,7 +111,7 @@ function testForEachElementIteratesOverAllElements() {
 }
 
 function testAddsConstructorValues() {
-  map = new analytics.internal.ParameterMap(
+  map = new analytics.ParameterMap(
       analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768',
       analytics.Parameters.CAMPAIGN_ID, '789'
       );

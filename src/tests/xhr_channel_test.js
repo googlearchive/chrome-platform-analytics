@@ -24,13 +24,12 @@ goog.setTestOnly();
 goog.require('analytics.HitType');
 goog.require('analytics.HitTypes');
 goog.require('analytics.Parameter');
+goog.require('analytics.ParameterMap');
 goog.require('analytics.Parameters');
 goog.require('analytics.Result');
 goog.require('analytics.Status');
-goog.require('analytics.internal.ParameterMap');
 goog.require('analytics.internal.Parameters');
 goog.require('analytics.internal.XhrChannel');
-
 goog.require('goog.testing.PropertyReplacer');
 goog.require('goog.testing.events.OnlineHandler');
 goog.require('goog.testing.jsunit');
@@ -40,8 +39,8 @@ goog.require('goog.testing.jsunit');
 var EMPTY = {};
 
 
-/** @const {!analytics.internal.ParameterMap} */
-var HIT_0 = new analytics.internal.ParameterMap(
+/** @const {!analytics.ParameterMap} */
+var HIT_0 = new analytics.ParameterMap(
     analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768',
     analytics.Parameters.CAMPAIGN_ID, '789'
     );
@@ -87,7 +86,7 @@ function testSendsHit() {
 
 function testEnforcedPostSizeLimit() {
   var deferred = channel.send(analytics.HitTypes.EVENT,
-      new analytics.internal.ParameterMap(
+      new analytics.ParameterMap(
           /** @type {analytics.Parameter} */ (
               {name: 'abcdabcdabcdabcdabcd'}), '12341234123412341234',
           /** @type {analytics.Parameter} */ (
@@ -115,8 +114,8 @@ function testDoesNotSendHitsWhenOffline() {
 // TODO(smckay): Add unicode test coverage.
 function testEncodesValues() {
 
-  /** @type {!analytics.internal.ParameterMap} */
-  var params = new analytics.internal.ParameterMap(
+  /** @type {!analytics.ParameterMap} */
+  var params = new analytics.ParameterMap(
       /** @type {!analytics.Parameter} */ ({name: 'gee whiz'}),
       'a b&c%d\\eee'
       );
@@ -132,7 +131,7 @@ function testDeferredFires() {
   var fired = false;
   channel.send(
       analytics.HitTypes.EVENT,
-      new analytics.internal.ParameterMap()).addCallback(
+      new analytics.ParameterMap()).addCallback(
       function() {
         fired = true;
       });
@@ -148,7 +147,7 @@ function testDeferredFiresErrorWhenOffline() {
   var fired = false;
   channel.send(
       analytics.HitTypes.EVENT,
-      new analytics.internal.ParameterMap()).addErrback(
+      new analytics.ParameterMap()).addErrback(
       function() {
         fired = true;
       });
@@ -158,7 +157,7 @@ function testDeferredFiresErrorWhenOffline() {
 
 /**
  * @param {!analytics.HitType} hitType
- * @param {!analytics.internal.ParameterMap} parameters
+ * @param {!analytics.ParameterMap} parameters
  * @return {!Object} The data sent to the server.
  */
 function send(hitType, parameters) {

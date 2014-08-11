@@ -21,7 +21,7 @@
  */
 
 
-goog.provide('analytics.internal.ParameterMap');
+goog.provide('analytics.ParameterMap');
 
 goog.require('analytics.Parameter');
 goog.require('analytics.Value');
@@ -50,9 +50,9 @@ goog.require('goog.structs.Map');
  *     An optional list of alternating key, value pairs.
  * @struct
  */
-analytics.internal.ParameterMap = function(var_args) {
+analytics.ParameterMap = function(var_args) {
   /** @private {!goog.structs.Map.<
-      string, analytics.internal.ParameterMap.Entry>} */
+      string, analytics.ParameterMap.Entry>} */
   this.entries_ = new goog.structs.Map();
 
   goog.asserts.assert(!(arguments.length % 2), 'Uneven number of arguments.');
@@ -67,7 +67,7 @@ analytics.internal.ParameterMap = function(var_args) {
  * }}
  * @private
  */
-analytics.internal.ParameterMap.Entry;
+analytics.ParameterMap.Entry;
 
 
 /**
@@ -77,7 +77,7 @@ analytics.internal.ParameterMap.Entry;
  * @param {!analytics.Parameter} param
  * @param {analytics.Value} value
  */
-analytics.internal.ParameterMap.prototype.set = function(param, value) {
+analytics.ParameterMap.prototype.set = function(param, value) {
   this.entries_.set(param.name, {'key': param, 'value': value});
 };
 
@@ -87,7 +87,7 @@ analytics.internal.ParameterMap.prototype.set = function(param, value) {
  *
  * @param {!analytics.Parameter} param
  */
-analytics.internal.ParameterMap.prototype.remove = function(param) {
+analytics.ParameterMap.prototype.remove = function(param) {
   this.entries_.remove(param.name);
 };
 
@@ -99,9 +99,9 @@ analytics.internal.ParameterMap.prototype.remove = function(param) {
  * @param {!analytics.Parameter} param
  * @return {?analytics.Value} The value or null if not previously set.
  */
-analytics.internal.ParameterMap.prototype.get = function(param) {
-  /** @type {!analytics.internal.ParameterMap.Entry} */
-  var entry = /** @type {analytics.internal.ParameterMap.Entry} */ (
+analytics.ParameterMap.prototype.get = function(param) {
+  /** @type {!analytics.ParameterMap.Entry} */
+  var entry = /** @type {analytics.ParameterMap.Entry} */ (
       this.entries_.get(param.name, null));
   return goog.isNull(entry) ? null : entry.value;
 };
@@ -114,7 +114,7 @@ analytics.internal.ParameterMap.prototype.get = function(param) {
  * @param {!goog.array.ArrayLike.<
  *     analytics.Parameter|analytics.Value>} elements
  */
-analytics.internal.ParameterMap.prototype.addAll = function(elements) {
+analytics.ParameterMap.prototype.addAll = function(elements) {
   for (var i = 0; i < elements.length; i += 2) {
     this.set(
         /** @type {analytics.Parameter} */ (elements[i]),
@@ -124,15 +124,15 @@ analytics.internal.ParameterMap.prototype.addAll = function(elements) {
 
 
 /**
- * Apply {@code receiver} to each {@code analytics.internal.ParameterMap.Entry}
+ * Apply {@code receiver} to each {@code analytics.ParameterMap.Entry}
  * having been previously set in the map.
  * @param {!function(!analytics.Parameter, !analytics.Value)} receiver
  */
-analytics.internal.ParameterMap.prototype.forEachEntry = function(receiver) {
+analytics.ParameterMap.prototype.forEachEntry = function(receiver) {
   goog.array.forEach(
       this.entries_.getValues(),
       /**
-       * @param {!analytics.internal.ParameterMap.Entry} entry
+       * @param {!analytics.ParameterMap.Entry} entry
        */
       function(entry) {
         receiver(entry.key, entry.value);
@@ -146,7 +146,7 @@ analytics.internal.ParameterMap.prototype.forEachEntry = function(receiver) {
  *
  * @return {!Object.<string, analytics.Value>}
  */
-analytics.internal.ParameterMap.prototype.toObject = function() {
+analytics.ParameterMap.prototype.toObject = function() {
   /** @type {!Object.<string, analytics.Value>} */
   var params = {};
   this.forEachEntry(
@@ -166,10 +166,10 @@ analytics.internal.ParameterMap.prototype.toObject = function() {
 
 /**
  * Create a copy of *this*.
- * @return {!analytics.internal.ParameterMap}
+ * @return {!analytics.ParameterMap}
  */
-analytics.internal.ParameterMap.prototype.clone = function() {
-  var copy = new analytics.internal.ParameterMap();
+analytics.ParameterMap.prototype.clone = function() {
+  var copy = new analytics.ParameterMap();
   copy.entries_ = this.entries_.clone();
   return copy;
 };
@@ -177,10 +177,10 @@ analytics.internal.ParameterMap.prototype.clone = function() {
 
 /**
  * Compares {@code this} instance to {@code that} instance for equality.
- * @param {!analytics.internal.ParameterMap} that
+ * @param {!analytics.ParameterMap} that
  * @return {boolean} True if this instance is identical to that instance.
  */
-analytics.internal.ParameterMap.prototype.equals = function(that) {
+analytics.ParameterMap.prototype.equals = function(that) {
   if (this.entries_.length !== that.entries_.length) {
     return false;
   }
@@ -189,7 +189,7 @@ analytics.internal.ParameterMap.prototype.equals = function(that) {
   var result = goog.array.every(
       this.entries_.getValues(),
       /**
-       * @param {!analytics.internal.ParameterMap.Entry} entry
+       * @param {!analytics.ParameterMap.Entry} entry
        * @return {boolean} True if this and that have the same key/value pair.
        */
       function(entry) {
@@ -202,7 +202,7 @@ analytics.internal.ParameterMap.prototype.equals = function(that) {
 
 
 /** @override */
-analytics.internal.ParameterMap.prototype.toString = function() {
+analytics.ParameterMap.prototype.toString = function() {
   /** @type {!Object.<string, !analytics.Value>} */
   var fields = new Object();
   this.forEachEntry(

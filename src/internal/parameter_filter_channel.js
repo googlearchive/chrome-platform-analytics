@@ -51,7 +51,7 @@ analytics.internal.ParameterFilterChannel.prototype.send =
 
 
 /**
- * @param {!analytics.internal.ParameterMap} parameters
+ * @param {!analytics.ParameterMap} parameters
  * @private
  */
 analytics.internal.ParameterFilterChannel.truncateStrings_ =
@@ -73,7 +73,7 @@ analytics.internal.ParameterFilterChannel.truncateStrings_ =
 
 
 /**
- * @param {!analytics.internal.ParameterMap} parameters
+ * @param {!analytics.ParameterMap} parameters
  * @private
  */
 analytics.internal.ParameterFilterChannel.removeDefaults_ =

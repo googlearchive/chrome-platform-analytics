@@ -22,12 +22,11 @@
 goog.provide('analytics.internal.XhrChannel');
 
 goog.require('analytics.Parameter');
+goog.require('analytics.ParameterMap');
 goog.require('analytics.Parameters');
 goog.require('analytics.Results');
 goog.require('analytics.Status');
 goog.require('analytics.internal.Channel');
-goog.require('analytics.internal.ParameterMap');
-
 goog.require('goog.Uri');
 goog.require('goog.async.Deferred');
 goog.require('goog.net.NetworkStatusMonitor');
@@ -88,7 +87,7 @@ analytics.internal.XhrChannel.prototype.send = function(hitType, parameters) {
 
 /**
  * @param {!analytics.HitType} hitType
- * @param {!analytics.internal.ParameterMap} parameters
+ * @param {!analytics.ParameterMap} parameters
  * @return {string} The parameters formatted as a URL query string.
  * @private
  */

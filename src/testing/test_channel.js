@@ -21,10 +21,9 @@
 
 goog.provide('analytics.testing.TestChannel');
 
+goog.require('analytics.ParameterMap');
 goog.require('analytics.internal.DivertingChannel');
-goog.require('analytics.internal.ParameterMap');
 goog.require('analytics.internal.parameters');
-
 goog.require('goog.array');
 goog.require('goog.async.Deferred');
 goog.require('goog.string.format');
@@ -62,7 +61,7 @@ analytics.testing.TestChannel.Key_;
 
 
 /**
- * @param {!analytics.internal.ParameterMap} expected
+ * @param {!analytics.ParameterMap} expected
  * @return {boolean} True if the hit was previously sent.
  */
 analytics.testing.TestChannel.prototype.hitWasSent = function(expected) {
@@ -126,7 +125,7 @@ analytics.testing.TestChannel.prototype.lastHitHasEntry =
 
 
 /**
- * @param {!analytics.internal.ParameterMap} expected
+ * @param {!analytics.ParameterMap} expected
  */
 analytics.testing.TestChannel.prototype.assertHitSent = function(expected) {
   if (!this.hitWasSent(expected)) {

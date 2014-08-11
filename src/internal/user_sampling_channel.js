@@ -72,6 +72,7 @@ analytics.internal.UserSamplingChannel.prototype.send =
       goog.async.Deferred.succeed(analytics.Results.SAMPLED_OUT);
 };
 
+
 /**
  * Return the sample rate for the channel. The default value is part of the
  * tracker's state, but may be overridden in the parameters map. If an override
@@ -83,7 +84,7 @@ analytics.internal.UserSamplingChannel.prototype.send =
  * returned.
  *
  * @param {!analytics.HitType} hitType The hit type.
- * @param {!analytics.internal.ParameterMap} parameters The parameters to send.
+ * @param {!analytics.ParameterMap} parameters The parameters to send.
  * @return {analytics.Value}
  * @private
  */

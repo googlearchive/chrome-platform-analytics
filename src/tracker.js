@@ -200,7 +200,7 @@ analytics.Tracker.Timing.prototype.send;
  * @constructor
  * @extends {goog.events.Event}
  * @param {!analytics.HitType} type
- * @param {!analytics.internal.ParameterMap} hit
+ * @param {!analytics.ParameterMap} hit
  */
 analytics.Tracker.HitEvent = function(type, hit) {
   goog.base(this, analytics.Tracker.HitEvent.EVENT_TYPE);
@@ -208,7 +208,7 @@ analytics.Tracker.HitEvent = function(type, hit) {
   /** @private {!analytics.HitType} */
   this.hitType_ = type;
 
-  /** @private {!analytics.internal.ParameterMap} */
+  /** @private {!analytics.ParameterMap} */
   this.hit_ = hit;
 };
 goog.inherits(analytics.Tracker.HitEvent, goog.events.Event);

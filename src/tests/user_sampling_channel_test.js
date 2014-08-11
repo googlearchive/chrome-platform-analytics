@@ -22,13 +22,12 @@
 goog.setTestOnly();
 
 goog.require('analytics.HitTypes');
+goog.require('analytics.ParameterMap');
 goog.require('analytics.internal.Identifier');
-goog.require('analytics.internal.ParameterMap');
 goog.require('analytics.internal.Parameters');
 goog.require('analytics.internal.UserSamplingChannel');
 goog.require('analytics.testing.TestChannel');
 goog.require('analytics.testing.TestSettings');
-
 goog.require('goog.structs.Map');
 goog.require('goog.testing.jsunit');
 
@@ -48,7 +47,7 @@ function assertSampled(
   var delegate = new analytics.testing.TestChannel();
   var channel = new analytics.internal.UserSamplingChannel(settings, delegate);
 
-  var params = new analytics.internal.ParameterMap(
+  var params = new analytics.ParameterMap(
       analytics.internal.Parameters.CLIENT_ID,
       '04D25678-' + clientIdPart + '-4321-y123-04D256789012');
 
@@ -144,6 +143,7 @@ function testSend_sampleRateOverride() {
   assertSampled(5, 'FFFF', false, 50);
 }
 
+
 /**
  * Randomly generate 1,000 client ids (using the actual id generator) and
  * verify that the UserSamplingChannel, with sample rate configured to 25%, only
@@ -157,7 +157,7 @@ function testSend_withRandomIds_sampleRate25() {
   var hitsSent = 0;
   for (var i = 0; i < 1000; i++) {
     var cid = analytics.internal.Identifier.generateUuid();
-    var params = new analytics.internal.ParameterMap();
+    var params = new analytics.ParameterMap();
     params.set(analytics.internal.Parameters.CLIENT_ID, cid);
     var delegate = new analytics.testing.TestChannel();
     var channel =
@@ -181,7 +181,7 @@ function testSend_withRandomIds_sampleRate100() {
   var settings = new analytics.testing.TestSettings();
   for (var i = 0; i < 1000; i++) {
     var cid = analytics.internal.Identifier.generateUuid();
-    var params = new analytics.internal.ParameterMap();
+    var params = new analytics.ParameterMap();
     params.set(analytics.internal.Parameters.CLIENT_ID, cid);
     var delegate = new analytics.testing.TestChannel();
     var channel =
@@ -202,7 +202,7 @@ function testSend_withRandomIds_sampleRate0() {
   settings.setSampleRate(0);
   for (var i = 0; i < 1000; i++) {
     var cid = analytics.internal.Identifier.generateUuid();
-    var params = new analytics.internal.ParameterMap();
+    var params = new analytics.ParameterMap();
     params.set(analytics.internal.Parameters.CLIENT_ID, cid);
     var delegate = new analytics.testing.TestChannel();
     var channel =

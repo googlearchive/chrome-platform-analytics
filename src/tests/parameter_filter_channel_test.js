@@ -22,12 +22,11 @@
 goog.setTestOnly();
 
 goog.require('analytics.HitTypes');
+goog.require('analytics.ParameterMap');
 goog.require('analytics.Parameters');
 goog.require('analytics.internal.DummyChannel');
 goog.require('analytics.internal.ParameterFilterChannel');
-goog.require('analytics.internal.ParameterMap');
 goog.require('analytics.internal.Parameters');
-
 goog.require('goog.testing.jsunit');
 
 
@@ -35,12 +34,12 @@ goog.require('goog.testing.jsunit');
 var channel;
 
 
-/** @const {!analytics.internal.ParameterMap} */
+/** @const {!analytics.ParameterMap} */
 var params;
 
 
 function setUp() {
-  params = new analytics.internal.ParameterMap();
+  params = new analytics.ParameterMap();
   channel = new analytics.internal.ParameterFilterChannel(
       analytics.internal.DummyChannel.getInstance());
 }
