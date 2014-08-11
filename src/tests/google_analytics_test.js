@@ -28,7 +28,6 @@ goog.require('analytics.resetForTesting');
 goog.require('analytics.testing.TestChromeStorageArea');
 
 goog.require('goog.array');
-goog.require('goog.events');
 goog.require('goog.testing.AsyncTestCase');
 goog.require('goog.testing.PropertyReplacer');
 goog.require('goog.testing.jsunit');
@@ -135,7 +134,6 @@ function setUpChromeEnv() {
 }
 
 function tearDown() {
-  goog.events.removeAll(tracker.getEventTarget());
   replacer.reset();
 }
 
@@ -185,19 +183,14 @@ function testOptOut_SubsequentEventsNotSent() {
   // before our call to continueTesting.
   asyncTestCase.waitForAsync();
 
-  // Set up an event listener.
-  var hitEventCount = 0;
-  goog.events.listen(tracker.getEventTarget(),
-      analytics.Tracker.HitEvent.EVENT_TYPE,
-      function(event) {
-        hitEventCount++;
-      });
+  tracker.addFilter(recorder);
 
   // Send one event first, to make sure things are working.
   tracker.sendAppView('foo');
 
   // Check that we got the expected event.
-  assertEquals(1, hitEventCount);
+  recorder.assertCallCount(1);
+  recorder.reset();
 
   // Disable the analytics service, then send another hit.
   service.getConfig().addCallback(
@@ -207,8 +200,7 @@ function testOptOut_SubsequentEventsNotSent() {
             function() {
               tracker.sendAppView('foo');
 
-              // Make sure we didn't send another event.
-              assertEquals(1, hitEventCount);
+              recorder.assertCallCount(0);
               asyncTestCase.continueTesting();
             });
 
@@ -277,42 +269,6 @@ function testSend_DeliversPayload() {
         assertTrue(sent.content, goog.array.contains(entries, 'el=Strawberry'));
         assertTrue(sent.content, goog.array.contains(entries, 'ev=100'));
         assertTrue(sent.content, goog.array.contains(entries, '_v=ca1.4.0'));
-        asyncTestCase.continueTesting();
-      });
-}
-
-// The EventTarget business is deprecated, and the
-// EventPublishingChannel has been deleted. The
-// deprecated support is implemented using a filter
-// (installed by service tracker). Since the test
-// for EventPublishingChannel went away along with the
-// channel. We have a little coverage here until the
-// support is removed.
-function testDeprecatedEventPublishing() {
-  asyncTestCase.waitForAsync();
-  service.getConfig().addCallback(
-      function(config) {
-        config.setTrackingPermitted(true);
-
-        goog.events.listen(
-            tracker.getEventTarget(),
-            analytics.Tracker.HitEvent.EVENT_TYPE,
-            recorder);
-
-        tracker.sendEvent(
-            EVENT_HIT.eventCategory,
-            EVENT_HIT.eventAction,
-            EVENT_HIT.eventLabel,
-            EVENT_HIT.eventValue);
-
-        recorder.assertCallCount(1);
-        var event = recorder.getLastCall().getArgument(0);
-        var params = event.getHit();
-        assertEquals(analytics.HitTypes.EVENT, event.getHitType());
-        assertEquals(EVENT_HIT.eventCategory, params['eventCategory']);
-        assertEquals(EVENT_HIT.eventAction, params['eventAction']);
-        assertEquals(EVENT_HIT.eventLabel, params['eventLabel']);
-        assertEquals(EVENT_HIT.eventValue, params['eventValue']);
         asyncTestCase.continueTesting();
       });
 }

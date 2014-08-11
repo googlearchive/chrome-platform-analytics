@@ -104,9 +104,6 @@ goog.exportSymbol(
     'analytics.internal.ServiceTracker.prototype.forceSessionStart',
     analytics.internal.ServiceTracker.prototype.forceSessionStart);
 goog.exportSymbol(
-    'analytics.internal.ServiceTracker.prototype.getEventTarget',
-    analytics.internal.ServiceTracker.prototype.getEventTarget);
-goog.exportSymbol(
     'analytics.internal.ServiceTracker.prototype.addFilter',
     analytics.internal.ServiceTracker.prototype.addFilter);
 
@@ -168,20 +165,6 @@ goog.exportSymbol(
 goog.exportSymbol(
     'analytics.HitTypes.EXCEPTION',
     analytics.HitTypes.EXCEPTION);
-
-// HitEvent...
-goog.exportSymbol(
-    'analytics.Tracker.HitEvent',
-    analytics.Tracker.HitEvent);
-goog.exportSymbol(
-    'analytics.Tracker.HitEvent.EVENT_TYPE',
-    analytics.Tracker.HitEvent.EVENT_TYPE);
-goog.exportSymbol(
-    'analytics.Tracker.HitEvent.prototype.getHitType',
-    analytics.Tracker.HitEvent.prototype.getHitType);
-goog.exportSymbol(
-    'analytics.Tracker.HitEvent.prototype.getHit',
-    analytics.Tracker.HitEvent.prototype.getHit);
 
 
 // Params...

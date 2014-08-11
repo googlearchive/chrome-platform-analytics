@@ -20,7 +20,6 @@
 goog.provide('analytics.Timing');
 goog.provide('analytics.Tracker');
 goog.provide('analytics.Tracker.Hit');
-goog.provide('analytics.Tracker.HitEvent');
 
 goog.require('analytics.HitType');
 goog.require('analytics.Parameter');
@@ -188,16 +187,6 @@ analytics.Tracker.Timing.prototype.send;
 
 
 /**
- * @deprecated Use {@code analytics.Tracker#addFilter}
- *
- * @return {!goog.events.EventTarget} An event target that emits events for each
- *     hit that is "sent" via the tracker. Events will only be published when
- *     analytics reporting is enabled.
- */
-analytics.Tracker.prototype.getEventTarget;
-
-
-/**
  * Adds a {@code analytics.Tracker.Filter} to the request
  * handling pipeline. The filter will be called once for each hit,
  * immediately after the hit is sent.
@@ -247,45 +236,3 @@ analytics.Tracker.Hit.prototype.getParameters;
  * processing once it has been marked as canceled.
  */
 analytics.Tracker.Hit.prototype.cancel;
-
-
-
-/**
- * An event that is sent whenever a hit is recorded.
- *
- * @constructor
- * @extends {goog.events.Event}
- * @deprecated Use {@code analytics.Tracker#addFilter}
- *
- * @param {!analytics.Tracker.Hit} hit
- */
-analytics.Tracker.HitEvent = function(hit) {
-  goog.base(this, analytics.Tracker.HitEvent.EVENT_TYPE);
-
-  /** @private {!analytics.Tracker.Hit} */
-  this.hit_ = hit;
-};
-goog.inherits(analytics.Tracker.HitEvent, goog.events.Event);
-
-
-/** @return {!analytics.HitType} */
-analytics.Tracker.HitEvent.prototype.getHitType = function() {
-  return this.hit_.getHitType();
-};
-
-
-/**
- * @return {!Object.<string, analytics.Value>}
- *     An object representation of the hit data.
- */
-analytics.Tracker.HitEvent.prototype.getHit = function() {
-  return this.hit_.getParameters().toObject();
-};
-
-
-/**
- * @deprecated Use {@code analytics.Tracker#addFilter}
- * @const {string} The event type for {@code analytics.Tracker.HitEvent}.
- */
-analytics.Tracker.HitEvent.EVENT_TYPE = goog.events.getUniqueId('HitEvent');
-

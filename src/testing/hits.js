@@ -18,22 +18,20 @@
  * @author kenobi@google.com (Ben Kwa)
  */
 
-goog.provide('analytics.testing.HitEvents');
+goog.provide('analytics.testing.Hits');
 
 goog.require('analytics.ParameterMap');
-goog.require('analytics.Tracker.HitEvent');
 goog.require('analytics.testing.TestHit');
 
 
 /**
- * Returns a HitEvent representing an appView.
+ * Returns a Hit representing an appView.
  * @param {string} description
- * @return {!analytics.Tracker.HitEvent}
+ * @return {!analytics.Tracker.Hit}
  */
-analytics.testing.HitEvents.createHitEvent = function(description) {
-  var hit = new analytics.testing.TestHit(
+analytics.testing.Hits.createAppViewHit = function(description) {
+  return new analytics.testing.TestHit(
       analytics.HitTypes.APPVIEW,
       new analytics.ParameterMap(
           analytics.Parameters.DESCRIPTION, description));
-  return new analytics.Tracker.HitEvent(hit);
 };

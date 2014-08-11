@@ -31,7 +31,6 @@ goog.require('analytics.internal.Channel');
 goog.require('analytics.internal.parameters');
 goog.require('goog.asserts');
 goog.require('goog.async.Deferred');
-goog.require('goog.events.EventTarget');
 goog.require('goog.object');
 goog.require('goog.string.format');
 
@@ -46,9 +45,6 @@ goog.require('goog.string.format');
  * @param {!analytics.internal.ChannelManager} channelManager
  */
 analytics.internal.ServiceTracker = function(settings, channelManager) {
-
-  /** @private {!goog.events.EventTarget} */
-  this.eventTarget_;
 
   /** @private {!analytics.internal.ChannelManager} */
   this.channelManager_ = channelManager;
@@ -184,26 +180,6 @@ analytics.internal.ServiceTracker.prototype.startTiming =
     function(category, variable, opt_label, opt_sampleRate) {
   return new analytics.internal.ServiceTracker.Timing(
       this, category, variable, opt_label, opt_sampleRate);
-};
-
-
-/** @override */
-analytics.internal.ServiceTracker.prototype.getEventTarget = function() {
-  if (!this.eventTarget_) {
-    this.eventTarget_ = new goog.events.EventTarget();
-    this.addFilter(
-        goog.bind(
-            /**
-             * @param {!analytics.Tracker.Hit} hit
-             * @this {analytics.internal.ServiceTracker}
-             */
-            function(hit) {
-              this.eventTarget_.dispatchEvent(
-                  new analytics.Tracker.HitEvent(hit));
-            },
-            this));
-  }
-  return this.eventTarget_;
 };
 
 

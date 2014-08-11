@@ -29,7 +29,6 @@ goog.require('analytics.internal.ServiceTracker');
 goog.require('analytics.internal.parameters');
 goog.require('analytics.testing.TestChannelManager');
 goog.require('analytics.testing.TestSettings');
-goog.require('goog.events.EventTarget');
 goog.require('goog.object');
 goog.require('goog.testing.PropertyReplacer');
 goog.require('goog.testing.jsunit');
