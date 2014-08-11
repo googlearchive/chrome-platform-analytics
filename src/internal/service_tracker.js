@@ -43,15 +43,17 @@ goog.require('goog.string.format');
  * @implements {analytics.Tracker}
  * @struct
  *
- * @param {!analytics.internal.Channel} channel
- * @param {!goog.events.EventTarget} eventTarget
+ * @param {!analytics.internal.Settings} settings
+ * @param {!analytics.internal.ChannelManager} channelManager
  */
-analytics.internal.ServiceTracker = function(channel, eventTarget) {
-  /** @private {!analytics.internal.Channel} */
-  this.channel_ = channel;
-
+analytics.internal.ServiceTracker = function(settings, channelManager) {
   /** @private {!goog.events.EventTarget} */
-  this.eventTarget_ = eventTarget;
+  this.eventTarget_ = new goog.events.EventTarget();
+
+  /** @private {!analytics.internal.Channel} */
+  this.channel_ = channelManager.createServiceChannel(
+      settings,
+      this.eventTarget_);
 
   /** @private {!analytics.internal.ParameterMap} */
   this.params_ = new analytics.internal.ParameterMap();

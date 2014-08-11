@@ -24,22 +24,12 @@ goog.provide('analytics.getService');
 goog.provide('analytics.resetForTesting');
 
 goog.require('analytics.Tracker');
-goog.require('analytics.internal.AsyncSettingsChannel');
 goog.require('analytics.internal.Channel');
 goog.require('analytics.internal.ChromeStorage');
-goog.require('analytics.internal.DummyChannel');
 goog.require('analytics.internal.GoogleAnalyticsService');
-goog.require('analytics.internal.ParameterFilterChannel');
-goog.require('analytics.internal.RateLimitingChannel');
-goog.require('analytics.internal.ServiceChannel');
+goog.require('analytics.internal.RuntimeChannelManager');
 goog.require('analytics.internal.ServiceSettings');
-goog.require('analytics.internal.Settings');
-goog.require('analytics.internal.TokenBucket');
-goog.require('analytics.internal.UserSamplingChannel');
-goog.require('analytics.internal.XhrChannel');
 
-goog.require('goog.events.OnlineHandler');
-goog.require('goog.net.NetworkStatusMonitor');
 goog.require('goog.structs.Map');
 
 
@@ -53,6 +43,20 @@ analytics.LIBRARY_VERSION = 'ca1.4.0';
 
 /** @private {string} */
 analytics.STORAGE_NAMESPACE_ = 'google-analytics';
+
+
+/**
+ * The URL of the GA server. This library only communicates over SSL.
+ * @private {string}
+ */
+analytics.GA_SERVER_ = 'https://www.google-analytics.com/collect';
+
+
+/**
+ * The maximum number of characters that can be included in the POST payload.
+ * @private {number}
+ */
+analytics.MAX_POST_LENGTH_ = 8192;
 
 
 /**
@@ -113,12 +117,14 @@ analytics.createSettings_ = function() {
  * @private
  */
 analytics.createService_ = function(appName) {
-  var appVersion = analytics.getAppVersion_();
   return new analytics.internal.GoogleAnalyticsService(
       analytics.LIBRARY_VERSION,
       appName,
-      appVersion,
-      analytics.createSettings_());
+      analytics.getAppVersion_(),
+      analytics.createSettings_(),
+      analytics.internal.RuntimeChannelManager.get(
+          analytics.GA_SERVER_,
+          analytics.MAX_POST_LENGTH_));
 };
 
 
@@ -146,8 +152,9 @@ analytics.GoogleAnalytics = function() {};
 
 /**
  * Creates a new {@code analytics.Tracker} instance.
- * @param {string} trackingId Your Google Analytics tracking id. This id should
- *     be for an "app" style property.
+ * @param {string} trackingId Your Google Analytics tracking id. This id must
+ *     be for an "app" style analytics property.
+ * See {@link https://support.google.com/analytics/answer/2614741} for details.
  *
  * @return {!analytics.Tracker}
  */

@@ -27,10 +27,10 @@ goog.require('analytics.internal.GoogleAnalyticsService');
 goog.require('analytics.internal.Parameters');
 goog.require('analytics.internal.ServiceChannel');
 goog.require('analytics.testing.TestChannel');
+goog.require('analytics.testing.TestChannelManager');
 goog.require('analytics.testing.TestSettings');
 
 goog.require('goog.structs.Map');
-goog.require('goog.testing.PropertyReplacer');
 goog.require('goog.testing.jsunit');
 
 
@@ -58,6 +58,10 @@ var settings;
 var service;
 
 
+/** @type {!analytics.testing.TestChannelManager} */
+var channelManager;
+
+
 /** @type {!analytics.testing.TestChannel} */
 var enabledChannel;
 
@@ -70,24 +74,12 @@ var disabledChannel;
 var tracker;
 
 
-/** @type {!goog.testing.PropertyReplacer} */
-var propertyReplacer;
-
-
 function setUp() {
-  enabledChannel = new analytics.testing.TestChannel('EnabledTestChannel');
+  channelManager = new analytics.testing.TestChannelManager();
+  enabledChannel = channelManager.getTestChannel();
   disabledChannel = new analytics.testing.TestChannel('DisabledTestChannel');
-
-  propertyReplacer = new goog.testing.PropertyReplacer();
-  propertyReplacer.replace(
-      analytics.internal.GoogleAnalyticsService,
-      'ChannelPipelineFactory',
-      goog.functions.constant(enabledChannel));
 }
 
-function tearDown() {
-  propertyReplacer.reset();
-}
 
 function testAppliesSettingsChangesMadePriorToReady() {
   initSettings(false, false);
@@ -180,5 +172,6 @@ function initService() {
       analytics.LIBRARY_VERSION,
       APP_NAME,
       APP_VERSION,
-      settings);
+      settings,
+      channelManager);
 }

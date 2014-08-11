@@ -41,7 +41,7 @@ goog.require('goog.events.EventTarget');
  * @struct
  *
  * @param {!analytics.internal.Settings} settings
- * @param {function(!analytics.internal.Settings): !analytics.internal.Channel}
+ * @param {function(): !analytics.internal.Channel}
  *     enabledChannelFactory
  * @param {!analytics.internal.Channel} disabledChannel
  */
@@ -72,8 +72,9 @@ analytics.internal.ServiceChannel = function(
     /*
      * Settings are loaded asynchronously, so we don't have the *real* enabled
      * channel initially. For that reason we divert hits sent prior to
-     * initialization to an array. Once the *real* enabled channel is ready
-     * we'll swap this out for the real channel and queue of diverted of hits.
+     * initialization to a buffer. Once the *real* enabled channel is ready
+     * we'll swap this out for the real channel and flush
+     * the queue of diverted hits.
      */
     enabled: new analytics.internal.DivertingChannel(this.diverted_),
     disabled: disabledChannel
@@ -107,8 +108,7 @@ analytics.internal.ServiceChannel.Channels_;
 /**
  * When settings becomes ready we complete channel initialization and
  * install property change listeners.
- * @param {function(!analytics.internal.Settings): !analytics.internal.Channel}
- *     enabledChannelFactory
+ * @param {function(): !analytics.internal.Channel} enabledChannelFactory
  * @param {!analytics.internal.Settings} settings
  * @private
  */
@@ -119,7 +119,7 @@ analytics.internal.ServiceChannel.prototype.onSettingsReady_ =
   goog.asserts.assert(settings == this.settings_);
 
   // Get the "enabled" channel from the factory
-  this.channels_.enabled = enabledChannelFactory(this.settings_);
+  this.channels_.enabled = enabledChannelFactory();
   this.pickChannel_();
 
   // Drain all hits that were sent prior to now (those that were sent

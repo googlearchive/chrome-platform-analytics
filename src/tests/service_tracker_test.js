@@ -27,7 +27,8 @@ goog.require('analytics.internal.ParameterMap');
 goog.require('analytics.internal.Parameters');
 goog.require('analytics.internal.ServiceTracker');
 goog.require('analytics.internal.parameters');
-goog.require('analytics.testing.TestChannel');
+goog.require('analytics.testing.TestChannelManager');
+goog.require('analytics.testing.TestSettings');
 
 goog.require('goog.events.EventTarget');
 goog.require('goog.object');
@@ -80,6 +81,14 @@ var TIMING_HIT = {
 var replacer;
 
 
+/** @type {!analytics.testing.TestSettings} */
+var settings;
+
+
+/** @type {!analytics.testing.TestChannelManager} */
+var channelManager;
+
+
 /** @type {!analytics.testing.TestChannel} */
 var channel;
 
@@ -93,10 +102,12 @@ var extraParams;
 
 function setUp() {
   replacer = new goog.testing.PropertyReplacer();
-  channel = new analytics.testing.TestChannel();
+  settings = new analytics.testing.TestSettings();
+  channelManager = new analytics.testing.TestChannelManager();
+  channel = channelManager.getTestChannel();
   tracker = new analytics.internal.ServiceTracker(
-      channel,
-      new goog.events.EventTarget());
+      settings,
+      channelManager);
   extraParams = {};
 }
 

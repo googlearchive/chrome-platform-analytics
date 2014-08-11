@@ -12,26 +12,63 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+
 /**
  * @author tbreisacher@google.com (Tyler Breisacher)
  */
 goog.provide('analytics.extras.DummyTracker');
 
-goog.require('analytics.internal.DummyChannel');
-goog.require('analytics.internal.ServiceTracker');
+goog.require('analytics.Tracker');
 goog.require('goog.events.EventTarget');
+
 
 
 /**
  * A Tracker which no-ops for all methods. Not intended for testing; use
- * analytics.testing.TestTracker for tests.
+ * {@code analytics.testing.TestTracker} for tests.
  *
  * @constructor
- * @extends {analytics.internal.ServiceTracker}
+ * @implements {analytics.Tracker}
  * @struct
  */
-analytics.extras.DummyTracker = function() {
-  var channel = new analytics.internal.DummyChannel();
-  goog.base(this, channel, new goog.events.EventTarget());
-};
-goog.inherits(analytics.extras.DummyTracker, analytics.internal.ServiceTracker);
+analytics.extras.DummyTracker = function() {};
+
+
+/** @override */
+analytics.extras.DummyTracker.prototype.set = goog.nullFunction;
+
+
+/** @override */
+analytics.extras.DummyTracker.prototype.send = goog.nullFunction;
+
+
+/** @override */
+analytics.extras.DummyTracker.prototype.sendAppView = goog.nullFunction;
+
+
+/** @override */
+analytics.extras.DummyTracker.prototype.sendEvent = goog.nullFunction;
+
+
+/** @override */
+analytics.extras.DummyTracker.prototype.sendSocial = goog.nullFunction;
+
+
+/** @override */
+analytics.extras.DummyTracker.prototype.sendException = goog.nullFunction;
+
+
+/** @override */
+analytics.extras.DummyTracker.prototype.sendTiming = goog.nullFunction;
+
+
+/** @override */
+analytics.extras.DummyTracker.prototype.forceSessionStart = goog.nullFunction;
+
+
+/** @override */
+analytics.extras.DummyTracker.prototype.startTiming = goog.nullFunction;
+
+
+/** @override */
+analytics.extras.DummyTracker.prototype.getEventTarget = goog.nullFunction;

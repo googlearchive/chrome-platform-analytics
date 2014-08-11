@@ -24,9 +24,8 @@
 goog.provide('analytics.testing.TestTracker');
 
 goog.require('analytics.internal.ServiceTracker');
-goog.require('analytics.testing.TestChannel');
-
-goog.require('goog.events.EventTarget');
+goog.require('analytics.testing.TestChannelManager');
+goog.require('analytics.testing.TestSettings');
 
 
 
@@ -36,10 +35,11 @@ goog.require('goog.events.EventTarget');
  * @struct
  */
 analytics.testing.TestTracker = function() {
+  var channelManager = new analytics.testing.TestChannelManager();
   /** @private {!analytics.testing.TestChannel} */
-  this.testChannel_ = new analytics.testing.TestChannel();
+  this.testChannel_ = channelManager.getTestChannel();
 
-  goog.base(this, this.testChannel_, new goog.events.EventTarget());
+  goog.base(this, new analytics.testing.TestSettings(), channelManager);
 };
 goog.inherits(
     analytics.testing.TestTracker,

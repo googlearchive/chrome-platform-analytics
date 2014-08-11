@@ -36,7 +36,6 @@ goog.require('analytics.internal.UserSamplingChannel');
 goog.require('analytics.internal.XhrChannel');
 
 goog.require('goog.dom');
-goog.require('goog.events.EventTarget');
 goog.require('goog.events.OnlineHandler');
 
 
@@ -52,12 +51,14 @@ goog.require('goog.events.OnlineHandler');
  * @param {string} appName The Chromium Platform App name.
  * @param {string} appVersion The version of the platform app.
  * @param {!analytics.internal.Settings} settings
+ * @param {!analytics.internal.ChannelManager} channelManager
  */
 analytics.internal.GoogleAnalyticsService = function(
     libVersion,
     appName,
     appVersion,
-    settings) {
+    settings,
+    channelManager) {
 
   /** @private {string} */
   this.libVersion_ = libVersion;
@@ -70,40 +71,19 @@ analytics.internal.GoogleAnalyticsService = function(
 
   /** @private {!analytics.internal.Settings} */
   this.settings_ = settings;
+
+  /** @private {!analytics.internal.ChannelManager} */
+  this.channelManager_ = channelManager;
 };
-
-
-/**
- * The URL of the GA server. This library only communicates over SSL.
- * @private {string}
- */
-analytics.internal.GoogleAnalyticsService.GA_SERVER_ =
-    'https://www.google-analytics.com/collect';
-
-
-/**
- * The maximum number of characters that can be included in the POST payload.
- * @private {number}
- */
-analytics.internal.GoogleAnalyticsService.MAX_POST_LENGTH_ = 8192;
-
-
-/**
- * The channel that handles hits sent from a tracker instance. All
- * tracker instances share this single, lazily initialized, channel instance.
- * @private {!analytics.internal.Channel|undefined}
- */
-analytics.internal.GoogleAnalyticsService.channelPipeline_;
 
 
 /** @override */
 analytics.internal.GoogleAnalyticsService.prototype.getTracker =
     function(trackingId) {
 
-  var eventTarget = new goog.events.EventTarget();
   var tracker = new analytics.internal.ServiceTracker(
-      this.createServiceChannel_(eventTarget),
-      eventTarget);
+      this.settings_,
+      this.channelManager_);
 
   tracker.set(analytics.internal.Parameters.LIBRARY_VERSION, this.libVersion_);
   tracker.set(analytics.internal.Parameters.API_VERSION, 1);
@@ -114,41 +94,6 @@ analytics.internal.GoogleAnalyticsService.prototype.getTracker =
   analytics.internal.GoogleAnalyticsService.addEnvironmentalParams_(tracker);
 
   return tracker;
-};
-
-
-/**
- * Creates a service channel suitable for use with a single tracker instance.
- * Each tracker instance is paired with a specific service channel providing
- * proper servicing of hits.
- *
- * @param {!goog.events.EventTarget} eventTarget This event target is
- *     shared by the event publishing channel and the tracker as a means
- *     of exposing support for monitoring of events by client code.
- *     This slightly funky arrangement allows us to only report events when
- *     analytics is enabled (by way of including event publishing at the
- *     head of the channel pipeline.)
- *
- * @return {!analytics.internal.Channel}
- * @private
- */
-analytics.internal.GoogleAnalyticsService.prototype.createServiceChannel_ =
-    function(eventTarget) {
-
-  // Each tracker requires its own EventTarget & publishing so we provide
-  // a custom channel factory that places our event publishing channel
-  // at the head of the channel pipeline.
-  var channelFactory = function(settings) {
-    return new analytics.internal.EventPublishingChannel(
-      eventTarget,
-      analytics.internal.GoogleAnalyticsService.ChannelPipelineFactory(
-          settings));
-  };
-
-  return new analytics.internal.ServiceChannel(
-      this.settings_,
-      channelFactory,
-      analytics.internal.DummyChannel.getInstance());
 };
 
 
@@ -179,55 +124,4 @@ analytics.internal.GoogleAnalyticsService.addEnvironmentalParams_ =
   var size = goog.dom.getViewportSize();
   value = [size.width, size.height].join('x');
   tracker.set(analytics.internal.Parameters.VIEWPORT_SIZE, value);
-};
-
-
-/**
- * A factory that lazily creates the runtime Channel pipeline that handles
- * requests for users with tracking enabled. The use of a factory enables
- * delayed initialization of the pipeline. Deferred initialization is
- * necessitated by asynchronous loading of settings from local storage.
- * @param {!analytics.internal.Settings} settings A ready settings object.
- * @return {!analytics.internal.Channel} The channel.
- */
-analytics.internal.GoogleAnalyticsService.ChannelPipelineFactory =
-    function(settings) {
-  if (!analytics.internal.GoogleAnalyticsService.channelPipeline_) {
-
-    /** @type {!goog.net.NetworkStatusMonitor} */
-    var networkStatus = new goog.events.OnlineHandler();
-
-    /** @type {!analytics.internal.Channel} */
-    var xhrChannel =
-        new analytics.internal.XhrChannel(
-            analytics.internal.GoogleAnalyticsService.GA_SERVER_,
-            analytics.internal.GoogleAnalyticsService.MAX_POST_LENGTH_,
-            networkStatus);
-
-    /** @type {!analytics.internal.Channel} */
-    var paramFilterChannel = new analytics.internal.ParameterFilterChannel(
-        xhrChannel);
-
-    /** @type {!analytics.internal.TokenBucket} */
-    var tokenBucket = new analytics.internal.TokenBucket(
-        60, 500, analytics.internal.TokenBucket.FillRate.ONE_EVERY_TWO_SECONDS);
-
-    /** @type {!analytics.internal.Channel} */
-    var limitingChannel = new analytics.internal.RateLimitingChannel(
-        tokenBucket, paramFilterChannel);
-
-    /** @type {!analytics.internal.Channel} */
-    var samplerChannel = new analytics.internal.UserSamplingChannel(
-        settings,
-        limitingChannel);
-
-    /** @type {!analytics.internal.Channel} */
-    var asyncSettingsChannel = new analytics.internal.AsyncSettingsChannel(
-        settings, samplerChannel);
-
-    analytics.internal.GoogleAnalyticsService.channelPipeline_ =
-        asyncSettingsChannel;
-  }
-
-  return analytics.internal.GoogleAnalyticsService.channelPipeline_;
 };
