@@ -20,6 +20,7 @@
  * @author smckay@google.com (Steve McKay)
  */
 
+goog.require('analytics.Tracker.Hit');
 goog.provide('analytics.internal.FilterChannel');
 goog.require('analytics.internal.Channel');
 

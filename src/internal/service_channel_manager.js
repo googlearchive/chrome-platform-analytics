@@ -61,7 +61,7 @@ analytics.internal.ServiceChannelManager =
    * Buffer of any filters installed before the filter channel is
    * created.
    *
-   * @private {!Array.<!analytics.Tracker.Filter>}
+   * @private {Array.<!analytics.Tracker.Filter>}
    */
   this.bufferedFilters_ = [];
 
@@ -86,10 +86,15 @@ analytics.internal.ServiceChannelManager =
         // the filter channel was created.
         goog.array.forEach(
             this.bufferedFilters_,
+            /**
+             * @param {!analytics.Tracker.Filter} filter
+             * @this {analytics.internal.ServiceChannelManager}
+             */
             function(filter) {
               this.filterChannel_.addFilter(filter);
-              this.bufferedFilters_ = undefined;
-            });
+            },
+            this);
+        this.bufferedFilters_ = null;
         return this.filterChannel_;
       },
       this);

@@ -23,6 +23,7 @@ goog.provide('analytics.testing.TestChannel');
 
 goog.require('analytics.ParameterMap');
 goog.require('analytics.internal.DivertingChannel');
+goog.require('analytics.internal.HasChannel');
 goog.require('analytics.internal.parameters');
 goog.require('goog.array');
 goog.require('goog.async.Deferred');
@@ -36,6 +37,7 @@ goog.require('goog.testing.asserts');
  * @param {string=} opt_name A name useful for identifying the channel during
  *     testing.
  * @extends {analytics.internal.DivertingChannel}
+ * @implements {analytics.internal.HasChannel}
  * @struct
  */
 analytics.testing.TestChannel = function(opt_name) {
@@ -58,6 +60,12 @@ goog.inherits(analytics.testing.TestChannel,
 
 /** @typedef {!analytics.Parameter|string} */
 analytics.testing.TestChannel.Key_;
+
+
+/** @override */
+analytics.testing.TestChannel.prototype.getChannel = function() {
+  return this;
+};
 
 
 /**
