@@ -20,8 +20,9 @@
  * @author smckay@google.com (Steve McKay)
  */
 
-goog.require('analytics.Tracker.Hit');
 goog.provide('analytics.internal.FilterChannel');
+
+goog.require('analytics.Tracker.Hit');
 goog.require('analytics.internal.Channel');
 
 goog.require('goog.async.Deferred');
@@ -67,16 +68,59 @@ analytics.internal.FilterChannel.prototype.addFilter = function(filter) {
 analytics.internal.FilterChannel.prototype.send =
     function(hitType, parameters) {
 
-  var hit = new analytics.Tracker.Hit(hitType, parameters);
+  var hit = new analytics.internal.FilterChannel.Hit(hitType, parameters);
 
   for (var i = 0; i < this.filters_.length; i++) {
     this.filters_[i](hit);
-    if (hit.canceled()) {
+    if (hit.canceled_) {
       break;
     }
   }
 
-  return hit.canceled() ?
+  return hit.canceled_ ?
       goog.async.Deferred.succeed() :
       this.delegate_.send(hitType, parameters);
+};
+
+
+
+/**
+ * The implementation of the {@code Hit} used by FilterChannel.
+ *
+ * @constructor
+ * @implements {analytics.Tracker.Hit}
+ * @struct
+ *
+ * @param {!analytics.HitType} type
+ * @param {!analytics.ParameterMap} parameters
+ *
+ * @protected
+ */
+analytics.internal.FilterChannel.Hit = function(type, parameters) {
+  /** @private {!analytics.HitType} */
+  this.type_ = type;
+
+  /** @private {!analytics.ParameterMap} */
+  this.parameters_ = parameters;
+
+  /** @private {boolean} */
+  this.canceled_ = false;
+};
+
+
+/** @override */
+analytics.internal.FilterChannel.Hit.prototype.getHitType = function() {
+  return this.type_;
+};
+
+
+/** @override */
+analytics.internal.FilterChannel.Hit.prototype.getParameters = function() {
+  return this.parameters_;
+};
+
+
+/** @override */
+analytics.internal.FilterChannel.Hit.prototype.cancel = function() {
+  this.canceled_ = true;
 };

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 goog.require('analytics.GoogleAnalytics');
+goog.require('analytics.internal.FilterChannel');
 goog.require('analytics.internal.GoogleAnalyticsService');
 goog.require('analytics.internal.ServiceChannel');
 goog.require('analytics.internal.ServiceSettings');
@@ -105,6 +106,45 @@ goog.exportSymbol(
 goog.exportSymbol(
     'analytics.internal.ServiceTracker.prototype.getEventTarget',
     analytics.internal.ServiceTracker.prototype.getEventTarget);
+goog.exportSymbol(
+    'analytics.internal.ServiceTracker.prototype.addFilter',
+    analytics.internal.ServiceTracker.prototype.addFilter);
+
+goog.exportSymbol(
+    'analytics.internal.FilterChannel.Hit',
+    analytics.internal.FilterChannel.Hit);
+goog.exportSymbol(
+    'analytics.internal.FilterChannel.Hit.prototype.getHitType',
+    analytics.internal.FilterChannel.Hit.prototype.getHitType);
+goog.exportSymbol(
+    'analytics.internal.FilterChannel.Hit.prototype.getParameters',
+    analytics.internal.FilterChannel.Hit.prototype.getParameters);
+goog.exportSymbol(
+    'analytics.internal.FilterChannel.Hit.prototype.cancel',
+    analytics.internal.FilterChannel.Hit.prototype.cancel);
+
+
+goog.exportSymbol(
+    'analytics.ParameterMap',
+    analytics.ParameterMap);
+goog.exportSymbol(
+    'analytics.ParameterMap.Entry',
+    analytics.ParameterMap.Entry);
+goog.exportSymbol(
+    'analytics.ParameterMap.prototype.set',
+    analytics.ParameterMap.prototype.set);
+goog.exportSymbol(
+    'analytics.ParameterMap.prototype.get',
+    analytics.ParameterMap.prototype.get);
+goog.exportSymbol(
+    'analytics.ParameterMap.prototype.remove',
+    analytics.ParameterMap.prototype.remove);
+// intentionally omitting forEachEntry as it
+// is only used by internal code...and we like it like that.
+goog.exportSymbol(
+    'analytics.ParameterMap.prototype.toObject',
+    analytics.ParameterMap.prototype.toObject);
+
 
 // HitTypes...
 goog.exportSymbol(
@@ -142,6 +182,7 @@ goog.exportSymbol(
 goog.exportSymbol(
     'analytics.Tracker.HitEvent.prototype.getHit',
     analytics.Tracker.HitEvent.prototype.getHit);
+
 
 // Params...
 goog.object.forEach(

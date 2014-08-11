@@ -54,23 +54,20 @@ function startApp() {
   setupAnalyticsListener();
 }
 
-// Set up an event listener to capture events that are generated when analytics
-// receives a hit.  Useful for keeping track of what's happening in your app.
+// Add a filter that captures hits being sent to Google Analytics.
+// Useful for keeping track of what's happening in your app.
 function setupAnalyticsListener() {
   // Listen for event hits of the 'Flavor' category, and record them.
   previous = [];
-  var onTrackerEvent = function(event) {
-    if (event.getHitType() == analytics.HitTypes.EVENT) {
-      var hit = JSON.parse(event.getHit());
-      if (hit[analytics.Parameters.EVENT_CATEGORY.id] == 'Flavor') {
-        previous.push(hit[analytics.Parameters.EVENT_LABEL.id]);
-      }
-    }
-  };
-
-  // Install the event listener.
-  var eventTarget = tracker.getEventTarget();
-  eventTarget.listen(analytics.Tracker.HitEvent.EVENT_TYPE, onTrackerEvent);
+  tracker.addFilter(
+      function(hit) {
+        if (hit.getHitType() == analytics.HitTypes.EVENT) {
+          var params = hit.getParameters();
+          if (params.get(analytics.Parameters.EVENT_CATEGORY) == 'Flavor') {
+            previous.push(params.get(analytics.Parameters.EVENT_LABEL));
+          }
+        }
+      });
 }
 
 function addButtonListener(button) {

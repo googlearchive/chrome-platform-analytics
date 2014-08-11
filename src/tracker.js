@@ -221,58 +221,32 @@ analytics.Tracker.Filter;
 
 /**
  * A mutable representation of a hit being sent by client code.
- * This is the payload given to filters, and the means by which
- * a filter can manipulate or terminate ("cancel") a hit.
+ * This is the payload given to filters. Filters can manipulate
+ * parameters directly in the {@code ParameterMap} accessible
+ * via {@code #getParameters}, and can stop further processing
+ * of the hit using the {@code #cancel} method.
  *
- * @constructor
- * @struct
- *
- * @param {!analytics.HitType} type
- * @param {!analytics.ParameterMap} parameters
+ * @interface
  */
-analytics.Tracker.Hit = function(type, parameters) {
-  /** @private {!analytics.HitType} */
-  this.type_ = type;
-
-  /** @private {!analytics.ParameterMap} */
-  this.parameters_ = parameters;
-
-  /** @private {boolean} */
-  this.canceled_ = false;
-};
+analytics.Tracker.Hit = function() {};
 
 
 /** @return {!analytics.HitType} */
-analytics.Tracker.Hit.prototype.getHitType = function() {
-  return this.type_;
-};
+analytics.Tracker.Hit.prototype.getHitType;
 
 
 /**
  * @return {!analytics.ParameterMap} A map of the individual parameters
  *     and their values.
  */
-analytics.Tracker.Hit.prototype.getParameters = function() {
-  return this.parameters_;
-};
+analytics.Tracker.Hit.prototype.getParameters;
 
 
 /**
  * Marks the hit as canceled. The hit will endure no further
  * processing once it has been marked as canceled.
  */
-analytics.Tracker.Hit.prototype.cancel = function() {
-  this.canceled_ = true;
-};
-
-
-/**
- * @return {boolean} True if the hit was canceled by the previous
- *     filter. A filter will never be given a previously canceled hit.
- */
-analytics.Tracker.Hit.prototype.canceled = function() {
-  return this.canceled_;
-};
+analytics.Tracker.Hit.prototype.cancel;
 
 
 
