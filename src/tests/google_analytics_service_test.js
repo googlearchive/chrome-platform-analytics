@@ -35,7 +35,7 @@ goog.require('goog.testing.jsunit');
 
 
 /** @const {string} */
-var LIB_VERSION = 'ca1.4.0';
+var LIB_VERSION = 'ca1.5.0';
 
 
 /** @const {string} */
