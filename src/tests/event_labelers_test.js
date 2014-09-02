@@ -1,5 +1,5 @@
 /**
- * @fileoverview {@code cr.analytics.LabelingTracker} tests.
+ * @fileoverview {@code analytics.filters.EventLabelers} tests.
  * @author orenb@google.com (Oren Blasberg)
  */
 
