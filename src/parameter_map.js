@@ -56,7 +56,7 @@ analytics.ParameterMap = function(var_args) {
   this.entries_ = new goog.structs.Map();
 
   goog.asserts.assert(!(arguments.length % 2), 'Uneven number of arguments.');
-  this.addAll_(arguments);
+  this.addPairs_(arguments);
 };
 
 
@@ -108,6 +108,16 @@ analytics.ParameterMap.prototype.get = function(param) {
 
 
 /**
+ * Adds all elements from {@code map}.
+ *
+ * @param {!analytics.ParameterMap} map
+ */
+analytics.ParameterMap.prototype.addAll = function(map) {
+  this.entries_.addAll(map.entries_);
+};
+
+
+/**
  * Adds elements from list of alternating {@code analytics.Parameter}
  * and {@code analytics.Value} values.
  *
@@ -115,7 +125,7 @@ analytics.ParameterMap.prototype.get = function(param) {
  *     analytics.Parameter|analytics.Value>} elements
  * @private
  */
-analytics.ParameterMap.prototype.addAll_ = function(elements) {
+analytics.ParameterMap.prototype.addPairs_ = function(elements) {
   for (var i = 0; i < elements.length; i += 2) {
     this.set(
         /** @type {analytics.Parameter} */ (elements[i]),

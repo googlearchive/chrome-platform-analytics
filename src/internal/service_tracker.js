@@ -78,8 +78,11 @@ analytics.internal.ServiceTracker.prototype.send =
     function(hitType, opt_extraParams) {
   var hit = this.params_.clone();
 
-  if (opt_extraParams) {
-    goog.object.forEach(opt_extraParams,
+  if (opt_extraParams instanceof analytics.ParameterMap) {
+    hit.addAll(opt_extraParams);
+  } else if (goog.isObject(opt_extraParams)) {
+    goog.object.forEach(
+        opt_extraParams,
         function(value, key) {
           if (goog.isDefAndNotNull(value)) {
             hit.set(analytics.internal.parameters.asParameter(key), value);

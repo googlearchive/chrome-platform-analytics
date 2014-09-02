@@ -68,9 +68,11 @@ analytics.Tracker.prototype.set;
  * {@code sendEvent}.
  *
  * @param {!analytics.HitType} hitType
- * @param {!Object=} opt_extraParams An optional object containing
- *     {@code string} / {@code !analytics.Value} pairs
- *     to send with the hit. The values are NOT persisted in the tracker.
+ * @param {(!analytics.ParameterMap|!Object.<string, !analytics.Value>)=}
+ *     opt_extraParams An optional ParameterMap || object containing
+ *    {@code string} / {@code !analytics.Value}
+ *     pairs to send with the hit.
+ *     The values are NOT persisted in the tracker.
  * @return {!goog.async.Deferred}
  */
 analytics.Tracker.prototype.send;

@@ -98,6 +98,17 @@ function testInequality() {
   assertFalse(map.equals(other));
 }
 
+function testAddAll() {
+  map.set(analytics.internal.Parameters.SCREEN_RESOLUTION, 'Bedazzler');
+  map.set(analytics.Parameters.CAMPAIGN_ID, '789');
+
+  /** @type {!analytics.ParameterMap} */
+  var other = new analytics.ParameterMap();
+  other.addAll(map);
+  assertTrue(map.equals(other));
+}
+
+
 function testConstructorDisallowsUnevenNumberOfArguments() {
   try {
     new analytics.ParameterMap(
