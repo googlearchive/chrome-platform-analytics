@@ -13,7 +13,7 @@
 // limitations under the License.
 
 goog.require('analytics.GoogleAnalytics');
-goog.require('analytics.filters.EventLabelers');
+goog.require('analytics.filters.EventLabelerBuilder');
 goog.require('analytics.filters.FilterBuilder');
 goog.require('analytics.internal.FilterChannel');
 goog.require('analytics.internal.GoogleAnalyticsService');
@@ -181,25 +181,23 @@ goog.object.forEach(
 
 // Filters
 goog.exportSymbol(
-    'analytics.filters.EventLabelers.ExponentialLabelerBuilder',
-    analytics.filters.EventLabelers.ExponentialLabelerBuilder);
+    'analytics.filters.EventLabelerBuilder',
+    analytics.filters.EventLabelerBuilder);
 goog.exportSymbol(
-    'analytics.filters.EventLabelers.ExponentialLabelerBuilder.prototype.stripValue',
-    analytics.filters.EventLabelers.ExponentialLabelerBuilder.prototype.
-        stripValue);
+    'analytics.filters.EventLabelerBuilder.prototype.appendToExistingLabel',
+    analytics.filters.EventLabelerBuilder.prototype.appendToExistingLabel);
 goog.exportSymbol(
-    'analytics.filters.EventLabelers.ExponentialLabelerBuilder.prototype.build',
-    analytics.filters.EventLabelers.ExponentialLabelerBuilder.prototype.build);
+    'analytics.filters.EventLabelerBuilder.prototype.stripValue',
+    analytics.filters.EventLabelerBuilder.prototype.stripValue);
 goog.exportSymbol(
-    'analytics.filters.EventLabelers.RangeBoundsLabelerBuilder',
-    analytics.filters.EventLabelers.RangeBoundsLabelerBuilder);
+    'analytics.filters.EventLabelerBuilder.prototype.powersOfTwo',
+    analytics.filters.EventLabelerBuilder.prototype.powersOfTwo);
 goog.exportSymbol(
-    'analytics.filters.EventLabelers.RangeBoundsLabelerBuilder.prototype.stripValue',
-    analytics.filters.EventLabelers.RangeBoundsLabelerBuilder.prototype.
-        stripValue);
+    'analytics.filters.EventLabelerBuilder.prototype.rangeBounds',
+    analytics.filters.EventLabelerBuilder.prototype.rangeBounds);
 goog.exportSymbol(
-    'analytics.filters.EventLabelers.RangeBoundsLabelerBuilder.prototype.build',
-    analytics.filters.EventLabelers.RangeBoundsLabelerBuilder.prototype.build);
+    'analytics.filters.EventLabelerBuilder.prototype.build',
+    analytics.filters.EventLabelerBuilder.prototype.build);
 
 goog.exportSymbol(
     'analytics.filters.FilterBuilder',

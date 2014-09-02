@@ -13,24 +13,25 @@
 // limitations under the License.
 
 /**
- * @fileoverview {@code analytics.filters.EventLabelers} tests.
+ * @fileoverview {@code analytics.filters.EventLabelerBuilder} tests.
  * @author orenb@google.com (Oren Blasberg)
  */
 
 goog.setTestOnly();
 
-goog.require('analytics.filters.EventLabelers');
+goog.require('analytics.filters.EventLabelerBuilder');
 goog.require('analytics.testing.Hits');
 goog.require('goog.testing.jsunit');
 
 
 /**
- * Tests that an exponential labeler produces the correct range labels for
+ * Tests that an powers-of-two labeler produces the correct range labels for
  * the given hit value.
  */
-function testExponentialLabeler() {
-  var labeler =
-      new analytics.filters.EventLabelers.ExponentialLabelerBuilder().build();
+function testPowersOfTwoLabeler() {
+  var labeler = new analytics.filters.EventLabelerBuilder().
+      powersOfTwo().
+      build();
 
   checkLabelerHit(labeler, '<= 0', -5);
   checkLabelerHit(labeler, '<= 0', 0);
@@ -44,23 +45,23 @@ function testExponentialLabeler() {
 
 
 /**
- * Verifies that a non-EVENT hit just passes through the exponential labeler
+ * Verifies that a non-EVENT hit just passes through the powers-of-two labeler
  * filter without its params being modified.
  */
-function testExponentialLabeler_NonEventHit() {
+function testPowersOfTwoLabeler_NonEventHit() {
   var hit = analytics.testing.Hits.createAppViewHit('asdf');
   var origParams = hit.getParameters().clone();
-  var labeler =
-      new analytics.filters.EventLabelers.ExponentialLabelerBuilder().
+  var labeler = new analytics.filters.EventLabelerBuilder().
+      powersOfTwo().
       build();
 
   labeler(hit);
   assertTrue(origParams.equals(hit.getParameters()));
 }
 
-function testExponentialLabeler_WithStrippedValue() {
-  var labeler =
-      new analytics.filters.EventLabelers.ExponentialLabelerBuilder().
+function testPowersOfTwoLabeler_WithStrippedValue() {
+  var labeler = new analytics.filters.EventLabelerBuilder().
+      powersOfTwo().
       stripValue().
       build();
 
@@ -75,17 +76,77 @@ function testExponentialLabeler_WithStrippedValue() {
 
 
 /**
- * Verifies that if an event hit has an existing label, the exponential labeler
- * will leave it alone.
+ * Verifies that if an event hit has an existing label, the powers-of-two
+ * labeler will replace it w/ the new one.
  */
-function testExponentialLabeler_WithExistingLabel() {
+function testPowersOfTwoLabeler_WithExistingLabel() {
   var hit = analytics.testing.Hits.createEventHit(100);
   hit.getParameters().set(analytics.Parameters.EVENT_LABEL, 'asdf');
 
-  var labeler =
-      new analytics.filters.EventLabelers.ExponentialLabelerBuilder().build();
+  var labeler = new analytics.filters.EventLabelerBuilder().
+      powersOfTwo().
+      build();
   labeler(hit);
-  assertEquals('asdf',
+  assertEquals('64-128',
+      hit.getParameters().get(analytics.Parameters.EVENT_LABEL));
+}
+
+
+/**
+ * Verifies that if an event hit has an existing label, the powers-of-two
+ * labeler will append the new label to the existing one if the append feature
+ * is specified.
+ */
+function testPowersOfTwoLabeler_WithExistingLabel_WithAppend() {
+  var hit = analytics.testing.Hits.createEventHit(100);
+  hit.getParameters().set(analytics.Parameters.EVENT_LABEL, 'asdf');
+
+  var labeler = new analytics.filters.EventLabelerBuilder().
+      powersOfTwo().
+      appendToExistingLabel().
+      build();
+  labeler(hit);
+  assertEquals('asdf - 64-128',
+      hit.getParameters().get(analytics.Parameters.EVENT_LABEL));
+}
+
+
+/**
+ * Verifies that if an event hit has an existing label, the powers-of-two
+ * labeler will append the new label to the existing one, and strips the value
+ * if that is configured.
+ */
+function testPowersOfTwoLabeler_WithExistingLabel_WithAppendAndStrippedValue() {
+  var hit = analytics.testing.Hits.createEventHit(100);
+  hit.getParameters().set(analytics.Parameters.EVENT_LABEL, 'asdf');
+
+  var labeler = new analytics.filters.EventLabelerBuilder().
+      powersOfTwo().
+      appendToExistingLabel().
+      stripValue().
+      build();
+  labeler(hit);
+  assertEquals('asdf - 64-128',
+      hit.getParameters().get(analytics.Parameters.EVENT_LABEL));
+  assertNull(hit.getParameters().get(analytics.Parameters.EVENT_VALUE));
+}
+
+
+/**
+ * Verifies that if an event hit has an existing label, the powers-of-two
+ * labeler will append the new label to the existing one using the given
+ * separator if the append feature is specified.
+ */
+function testPowersOfTwoLabeler_WithExistingLabel_WithAppend_Separator() {
+  var hit = analytics.testing.Hits.createEventHit(100);
+  hit.getParameters().set(analytics.Parameters.EVENT_LABEL, 'asdf');
+
+  var labeler = new analytics.filters.EventLabelerBuilder().
+      powersOfTwo().
+      appendToExistingLabel(' ~~ ').
+      build();
+  labeler(hit);
+  assertEquals('asdf ~~ 64-128',
       hit.getParameters().get(analytics.Parameters.EVENT_LABEL));
 }
 
@@ -96,8 +157,9 @@ function testExponentialLabeler_WithExistingLabel() {
  */
 function testRangeBoundsLabeler() {
   var rightBounds = [10, 50, 100, 250, 500, 1000];
-  var labeler = new analytics.filters.EventLabelers.RangeBoundsLabelerBuilder(
-      rightBounds).build();
+  var labeler = new analytics.filters.EventLabelerBuilder().
+      rangeBounds(rightBounds).
+      build();
 
   checkLabelerHit(labeler, '<= 0', -230);
 
@@ -141,8 +203,8 @@ function testRangeBoundsLabeler() {
 function testRangeBoundsLabeler_NonEventHit() {
   var hit = analytics.testing.Hits.createAppViewHit('asdf');
   var origParams = hit.getParameters().clone();
-  var labeler =
-      new analytics.filters.EventLabelers.RangeBoundsLabelerBuilder([10, 50]).
+  var labeler = new analytics.filters.EventLabelerBuilder().
+      rangeBounds([10, 50]).
       build();
 
   labeler(hit);
@@ -150,8 +212,8 @@ function testRangeBoundsLabeler_NonEventHit() {
 }
 
 function testRangeBoundsLabeler_WithStrippedValue() {
-  var labeler =
-      new analytics.filters.EventLabelers.RangeBoundsLabelerBuilder([10, 50]).
+  var labeler = new analytics.filters.EventLabelerBuilder().
+      rangeBounds([10, 50]).
       stripValue().
       build();
 
@@ -167,18 +229,99 @@ function testRangeBoundsLabeler_WithStrippedValue() {
 
 /**
  * Verifies that if an event hit has an existing label, the range bounds labeler
- * will leave it alone.
+ * will replace it w/ the new one.
  */
 function testRangeBoundsLabeler_WithExistingLabel() {
   var hit = analytics.testing.Hits.createEventHit(100);
   hit.getParameters().set(analytics.Parameters.EVENT_LABEL, 'asdf');
 
-  var labeler =
-      new analytics.filters.EventLabelers.RangeBoundsLabelerBuilder([10, 50]).
+  var labeler = new analytics.filters.EventLabelerBuilder().
+      rangeBounds([10, 50]).
       build();
   labeler(hit);
-  assertEquals('asdf',
+  assertEquals('51+',
       hit.getParameters().get(analytics.Parameters.EVENT_LABEL));
+}
+
+
+/**
+ * Verifies that if an event hit has an existing label, the range bounds labeler
+ * will append the new label to the existing one if the append feature is
+ * specified.
+ */
+function testRangeBoundsLabeler_WithExistingLabel_WithAppend() {
+  var hit = analytics.testing.Hits.createEventHit(100);
+  hit.getParameters().set(analytics.Parameters.EVENT_LABEL, 'asdf');
+
+  var labeler = new analytics.filters.EventLabelerBuilder().
+      rangeBounds([10, 50]).
+      appendToExistingLabel().
+      build();
+  labeler(hit);
+  assertEquals('asdf - 51+',
+      hit.getParameters().get(analytics.Parameters.EVENT_LABEL));
+}
+
+
+/**
+ * Verifies that if an event hit has an existing label, the powers-of-two
+ * labeler will append the new label to the existing one, and strips the value
+ * if that is configured.
+ */
+function testRangeBoundsLabeler_WithExistingLabel_WithAppendAndStrippedValue() {
+  var hit = analytics.testing.Hits.createEventHit(100);
+  hit.getParameters().set(analytics.Parameters.EVENT_LABEL, 'asdf');
+
+  var labeler = new analytics.filters.EventLabelerBuilder().
+      rangeBounds([10, 50]).
+      appendToExistingLabel().
+      stripValue().
+      build();
+  labeler(hit);
+  assertEquals('asdf - 51+',
+      hit.getParameters().get(analytics.Parameters.EVENT_LABEL));
+  assertNull(hit.getParameters().get(analytics.Parameters.EVENT_VALUE));
+}
+
+
+/**
+ * Verifies that if an event hit has an existing label, the powers-of-two
+ * labeler will append the new label to the existing one using the given
+ * separator if the append feature is specified..
+ */
+function testRangeBoundsLabeler_WithExistingLabel_WithAppend_Separator() {
+  var hit = analytics.testing.Hits.createEventHit(100);
+  hit.getParameters().set(analytics.Parameters.EVENT_LABEL, 'asdf');
+
+  var labeler = new analytics.filters.EventLabelerBuilder().
+      rangeBounds([10, 50]).
+      appendToExistingLabel(' ~~ ').
+      build();
+  labeler(hit);
+  assertEquals('asdf ~~ 51+',
+      hit.getParameters().get(analytics.Parameters.EVENT_LABEL));
+}
+
+
+/**
+ * Tests that if a client tries to apply multiple labeling strategies to the
+ * builder, this throws an error.
+ */
+function testMultipleStrategiesThrowsError() {
+  assertThrows(function() {
+    var labeler = new analytics.filters.EventLabelerBuilder().
+        rangeBounds([10, 50]).
+        powersOfTwo().
+        build();
+  });
+}
+
+
+function testNoStrategyThrowsError() {
+  assertThrows(function() {
+    var labeler = new analytics.filters.EventLabelerBuilder().
+        build();
+  });
 }
 
 
