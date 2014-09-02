@@ -240,6 +240,18 @@ analytics.ParameterMap.prototype.contains = function(parameters) {
 };
 
 
+/**
+ * Returns true if this instance contains {@code key}.
+ *
+ * @param {!analytics.Parameter} parameter
+ * @return {boolean} True if this instance has an entry for
+ *     the specified parameter.
+ */
+analytics.ParameterMap.prototype.hasParameter = function(parameter) {
+  return this.entries_.containsKey(parameter.name);
+};
+
+
 /** @override */
 analytics.ParameterMap.prototype.toString = function() {
   /** @type {!Object.<string, !analytics.Value>} */

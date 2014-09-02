@@ -41,7 +41,7 @@ function setUp() {
 
 
 function testEventBuilder() {
-  analytics.EventBuilder.create().
+  analytics.EventBuilder.builder().
       category('mycategory').
       action('myaction').
       value(11).
@@ -58,8 +58,20 @@ function testEventBuilder() {
           analytics.createMetricParam(11), 123));
 }
 
+function testEventBuilder_NoDuplicateParameters() {
+  analytics.EventBuilder.builder().
+      category('mycategory').
+      category('hiscategory').
+      category('yourcategory').
+      send(tracker);
+
+  channel.assertHitSent(
+      new analytics.ParameterMap(
+          analytics.Parameters.EVENT_CATEGORY, 'yourcategory'));
+}
+
 function testEventBuilder_InstancesImmutable() {
-  var builder = analytics.EventBuilder.create();
+  var builder = analytics.EventBuilder.builder();
 
   builder.category('mycategory').send(tracker);
 

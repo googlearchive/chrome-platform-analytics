@@ -26,20 +26,20 @@ goog.provide('analytics.EventBuilder');
 
 /**
  * A class that aids in the building of event hits. Create instances
- * of this class using {@code analytics.EventBuilder#create}.
+ * of this class using {@code analytics.EventBuilder#builder}.
  *
  * @constructor
  * @struct
  *
- * @param {function(!analytics.Tracker, !analytics.ParameterMap):
- *     !goog.async.Deferred} delegate
+ * @param {function(!analytics.ParameterMap)} delegate This is the
+ *    connection to our parent builder (or an terminal function).
+ *    When we're asked to "collect", we put our params in the map,
+ *    then call this function to give our parent builder a chance
+ *    to contribute (or a terminal function that ends collection).
  */
 analytics.EventBuilder = function(delegate) {
 
-  /**
-   * @private {function(!analytics.Tracker, !analytics.ParameterMap):
-   *     !goog.async.Deferred}
-   */
+  /** @private {function(!analytics.ParameterMap)} */
   this.delegate_ = delegate;
 
   /** @private {!analytics.Parameter} */
@@ -57,7 +57,7 @@ analytics.EventBuilder = function(delegate) {
  */
 analytics.EventBuilder.prototype.category = function(category) {
   var builder = new analytics.EventBuilder(
-      goog.bind(this.send_, this));
+      goog.bind(this.collect, this));
   builder.parameter_ = analytics.Parameters.EVENT_CATEGORY;
   builder.value_ = category;
   return builder;
@@ -71,7 +71,7 @@ analytics.EventBuilder.prototype.category = function(category) {
  */
 analytics.EventBuilder.prototype.action = function(action) {
   var builder = new analytics.EventBuilder(
-      goog.bind(this.send_, this));
+      goog.bind(this.collect, this));
   builder.parameter_ = analytics.Parameters.EVENT_ACTION;
   builder.value_ = action;
   return builder;
@@ -85,7 +85,7 @@ analytics.EventBuilder.prototype.action = function(action) {
  */
 analytics.EventBuilder.prototype.label = function(label) {
   var builder = new analytics.EventBuilder(
-      goog.bind(this.send_, this));
+      goog.bind(this.collect, this));
   builder.parameter_ = analytics.Parameters.EVENT_LABEL;
   builder.value_ = label;
   return builder;
@@ -99,7 +99,7 @@ analytics.EventBuilder.prototype.label = function(label) {
  */
 analytics.EventBuilder.prototype.value = function(value) {
   var builder = new analytics.EventBuilder(
-      goog.bind(this.send_, this));
+      goog.bind(this.collect, this));
   builder.parameter_ = analytics.Parameters.EVENT_VALUE;
   builder.value_ = value;
   return builder;
@@ -114,7 +114,7 @@ analytics.EventBuilder.prototype.value = function(value) {
  */
 analytics.EventBuilder.prototype.dimension = function(index, value) {
   var builder = new analytics.EventBuilder(
-      goog.bind(this.send_, this));
+      goog.bind(this.collect, this));
   builder.parameter_ = analytics.createDimensionParam(index);
   builder.value_ = value;
   return builder;
@@ -129,7 +129,7 @@ analytics.EventBuilder.prototype.dimension = function(index, value) {
  */
 analytics.EventBuilder.prototype.metric = function(index, value) {
   var builder = new analytics.EventBuilder(
-      goog.bind(this.send_, this));
+      goog.bind(this.collect, this));
   builder.parameter_ = analytics.createMetricParam(index);
   builder.value_ = value;
   return builder;
@@ -142,44 +142,52 @@ analytics.EventBuilder.prototype.metric = function(index, value) {
  * @return {!goog.async.Deferred}
  */
 analytics.EventBuilder.prototype.send = function(tracker) {
-  return this.send_(tracker, new analytics.ParameterMap());
+  var parameters = new analytics.ParameterMap();
+  this.collect(parameters);
+  return tracker.send(analytics.HitTypes.EVENT, parameters);
 };
 
 
 /**
- * @param {!analytics.Tracker} tracker
- * @param {!analytics.ParameterMap} parameters
+ * Collects all parameters in this builder. Only the most
+ * "recently" (closest to the leaves) set value will be added
+ * when duplicate parameters have been set in the builder.
  *
- * @return {!goog.async.Deferred}
- * @private
+ * @param {!analytics.ParameterMap} parameters
  */
-analytics.EventBuilder.prototype.send_ =
-    function(tracker, parameters) {
-  return this.delegate_(tracker, this.extend_(parameters));
+analytics.EventBuilder.prototype.collect = function(parameters) {
+  this.put_(parameters);
+  if (goog.isObject(this.delegate_)) {
+    this.delegate_(parameters);
+  }
 };
 
 
 /**
- * Extends the supplied parameters with the parameters from this
- * instance.
+ * Puts the parameters known to this instance into {@code parameters}.
+ * Parameters will only be added if there is no existing entry.
+ *
+ * <p>This allows builder instances at the leaves to override values
+ * supplied by earlier builders.
  *
  * @param {!analytics.ParameterMap} parameters
- *
- * @return {!analytics.ParameterMap} It's the same instance that
- *     was passed in, but for the sake of convenience, we'll return it too :).
  * @private
  */
-analytics.EventBuilder.prototype.extend_ = function(parameters) {
+analytics.EventBuilder.prototype.put_ = function(parameters) {
   if (goog.isDefAndNotNull(this.parameter_) &&
-      goog.isDefAndNotNull(this.value_)) {
+      goog.isDefAndNotNull(this.value_) &&
+      !parameters.hasParameter(this.parameter_)) {
     parameters.set(this.parameter_, this.value_);
   }
-  return parameters;
 };
 
 
+/** @private {!analytics.EventBuilder} */
+analytics.EventBuilder.EMPTY_ = new analytics.EventBuilder(goog.nullFunction);
+
+
 /**
- * Creates a HitBuilder...and returns it to you. Each call
+ * Returns an empty HitBuilder instance. Each call
  * to a mutator method on this class (all methods except
  * {@code send}), return a new instance of the builder that
  * itself is immutable. That means plenty of object allocations.
@@ -188,16 +196,6 @@ analytics.EventBuilder.prototype.extend_ = function(parameters) {
  *
  * @return {!analytics.EventBuilder}
  */
-analytics.EventBuilder.create = function() {
-  return new analytics.EventBuilder(
-      /**
-       * @param {!analytics.Tracker} tracker
-       * @param {!analytics.ParameterMap} parameters
-       */
-      function(tracker, parameters) {
-        return tracker.send(
-            analytics.HitTypes.EVENT,
-            parameters);
-      });
+analytics.EventBuilder.builder = function() {
+  return analytics.EventBuilder.EMPTY_;
 };
-

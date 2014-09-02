@@ -87,6 +87,16 @@ function testContains_Failure() {
   assertFalse(map.contains(other));
 }
 
+function testHasParameter() {
+  map.set(analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768');
+  assertTrue(map.hasParameter(analytics.internal.Parameters.SCREEN_RESOLUTION));
+}
+
+function testHasParameter_Failure() {
+  map.set(analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768');
+  assertFalse(map.hasParameter(analytics.Parameters.CACHE_BUSTER));
+}
+
 function testInequality() {
   map.set(analytics.internal.Parameters.SCREEN_RESOLUTION, 'Bedazzler');
   map.set(analytics.Parameters.CAMPAIGN_ID, '789');
@@ -107,7 +117,6 @@ function testAddAll() {
   other.addAll(map);
   assertTrue(map.equals(other));
 }
-
 
 function testConstructorDisallowsUnevenNumberOfArguments() {
   try {

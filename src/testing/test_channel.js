@@ -21,6 +21,7 @@
 
 goog.provide('analytics.testing.TestChannel');
 
+goog.require('analytics.EventBuilder');
 goog.require('analytics.ParameterMap');
 goog.require('analytics.internal.DivertingChannel');
 goog.require('analytics.internal.HasChannel');
@@ -141,6 +142,16 @@ analytics.testing.TestChannel.prototype.assertHitSent = function(expected) {
         'Call to assertHitSent failed.',
         goog.string.format('Hit %s was not sent.', expected.toString()));
   }
+};
+
+
+/**
+ * @param {!analytics.EventBuilder} expected
+ */
+analytics.testing.TestChannel.prototype.assertEventSent = function(expected) {
+  var params = new analytics.ParameterMap();
+  expected.collect(params);
+  this.assertHitSent(params);
 };
 
 
