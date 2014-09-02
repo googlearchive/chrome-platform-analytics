@@ -141,12 +141,7 @@ analytics.filters.EventLabelerBuilder.prototype.stripValue =
  */
 analytics.filters.EventLabelerBuilder.prototype.powersOfTwo =
     function() {
-  if (goog.isDefAndNotNull(this.labeler_)) {
-    throw new Error('LabelerBuilder: Only one labeling strategy may be used.');
-  }
-
-  this.labeler_ = goog.bind(this.powersOfTwoLabeler_, this);
-  return this;
+  return this.labeler(analytics.filters.Buckets.powersOfTwo);
 };
 
 
@@ -164,63 +159,48 @@ analytics.filters.EventLabelerBuilder.prototype.powersOfTwo =
  */
 analytics.filters.EventLabelerBuilder.prototype.rangeBounds =
     function(rightBounds) {
+  return this.labeler(
+      goog.partial(analytics.filters.Buckets.rangeBounds, rightBounds));
+};
+
+
+/**
+ * Configures the labeler to use the supplied labeler function.
+ *
+ * @param {function(number): string} labeler
+ *
+ * @return {!analytics.filters.EventLabelerBuilder} This
+ *     builder, configured such that the supplied labeler is used.
+ */
+analytics.filters.EventLabelerBuilder.prototype.labeler =
+    function(labeler) {
   if (goog.isDefAndNotNull(this.labeler_)) {
     throw new Error('LabelerBuilder: Only one labeling strategy may be used.');
   }
 
-  this.labeler_ = goog.bind(this.rangeBoundsLabeler_, this, rightBounds);
+  this.labeler_ = goog.bind(
+      /**
+       * @param {!analytics.Tracker.Hit} hit
+       * @this {analytics.filters.EventLabelerBuilder}
+       */
+      function(hit) {
+        var val = hit.getParameters().get(analytics.Parameters.EVENT_VALUE);
+        var oldLabel = hit.getParameters().get(
+            analytics.Parameters.EVENT_LABEL);
+        if (!goog.isNumber(val)) {
+          return;
+        }
+
+        var newLabel = labeler(val);
+        if (goog.isDefAndNotNull(oldLabel) && this.appendToExistingLabel_) {
+          newLabel = oldLabel + this.labelSeparator_ + newLabel;
+        }
+
+        hit.getParameters().set(analytics.Parameters.EVENT_LABEL, newLabel);
+      },
+      this);
+
   return this;
-};
-
-
-/**
- * Labeler filter that generates an powers-of-two range label for the hit.
- *
- * @param {!analytics.Tracker.Hit} hit
- *
- * @private
- */
-analytics.filters.EventLabelerBuilder.prototype.powersOfTwoLabeler_ =
-    function(hit) {
-  var val = hit.getParameters().get(analytics.Parameters.EVENT_VALUE);
-  var oldLabel = hit.getParameters().get(analytics.Parameters.EVENT_LABEL);
-  if (!goog.isNumber(val)) {
-    return;
-  }
-
-  var newLabel = analytics.filters.Buckets.powersOfTwo(val);
-  if (goog.isDefAndNotNull(oldLabel) && this.appendToExistingLabel_) {
-    newLabel = oldLabel + this.labelSeparator_ + newLabel;
-  }
-
-  hit.getParameters().set(analytics.Parameters.EVENT_LABEL, newLabel);
-};
-
-
-/**
- * Labeler filter that generates a new range bounds label for the hit.
- *
- * @param {!Array.<number>} rightBounds The right bounds of each range.
- * @param {!analytics.Tracker.Hit} hit
- *
- * @private
- */
-analytics.filters.EventLabelerBuilder.prototype.rangeBoundsLabeler_ =
-    function(rightBounds, hit) {
-  var newLabel = '';
-  var oldLabel = hit.getParameters().get(analytics.Parameters.EVENT_LABEL);
-  var val = hit.getParameters().get(analytics.Parameters.EVENT_VALUE);
-  if (!goog.isNumber(val)) {
-    return;
-  }
-
-  if (goog.isDefAndNotNull(oldLabel) && this.appendToExistingLabel_) {
-    newLabel += oldLabel + this.labelSeparator_;
-  }
-
-  newLabel += analytics.filters.Buckets.rangeBounds(rightBounds, val);
-
-  hit.getParameters().set(analytics.Parameters.EVENT_LABEL, newLabel);
 };
 
 

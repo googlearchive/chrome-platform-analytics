@@ -33,14 +33,16 @@ function testPowersOfTwoLabeler() {
       powersOfTwo().
       build();
 
-  checkLabelerHit(labeler, '<= 0', -5);
-  checkLabelerHit(labeler, '<= 0', 0);
-  checkLabelerHit(labeler, '2-4', 2);
-  checkLabelerHit(labeler, '8-16', 10);
-  checkLabelerHit(labeler, '8-16', 13.3095235);
-  checkLabelerHit(labeler, '32-64', 50);
-  checkLabelerHit(labeler, '128-256', 250);
-  checkLabelerHit(labeler, '8192-16384', 12500);
+  checkLabelerHit(labeler, '0', -5);  // GA illegal, whuteva
+  checkLabelerHit(labeler, '0', 0);
+  checkLabelerHit(labeler, '1-2', 1.5);
+  checkLabelerHit(labeler, '1-2', 2);
+  checkLabelerHit(labeler, '3-4', 3.14159);  // GA illegal, whutevas
+  checkLabelerHit(labeler, '5-8', 6);
+  checkLabelerHit(labeler, '9-16', 16.1);
+  checkLabelerHit(labeler, '33-64', 50);
+  checkLabelerHit(labeler, '129-256', 250);
+  checkLabelerHit(labeler, '8193-16384', 12500);
 }
 
 
@@ -82,7 +84,7 @@ function testPowersOfTwoLabeler_WithStrippedValue() {
       build();
 
   // Verify labeling still works.
-  checkLabelerHit(labeler, '32-64', 50);
+  checkLabelerHit(labeler, '33-64', 50);
 
   // Verify the value got stripped out.
   var hit = analytics.testing.Hits.createEventHit(100);
@@ -103,7 +105,7 @@ function testPowersOfTwoLabeler_WithExistingLabel() {
       powersOfTwo().
       build();
   labeler(hit);
-  assertEquals('64-128',
+  assertEquals('65-128',
       hit.getParameters().get(analytics.Parameters.EVENT_LABEL));
 }
 
@@ -122,7 +124,7 @@ function testPowersOfTwoLabeler_WithExistingLabel_WithAppend() {
       appendToExistingLabel().
       build();
   labeler(hit);
-  assertEquals('asdf - 64-128',
+  assertEquals('asdf - 65-128',
       hit.getParameters().get(analytics.Parameters.EVENT_LABEL));
 }
 
@@ -142,7 +144,7 @@ function testPowersOfTwoLabeler_WithExistingLabel_WithAppendAndStrippedValue() {
       stripValue().
       build();
   labeler(hit);
-  assertEquals('asdf - 64-128',
+  assertEquals('asdf - 65-128',
       hit.getParameters().get(analytics.Parameters.EVENT_LABEL));
   assertNull(hit.getParameters().get(analytics.Parameters.EVENT_VALUE));
 }
@@ -162,7 +164,7 @@ function testPowersOfTwoLabeler_WithExistingLabel_WithAppend_Separator() {
       appendToExistingLabel(' ~~ ').
       build();
   labeler(hit);
-  assertEquals('asdf ~~ 64-128',
+  assertEquals('asdf ~~ 65-128',
       hit.getParameters().get(analytics.Parameters.EVENT_LABEL));
 }
 

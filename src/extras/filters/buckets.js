@@ -23,23 +23,29 @@ goog.provide('analytics.filters.Buckets');
 /**
  * <p>E.g.,
  * <pre>
- *    50 -> "32-64"
- *    51 -> "32-64"
- *    120 -> "64-128"
- *    15 -> "8-16"
+ *    15 -> "9-16"
+ *    31 -> "17-32"
+ *    32 -> "33-64"
+ *    50 -> "33-64"
+ *    51 -> "33-64"
+ *    120 -> "65-128"
  *    ...
  * </pre>
  *
- * @param {number} val The value to bucket.
+ * @param {number} val The number value to bucket.
+ *     Should be whole and non-negative, but we'll do our best.
  * @return {string} The generated label.
  */
 analytics.filters.Buckets.powersOfTwo = function(val) {
-  if (val <= 0) {
-    return '<= 0';
+  if (val < 1) {
+    return '0';
+  }
+  if (val < 3) {
+    return '1-2';
   }
 
-  var exp = Math.floor(Math.log(val) / Math.log(2));
-  var labelBottom = Math.pow(2, exp);
+  var exp = Math.floor(Math.log(val - 1) / Math.log(2));
+  var labelBottom = Math.pow(2, exp) + 1;
   var labelTop = Math.pow(2, exp + 1);
 
   return labelBottom + '-' + labelTop;
