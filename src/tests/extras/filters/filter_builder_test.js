@@ -114,3 +114,25 @@ function testCallsDelegateFilter() {
   filter(hit);
   recorder.assertCallCount(1);
 }
+
+function testCallsDelegateFilter_Scoped() {
+
+  /**
+   * Test class so we can verify scoping of filters.
+   * @constructor
+   */
+  var ScopeTester = function() {
+    this.callCount = 0;
+    this.filter = function(hit) {
+      this.callCount++;
+    };
+  };
+
+  var tester = new ScopeTester();
+  var filter = analytics.filters.FilterBuilder.builder().
+      when(function(hit) { return true; }).
+      applyFilter(tester.filter, tester).
+      build();
+  filter(hit);
+  assertEquals(1, tester.callCount);
+}

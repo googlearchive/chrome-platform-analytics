@@ -162,14 +162,17 @@ analytics.filters.FilterBuilder.prototype.whenValue =
  * Only one filter can be specified.
  *
  * @param {!analytics.Tracker.Filter} filter
+ * @param {!Object=} opt_scope Optional scope in which to call the filter.
+ *
  * @return {!analytics.filters.FilterBuilder}
  */
 analytics.filters.FilterBuilder.prototype.applyFilter =
-    function(filter) {
+    function(filter, opt_scope) {
   if (goog.isObject(this.delegate_)) {
     throw new Error('Filter has already been set.');
   }
-  this.delegate_ = filter;
+  this.delegate_ = goog.isObject(opt_scope) ?
+      goog.bind(filter, opt_scope) : filter;
   return this;
 };
 
