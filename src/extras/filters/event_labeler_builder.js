@@ -16,8 +16,8 @@
  * @fileoverview A collection of useful strategies for labeling numeric data in
  * Event hits. It's often useful in the field to group data based on values
  * and be able to examine these groups in the Analytics dashboard. For instance,
- * the LabelerBuilder allows you to build a filter that would map
- * the following events to the following labels:
+ * the EventLabelerBuilder allows you to build a filter that would map
+ * the following event values to the following labels:
  *
  * <pre>
  *    50 -> "32-64"
@@ -42,6 +42,7 @@ goog.provide('analytics.filters.EventLabelerBuilder');
 
 goog.require('analytics.HitTypes');
 goog.require('analytics.Parameters');
+goog.require('analytics.filters.Buckets');
 goog.require('analytics.filters.FilterBuilder');
 goog.require('goog.array');
 
@@ -59,7 +60,8 @@ goog.require('goog.array');
  * <p>Example: If 205 were the value for a hit, this function would
  * generate a label of '128-256'.
  *
- * <p>NOTE: Negative or zero values just get mapped to "<= 0".
+ * <p>NOTE: Negative or zero values just get mapped to "<= 0". Non-numeric
+ * values get left as-is.
  *
  * @constructor
  * @struct
@@ -180,21 +182,15 @@ analytics.filters.EventLabelerBuilder.prototype.rangeBounds =
  */
 analytics.filters.EventLabelerBuilder.prototype.powersOfTwoLabeler_ =
     function(hit) {
-  var newLabel = '';
+  var val = hit.getParameters().get(analytics.Parameters.EVENT_VALUE);
   var oldLabel = hit.getParameters().get(analytics.Parameters.EVENT_LABEL);
-  if (goog.isDefAndNotNull(oldLabel) && this.appendToExistingLabel_) {
-    newLabel += oldLabel + this.labelSeparator_;
+  if (!goog.isNumber(val)) {
+    return;
   }
 
-  var val = hit.getParameters().get(analytics.Parameters.EVENT_VALUE);
-  if (val <= 0) {
-    newLabel += '<= 0';
-  } else {
-    var exp = Math.floor(Math.log(val) / Math.log(2));
-    var labelBottom = Math.pow(2, exp);
-    var labelTop = Math.pow(2, exp + 1);
-
-    newLabel += labelBottom + '-' + labelTop;
+  var newLabel = analytics.filters.Buckets.powersOfTwo(val);
+  if (goog.isDefAndNotNull(oldLabel) && this.appendToExistingLabel_) {
+    newLabel = oldLabel + this.labelSeparator_ + newLabel;
   }
 
   hit.getParameters().set(analytics.Parameters.EVENT_LABEL, newLabel);
@@ -211,38 +207,19 @@ analytics.filters.EventLabelerBuilder.prototype.powersOfTwoLabeler_ =
  */
 analytics.filters.EventLabelerBuilder.prototype.rangeBoundsLabeler_ =
     function(rightBounds, hit) {
-  var generateLabel = goog.bind(function() {
-    var val = hit.getParameters().get(analytics.Parameters.EVENT_VALUE);
-    var low = 0;
-    var high = rightBounds.length - 1;
-    var current = 0;
-
-    while (low <= high) {
-      var index = Math.floor((low + high) / 2);
-      current = rightBounds[index];
-
-      if (val <= current) {
-        var previous = index == 0 ? 0 : rightBounds[index - 1];
-        if (val > previous) {
-          return (previous + 1).toString() + '-' + current.toString();
-        }
-        high = index - 1;
-      } else if (val > current) {
-        if (index >= (rightBounds.length - 1)) {
-          return (goog.array.peek(rightBounds) + 1).toString() + '+';
-        }
-        low = index + 1;
-      }
-    }
-    return '<= 0';
-  }, this);
-
   var newLabel = '';
   var oldLabel = hit.getParameters().get(analytics.Parameters.EVENT_LABEL);
+  var val = hit.getParameters().get(analytics.Parameters.EVENT_VALUE);
+  if (!goog.isNumber(val)) {
+    return;
+  }
+
   if (goog.isDefAndNotNull(oldLabel) && this.appendToExistingLabel_) {
     newLabel += oldLabel + this.labelSeparator_;
   }
-  newLabel += generateLabel();
+
+  newLabel += analytics.filters.Buckets.rangeBounds(rightBounds, val);
+
   hit.getParameters().set(analytics.Parameters.EVENT_LABEL, newLabel);
 };
 

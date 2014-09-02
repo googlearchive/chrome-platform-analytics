@@ -59,6 +59,22 @@ function testPowersOfTwoLabeler_NonEventHit() {
   assertTrue(origParams.equals(hit.getParameters()));
 }
 
+
+/**
+ * Verifies that a hit whose event value is non-numeric just passes through the
+ * powers-of-two labeler filter without its label being modified.
+ */
+function testPowersOfTwoLabeler_NonNumericValue() {
+  var hit = analytics.testing.Hits.createEventHit('asdf');
+  var origParams = hit.getParameters().clone();
+  var labeler = new analytics.filters.EventLabelerBuilder().
+      powersOfTwo().
+      build();
+
+  labeler(hit);
+  assertTrue(origParams.equals(hit.getParameters()));
+}
+
 function testPowersOfTwoLabeler_WithStrippedValue() {
   var labeler = new analytics.filters.EventLabelerBuilder().
       powersOfTwo().
@@ -202,6 +218,22 @@ function testRangeBoundsLabeler() {
  */
 function testRangeBoundsLabeler_NonEventHit() {
   var hit = analytics.testing.Hits.createAppViewHit('asdf');
+  var origParams = hit.getParameters().clone();
+  var labeler = new analytics.filters.EventLabelerBuilder().
+      rangeBounds([10, 50]).
+      build();
+
+  labeler(hit);
+  assertTrue(origParams.equals(hit.getParameters()));
+}
+
+
+/**
+ * Verifies that a hit whose event value is non-numeric just passes through the
+ * powers-of-two labeler filter without its label being modified.
+ */
+function testRangeBoundsLabeler_NonNumericValue() {
+  var hit = analytics.testing.Hits.createEventHit('asdf');
   var origParams = hit.getParameters().clone();
   var labeler = new analytics.filters.EventLabelerBuilder().
       rangeBounds([10, 50]).
