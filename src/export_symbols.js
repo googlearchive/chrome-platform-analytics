@@ -14,6 +14,7 @@
 
 goog.require('analytics.GoogleAnalytics');
 goog.require('analytics.filters.EventLabelers');
+goog.require('analytics.filters.FilterBuilder');
 goog.require('analytics.internal.FilterChannel');
 goog.require('analytics.internal.GoogleAnalyticsService');
 goog.require('analytics.internal.ServiceChannel');
@@ -199,3 +200,25 @@ goog.exportSymbol(
 goog.exportSymbol(
     'analytics.filters.EventLabelers.RangeBoundsLabelerBuilder.prototype.build',
     analytics.filters.EventLabelers.RangeBoundsLabelerBuilder.prototype.build);
+
+goog.exportSymbol(
+    'analytics.filters.FilterBuilder',
+    analytics.filters.FilterBuilder);
+goog.exportSymbol(
+    'analytics.filters.FilterBuilder.builder',
+    analytics.filters.FilterBuilder.builder);
+goog.exportSymbol(
+    'analytics.filters.FilterBuilder.prototype.when',
+    analytics.filters.FilterBuilder.prototype.when);
+goog.exportSymbol(
+    'analytics.filters.FilterBuilder.prototype.whenHitType',
+    analytics.filters.FilterBuilder.prototype.whenHitType);
+goog.exportSymbol(
+    'analytics.filters.FilterBuilder.prototype.whenValues',
+    analytics.filters.FilterBuilder.prototype.whenValue);
+goog.exportSymbol(
+    'analytics.filters.FilterBuilder.prototype.applyFilter',
+    analytics.filters.FilterBuilder.prototype.applyFilter);
+goog.exportSymbol(
+    'analytics.filters.FilterBuilder.prototype.build',
+    analytics.filters.FilterBuilder.prototype.build);

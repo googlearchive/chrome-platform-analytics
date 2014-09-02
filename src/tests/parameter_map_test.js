@@ -65,9 +65,26 @@ function testEquality() {
   /** @type {!analytics.ParameterMap} */
   var other = new analytics.ParameterMap(
       analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768',
-      analytics.Parameters.CAMPAIGN_ID, '789'
-      );
+      analytics.Parameters.CAMPAIGN_ID, '789');
   assertTrue(map.equals(other));
+}
+
+function testContains() {
+  map.set(analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768');
+  map.set(analytics.Parameters.CAMPAIGN_ID, '789');
+
+  var other = new analytics.ParameterMap(
+      analytics.Parameters.CAMPAIGN_ID, '789');
+  assertTrue(map.contains(other));
+}
+
+function testContains_Failure() {
+  map.set(analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768');
+  map.set(analytics.Parameters.CAMPAIGN_ID, '789');
+
+  var other = new analytics.ParameterMap(
+      analytics.Parameters.CACHE_BUSTER, '11');
+  assertFalse(map.contains(other));
 }
 
 function testInequality() {
@@ -77,8 +94,7 @@ function testInequality() {
   /** @type {!analytics.ParameterMap} */
   var other = new analytics.ParameterMap(
       analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768',
-      analytics.Parameters.CAMPAIGN_ID, '789'
-      );
+      analytics.Parameters.CAMPAIGN_ID, '789');
   assertFalse(map.equals(other));
 }
 
@@ -113,8 +129,7 @@ function testForEachElementIteratesOverAllElements() {
 function testAddsConstructorValues() {
   map = new analytics.ParameterMap(
       analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768',
-      analytics.Parameters.CAMPAIGN_ID, '789'
-      );
+      analytics.Parameters.CAMPAIGN_ID, '789');
   assertEquals('1024x768',
       map.get(analytics.internal.Parameters.SCREEN_RESOLUTION));
   assertEquals('789', map.get(analytics.Parameters.CAMPAIGN_ID));

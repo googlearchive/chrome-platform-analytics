@@ -177,9 +177,12 @@ analytics.ParameterMap.prototype.clone = function() {
 
 
 /**
- * Compares {@code this} instance to {@code that} instance for equality.
+ * Returns true if this instance contains exactly the same entries
+ * as {@code that}.
+ *
  * @param {!analytics.ParameterMap} that
- * @return {boolean} True if this instance is identical to that instance.
+ * @return {boolean} True if this instance contains exactly the same entries
+ * as {@code that}.
  */
 analytics.ParameterMap.prototype.equals = function(that) {
   if (this.entries_.length !== that.entries_.length) {
@@ -194,10 +197,35 @@ analytics.ParameterMap.prototype.equals = function(that) {
        * @return {boolean} True if this and that have the same key/value pair.
        */
       function(entry) {
-        /** @type {?analytics.Value} */
-        var value = that.get(entry.key);
-        return !goog.isNull(value) && entry.value == that.get(entry.key);
+        return entry.value == that.get(entry.key);
       });
+  return result;
+};
+
+
+/**
+ * Returns true if this instance contains all entries
+ * in {@code parameters}.
+ *
+ * @param {!analytics.ParameterMap} parameters
+ * @return {boolean} True if this instance contains all entries
+ *     in {@code parameters}.
+ */
+analytics.ParameterMap.prototype.contains = function(parameters) {
+  /** @type {boolean} */
+  var result = goog.array.every(
+      parameters.entries_.getValues(),
+      goog.bind(
+          /**
+           * @param {!analytics.ParameterMap.Entry} entry
+           * @return {boolean}
+           *     True if this and parameters have the same key/value pair.
+           * @this {analytics.ParameterMap}
+           */
+          function(entry) {
+            return entry.value == this.get(entry.key);
+          },
+          this));
   return result;
 };
 
