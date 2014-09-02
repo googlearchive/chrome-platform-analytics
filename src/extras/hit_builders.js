@@ -22,6 +22,10 @@
  */
 goog.provide('analytics.EventBuilder');
 
+goog.require('analytics');
+goog.require('analytics.ParameterMap');
+goog.require('analytics.Parameters');
+
 
 
 /**
