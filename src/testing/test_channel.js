@@ -179,6 +179,14 @@ analytics.testing.TestChannel.prototype.assertNumHitsSent =
 };
 
 
+/**
+ * Reset test channel back to a shiney new like state.
+ */
+analytics.testing.TestChannel.prototype.reset = function() {
+  this.sent_ = [];
+};
+
+
 /** @override */
 analytics.testing.TestChannel.prototype.toString = function() {
   return goog.string.format(
