@@ -159,23 +159,11 @@ analytics.internal.parameters.asParameter = function(param) {
   // https://developers.google.com/analytics/devguides/platform/features/customdimsmets
   var match = /^dimension(\d+)$/.exec(param);
   if (!goog.isNull(match)) {
-    return {
-      id: param,
-      name: 'cd' + match[1],
-      valueType: analytics.ValueTypes.TEXT,
-      maxLength: 150,
-      defaultValue: undefined
-    };
+    return analytics.createDimensionParam(parseInt(match[1], 10));
   }
   match = /^metric(\d+)$/.exec(param);
   if (!goog.isNull(match)) {
-    return {
-      id: param,
-      name: 'cm' + match[1],
-      valueType: analytics.ValueTypes.INTEGER,
-      maxLength: undefined,
-      defaultValue: undefined
-    };
+    return analytics.createMetricParam(parseInt(match[1], 10));
   }
 
   throw new Error(param + ' is not a valid parameter name.');

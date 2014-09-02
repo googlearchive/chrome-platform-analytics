@@ -79,10 +79,10 @@ function testWhenHitType_Unmatched() {
 }
 
 function testWhenValue() {
-  hit.getParameters().set(analytics.Parameters.DIMENSION, 'X');
+  hit.getParameters().set(analytics.Parameters.TRANSACTION_ID, 'X');
   var filter = analytics.filters.FilterBuilder.builder().
       whenValue(
-          analytics.Parameters.DIMENSION,
+          analytics.Parameters.TRANSACTION_ID,
           'X',
           'Y',
           'Z').
@@ -93,10 +93,10 @@ function testWhenValue() {
 }
 
 function testWhenValue_Unmatched() {
-  hit.getParameters().set(analytics.Parameters.DIMENSION, 'L');
+  hit.getParameters().set(analytics.Parameters.TRANSACTION_ID, 'L');
   var filter = analytics.filters.FilterBuilder.builder().
       whenValue(
-          analytics.Parameters.DIMENSION,
+          analytics.Parameters.TRANSACTION_ID,
           'X',
           'Y',
           'Z').

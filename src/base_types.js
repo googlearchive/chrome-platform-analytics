@@ -182,7 +182,12 @@ analytics.Parameter;
 
 
 /**
- * All supported hit parameters.
+ * All supported public hit parameters excepting DIMENSION[0-199]
+ * and METRIC[0-199] which must be created with a user supplied index.
+ *
+ * @see analytics.createDimensionParam
+ * @see analytics.createMetricParam
+ *
  * @enum {analytics.Parameter}
  */
 analytics.Parameters = {
@@ -256,22 +261,6 @@ analytics.Parameters = {
     name: 'dt',
     valueType: analytics.ValueTypes.TEXT,
     maxLength: 1500,
-    defaultValue: undefined
-  },
-  /* Custom Dimension */
-  DIMENSION: {
-    id: 'dimension',
-    name: 'cd[1-9][0-9]*',
-    valueType: analytics.ValueTypes.TEXT,
-    maxLength: 150,
-    defaultValue: undefined
-  },
-  /* Custom Metric */
-  METRIC: {
-    id: 'metric',
-    name: 'cm[1-9][0-9]*',
-    valueType: analytics.ValueTypes.INTEGER,
-    maxLength: undefined,
     defaultValue: undefined
   },
   /* Application ID */
@@ -594,4 +583,38 @@ analytics.Parameters = {
     maxLength: undefined,
     defaultValue: '1'
   }
+};
+
+
+/**
+ * Returns a new DIMENSION param.
+ *
+ * @param {number} index Dimensions all have an id/index. This is that value.
+ * @return {!analytics.Parameter}
+ */
+analytics.createDimensionParam = function(index) {
+  return {
+    id: 'dimension' + index,
+    name: 'cd' + index,
+    valueType: analytics.ValueTypes.TEXT,
+    maxLength: 150,
+    defaultValue: undefined
+  };
+};
+
+
+/**
+ * Returns a new METRIC param.
+ *
+ * @param {number} index Metrics all have an id/index. This is that value.
+ * @return {!analytics.Parameter}
+ */
+analytics.createMetricParam = function(index) {
+  return {
+    id: 'metric' + index,
+    name: 'cm' + index,
+    valueType: analytics.ValueTypes.INTEGER,
+    maxLength: undefined,
+    defaultValue: undefined
+  };
 };
