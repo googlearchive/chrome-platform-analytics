@@ -212,7 +212,7 @@ goog.exportSymbol(
     'analytics.filters.FilterBuilder.prototype.whenHitType',
     analytics.filters.FilterBuilder.prototype.whenHitType);
 goog.exportSymbol(
-    'analytics.filters.FilterBuilder.prototype.whenValues',
+    'analytics.filters.FilterBuilder.prototype.whenValue',
     analytics.filters.FilterBuilder.prototype.whenValue);
 goog.exportSymbol(
     'analytics.filters.FilterBuilder.prototype.applyFilter',
