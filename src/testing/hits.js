@@ -35,3 +35,16 @@ analytics.testing.Hits.createAppViewHit = function(description) {
       new analytics.ParameterMap(
           analytics.Parameters.DESCRIPTION, description));
 };
+
+
+/**
+ * Returns a Hit representing an event.
+ * @param {!analytics.Value} val The event value.
+ * @return {!analytics.Tracker.Hit}
+ */
+analytics.testing.Hits.createEventHit = function(val) {
+  return new analytics.testing.TestHit(
+      analytics.HitTypes.EVENT,
+      new analytics.ParameterMap(
+          analytics.Parameters.EVENT_VALUE, val));
+};

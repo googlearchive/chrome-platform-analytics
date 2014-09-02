@@ -13,6 +13,7 @@
 // limitations under the License.
 
 goog.require('analytics.GoogleAnalytics');
+goog.require('analytics.filters.EventLabelers');
 goog.require('analytics.internal.FilterChannel');
 goog.require('analytics.internal.GoogleAnalyticsService');
 goog.require('analytics.internal.ServiceChannel');
@@ -176,3 +177,25 @@ goog.object.forEach(
           'analytics.Parameters.' + name,
           value);
     });
+
+// Filters
+goog.exportSymbol(
+    'analytics.filters.EventLabelers.ExponentialLabelerBuilder',
+    analytics.filters.EventLabelers.ExponentialLabelerBuilder);
+goog.exportSymbol(
+    'analytics.filters.EventLabelers.ExponentialLabelerBuilder.prototype.stripValue',
+    analytics.filters.EventLabelers.ExponentialLabelerBuilder.prototype.
+        stripValue);
+goog.exportSymbol(
+    'analytics.filters.EventLabelers.ExponentialLabelerBuilder.prototype.build',
+    analytics.filters.EventLabelers.ExponentialLabelerBuilder.prototype.build);
+goog.exportSymbol(
+    'analytics.filters.EventLabelers.RangeBoundsLabelerBuilder',
+    analytics.filters.EventLabelers.RangeBoundsLabelerBuilder);
+goog.exportSymbol(
+    'analytics.filters.EventLabelers.RangeBoundsLabelerBuilder.prototype.stripValue',
+    analytics.filters.EventLabelers.RangeBoundsLabelerBuilder.prototype.
+        stripValue);
+goog.exportSymbol(
+    'analytics.filters.EventLabelers.RangeBoundsLabelerBuilder.prototype.build',
+    analytics.filters.EventLabelers.RangeBoundsLabelerBuilder.prototype.build);
