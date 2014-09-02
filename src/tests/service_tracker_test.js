@@ -30,7 +30,7 @@ goog.require('analytics.internal.parameters');
 goog.require('analytics.testing.TestChannelManager');
 goog.require('analytics.testing.TestSettings');
 goog.require('goog.object');
-goog.require('goog.testing.PropertyReplacer');
+goog.require('goog.testing.MockClock');
 goog.require('goog.testing.jsunit');
 
 
@@ -75,8 +75,8 @@ var TIMING_HIT = {
   timingValue: 11};
 
 
-/** @type {goog.testing.PropertyReplacer} */
-var replacer;
+/** @type {!goog.testing.MockClock} */
+var clock;
 
 
 /** @type {!analytics.testing.TestSettings} */
@@ -99,7 +99,7 @@ var tracker;
 var extraParams;
 
 function setUp() {
-  replacer = new goog.testing.PropertyReplacer();
+  clock = new goog.testing.MockClock(true);
   settings = new analytics.testing.TestSettings();
   channelManager = new analytics.testing.TestChannelManager();
   channel = channelManager.getTestChannel();
@@ -110,7 +110,7 @@ function setUp() {
 }
 
 function tearDown() {
-  replacer.reset();
+  clock.dispose();
 }
 
 function testSend() {
@@ -228,20 +228,12 @@ function testSendTiming() {
 }
 
 function testTiming() {
-  replacer.set(goog, 'now',
-      function() {
-        return 0;
-      });
-
   var timing = tracker.startTiming(
       TIMING_HIT.timingCategory,
       TIMING_HIT.timingVar,
       TIMING_HIT.timingLabel);
 
-  replacer.set(goog, 'now',
-      function() {
-        return TIMING_HIT.timingValue;
-      });
+  clock.tick(TIMING_HIT.timingValue);
   timing.send();
 
   assertTypedHitSent(TIMING_HIT);

@@ -183,7 +183,7 @@ analytics.testing.TestChannel.prototype.assertNumHitsSent =
  * Reset test channel back to a shiney new like state.
  */
 analytics.testing.TestChannel.prototype.reset = function() {
-  this.sent_ = [];
+  goog.array.clear(this.sent_);
 };
 
 

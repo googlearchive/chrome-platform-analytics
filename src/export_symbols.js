@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+goog.require('analytics.EventBuilder');
 goog.require('analytics.GoogleAnalytics');
 goog.require('analytics.filters.EventLabelerBuilder');
 goog.require('analytics.filters.FilterBuilder');
@@ -179,6 +180,8 @@ goog.object.forEach(
           value);
     });
 
+// EXTRAS...
+
 // Filters
 goog.exportSymbol(
     'analytics.filters.EventLabelerBuilder',
@@ -220,3 +223,30 @@ goog.exportSymbol(
 goog.exportSymbol(
     'analytics.filters.FilterBuilder.prototype.build',
     analytics.filters.FilterBuilder.prototype.build);
+
+
+// HitBuilders
+goog.exportSymbol(
+    'analytics.EventBuilder',
+    analytics.EventBuilder);
+goog.exportSymbol(
+    'analytics.EventBuilder.create',
+    analytics.EventBuilder.create);
+goog.exportSymbol(
+    'analytics.EventBuilder.prototype.category',
+    analytics.EventBuilder.prototype.category);
+goog.exportSymbol(
+    'analytics.EventBuilder.prototype.action',
+    analytics.EventBuilder.prototype.action);
+goog.exportSymbol(
+    'analytics.EventBuilder.prototype.value',
+    analytics.EventBuilder.prototype.value);
+goog.exportSymbol(
+    'analytics.EventBuilder.prototype.dimension',
+    analytics.EventBuilder.prototype.dimension);
+goog.exportSymbol(
+    'analytics.EventBuilder.prototype.metric',
+    analytics.EventBuilder.prototype.metric);
+goog.exportSymbol(
+    'analytics.EventBuilder.prototype.send',
+    analytics.EventBuilder.prototype.send);
