@@ -22,6 +22,7 @@
 goog.provide('analytics.testing.TestChannelManager');
 
 goog.require('analytics.internal.ChannelManager');
+goog.require('analytics.internal.FilterChannel');
 goog.require('analytics.testing.TestChannel');
 goog.require('goog.testing.recordFunction');
 
@@ -34,24 +35,37 @@ goog.require('goog.testing.recordFunction');
  * @struct
  */
 analytics.testing.TestChannelManager = function() {
+
   /** @private {!analytics.testing.TestChannel} */
-  this.channel_ = new analytics.testing.TestChannel();
+  this.testChannel_ = new analytics.testing.TestChannel();
+
+  /**
+   * Minimal Chain of a FilterChannel > TestChannel.
+   * @private {!analytics.internal.FilterChannel}
+   */
+  this.channel_ = new analytics.internal.FilterChannel(
+      this.testChannel_);
 
   /** @override */
-  this.addFilter = goog.testing.recordFunction();
+  this.addFilter = goog.testing.recordFunction(
+      goog.bind(
+          function(filter) {
+            this.channel_.addFilter(filter);
+          },
+          this));
 };
 
 
 /** @return {!analytics.testing.TestChannel} */
 analytics.testing.TestChannelManager.prototype.getTestChannel =
     function() {
-  return this.channel_;
+  return this.testChannel_;
 };
 
 
 /** @override */
 analytics.testing.TestChannelManager.prototype.getChannel = function() {
-  return this.getTestChannel();
+  return this.channel_;
 };
 
 
