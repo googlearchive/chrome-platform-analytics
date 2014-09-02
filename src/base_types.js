@@ -19,6 +19,7 @@
  * @author tbreisacher@google.com (Tyler Breisacher)
  */
 
+goog.provide('analytics');
 goog.provide('analytics.EventHit');
 goog.provide('analytics.ExceptionHit');
 goog.provide('analytics.HitType');
@@ -589,10 +590,16 @@ analytics.Parameters = {
 /**
  * Returns a new DIMENSION param.
  *
- * @param {number} index Dimensions all have an id/index. This is that value.
+ * @param {number} index Each dimension has an index configured in
+ *    the Google Analytics admin console. This is that value.
+ *    It must be between 1 and 200.
  * @return {!analytics.Parameter}
  */
 analytics.createDimensionParam = function(index) {
+  if (index < 1 || index > 200) {
+    throw new Error(
+        'Expected dimension index range 1-200, but was : ' + index);
+  }
   return {
     id: 'dimension' + index,
     name: 'cd' + index,
@@ -606,10 +613,16 @@ analytics.createDimensionParam = function(index) {
 /**
  * Returns a new METRIC param.
  *
- * @param {number} index Metrics all have an id/index. This is that value.
+ * @param {number} index Each metric has an index configured in
+ *    the Google Analytics admin console. This is that value.
+ *    It must be between 1 and 200.
  * @return {!analytics.Parameter}
  */
 analytics.createMetricParam = function(index) {
+  if (index < 1 || index > 200) {
+    throw new Error(
+        'Expected metric index range 1-200, but was : ' + index);
+  }
   return {
     id: 'metric' + index,
     name: 'cm' + index,

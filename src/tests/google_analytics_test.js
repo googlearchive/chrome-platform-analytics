@@ -257,6 +257,8 @@ function testSend_DeliversPayload() {
   service.getConfig().addCallback(
       function(config) {
         config.setTrackingPermitted(true);
+        tracker.set('dimension11', 'Poodles');
+        tracker.set('metric72', 17);
         tracker.sendEvent(
             EVENT_HIT.eventCategory,
             EVENT_HIT.eventAction,
@@ -264,6 +266,8 @@ function testSend_DeliversPayload() {
             EVENT_HIT.eventValue);
         var entries = sent.content.split('&');
         assertTrue(entries.length > 0);
+        assertTrue(sent.content, goog.array.contains(entries, 'cd11=Poodles'));
+        assertTrue(sent.content, goog.array.contains(entries, 'cm72=17'));
         assertTrue(sent.content, goog.array.contains(entries, 'ec=IceCream'));
         assertTrue(sent.content, goog.array.contains(entries, 'ea=Melt'));
         assertTrue(sent.content, goog.array.contains(entries, 'el=Strawberry'));
