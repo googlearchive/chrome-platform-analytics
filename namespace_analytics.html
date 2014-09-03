@@ -68,6 +68,14 @@ Obtain a instance using the <code> analytics.Service#getConfig</code>.
 </div>
  </div>
  <div class="fn-constructor">
+        <a href="class_analytics_EventBuilder.html">
+          analytics.EventBuilder</a><br/>
+        <div class="class-details">A class that aids in the building of event hits. Create instances
+of this class using <code> analytics.EventBuilder#builder</code>.
+
+</div>
+ </div>
+ <div class="fn-constructor">
         <a href="interface_analytics_GoogleAnalytics.html">
           analytics.GoogleAnalytics</a><br/>
         <div class="class-details">Service object providing access to <code> analytics.Tracker</code> and
@@ -158,7 +166,7 @@ Obtain a instance using the <code> analytics.Service#getTracker</code>.
             <tbody>
               <tr><td>
                 <span class="entryName">
-                  APPVIEW
+                  EVENT
                 </span>
                 <div class="entryOverview">
                   <span class='nodesc'>No description.</span>
@@ -166,7 +174,7 @@ Obtain a instance using the <code> analytics.Service#getTracker</code>.
              </td></tr>
               <tr><td>
                 <span class="entryName">
-                  EVENT
+                  APPVIEW
                 </span>
                 <div class="entryOverview">
                   <span class='nodesc'>No description.</span>
@@ -257,7 +265,7 @@ and METRIC[0-199] which must be created with a user supplied index.
             <tbody>
               <tr><td>
                 <span class="entryName">
-                  ANONYMIZE_IP
+                  EVENT_VALUE
                 </span>
                 <div class="entryOverview">
                   <span class='nodesc'>No description.</span>
@@ -265,7 +273,15 @@ and METRIC[0-199] which must be created with a user supplied index.
              </td></tr>
               <tr><td>
                 <span class="entryName">
-                  CACHE_BUSTER
+                  EVENT_LABEL
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  ANONYMIZE_IP
                 </span>
                 <div class="entryOverview">
                   <span class='nodesc'>No description.</span>
@@ -289,6 +305,14 @@ and METRIC[0-199] which must be created with a user supplied index.
              </td></tr>
               <tr><td>
                 <span class="entryName">
+                  CACHE_BUSTER
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
                   SESSION_CONTROL
                 </span>
                 <div class="entryOverview">
@@ -298,6 +322,22 @@ and METRIC[0-199] which must be created with a user supplied index.
               <tr><td>
                 <span class="entryName">
                   USER_ID
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  EVENT_CATEGORY
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
+                  EVENT_ACTION
                 </span>
                 <div class="entryOverview">
                   <span class='nodesc'>No description.</span>
@@ -338,38 +378,6 @@ and METRIC[0-199] which must be created with a user supplied index.
               <tr><td>
                 <span class="entryName">
                   APP_INSTALLER_ID
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  EVENT_CATEGORY
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  EVENT_ACTION
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  EVENT_LABEL
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  EVENT_VALUE
                 </span>
                 <div class="entryOverview">
                   <span class='nodesc'>No description.</span>
@@ -1592,6 +1600,66 @@ major change to the library.
      <div class="entryOverview">
        A type alias for all ValueType values.
 
+     </div>
+
+  </td>
+
+
+     </tr>
+
+
+     <tr class="even entry public">
+       <td class="access"></td>
+
+
+
+
+
+  <a name="analytics.extras"></a>
+
+  <td>
+
+
+     <div class="arg">
+        <img align="left" src="static/images/blank.gif">
+
+        <span class="entryNamespace">analytics.</span><span class="entryName">extras</span>
+        : 
+     </div>
+
+
+     <div class="entryOverview">
+       <span class='nodesc'>No description.</span>
+     </div>
+
+  </td>
+
+
+     </tr>
+
+
+     <tr class="odd entry public">
+       <td class="access"></td>
+
+
+
+
+
+  <a name="analytics.filters"></a>
+
+  <td>
+
+
+     <div class="arg">
+        <img align="left" src="static/images/blank.gif">
+
+        <span class="entryNamespace">analytics.</span><span class="entryName">filters</span>
+        : 
+     </div>
+
+
+     <div class="entryOverview">
+       <span class='nodesc'>No description.</span>
      </div>
 
   </td>
