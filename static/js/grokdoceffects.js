@@ -10,7 +10,9 @@
 goog.require('goog.array');
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
+goog.require('goog.dom.safe');
 goog.require('goog.events');
+goog.require('goog.html.SafeHtml');
 goog.require('goog.json');
 goog.require('goog.net.ImageLoader');
 goog.require('goog.net.XhrIo');
@@ -953,65 +955,68 @@ grokdoc.TypedTreeNode.prototype.getRowClassName = function() {
 /**
  * Builds HTML for the label of a node. Overrides the BaseNode method
  * to allow different styling for namespace nodes and type nodes.
- * @return {string} HTML to apply to the node label.
+ * @return {!goog.html.SafeHtml} HTML to apply to the node label.
  * @override
  */
-grokdoc.TypedTreeNode.prototype.getLabelHtml = function() {
-  var labelClass = this.config_.cssItemLabel;
-  var typeAtt = '';
+grokdoc.TypedTreeNode.prototype.getLabelSafeHtml = function() {
+  var labelClass = this.getConfig().cssItemLabel;
+  var type = null;
   if (this.type_ in grokdoc.TypedTreeNode.KIND_LABEL_MAP) {
     labelClass = grokdoc.TypedTreeNode.KIND_LABEL_MAP[this.type_];
-    typeAtt = 'type="expand" ';
+    type = 'expand';
   }
-  var toolTip = this.getToolTip();
-  var tree = this.getTree();
-  var sb = new goog.string.StringBuffer();
-  var childCount = this.hasChildren() ? ' (' + this.children_.length + ')' : '';
-  sb.append('<span ', typeAtt, 'class="', labelClass, '" ',
-    (toolTip ? (' title="' + goog.string.htmlEscape(toolTip) + '" ') : ' '),
-    '>', this.getHtml(), childCount, '</span>',
-    '<span>', this.getAfterLabelHtml(), '</span>');
-  return sb.toString();
+  var childCount = this.hasChildren() ? ' (' +
+      this.getChildren().length + ')' : '';
+  var html = goog.html.SafeHtml.create('span',
+      {
+        'type': type,
+        'class': labelClass,
+        'title': this.getToolTip() || null
+      },
+      [this.getSafeHtml(), childCount]);
+
+  return goog.html.SafeHtml.concat(html,
+      goog.html.SafeHtml.create('span', {}, this.getAfterLabelSafeHtml()));
 };
 
 
 /**
- * Returns the html for the node.
- * @param {goog.string.StringBuffer} sb A string buffer to which the
- *     HTML will be appended.
- * @override
+ * @inheritDoc
  */
-grokdoc.TypedTreeNode.prototype.toHtml = function(sb) {
+grokdoc.TypedTreeNode.prototype.toSafeHtml = function() {
   var tree = this.getTree();
   var hideLines = !tree.getShowLines() ||
       tree == this.getParent() && !tree.getShowRootLines();
 
-  var childClass = hideLines ? this.config_.cssChildrenNoLines :
-      this.config_.cssChildren;
+  var childClass = hideLines ? this.getConfig().cssChildrenNoLines :
+      this.getConfig().cssChildren;
 
   var nonEmptyAndExpanded = this.getExpanded() && this.hasChildren();
+
+  var content = [];
+  if (nonEmptyAndExpanded) {
+    // children
+    this.forEachChild(function(child) {
+      content.push(child.toSafeHtml());
+    });
+  }
+
+  var children = goog.html.SafeHtml.create('div', {
+    'class': childClass,
+    'style': this.getLineStyle()
+  }, content);
 
   // Allow nodes with children to be styled specially.
   var parentClass = this.hasChildren() ? ' gdoc-treenodewithchildren' : '';
 
-  sb.append('<div class="', this.config_.cssItem, parentClass,
-    '" id="', this.getId(), '">',
-    this.getRowHtml(),
-    '<div class="', childClass, '" style="',
-    this.getLineStyle(),
-    (nonEmptyAndExpanded ? '' : 'display:none;'),
-    '">');
-
-  if (nonEmptyAndExpanded) {
-    // children
-    this.forEachChild(function(child) {
-      child.toHtml(sb);
-    });
-  }
-
-  // and tags
-  sb.append('</div></div>');
+  return goog.html.SafeHtml.create('div',
+      {
+        'class': this.getConfig().cssItem + parentClass,
+        'id': this.getId()
+      },
+      [this.getRowSafeHtml(), children]);
 };
+
 
 /**
  * Expands the child iff the component only has one child.

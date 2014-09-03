@@ -78,6 +78,21 @@ Obtain a instance using the <code> analytics.Service#getConfig</code>.
 </p></div>
  </div>
  <div class="fn-constructor">
+        <a href="class_analytics_ParameterMap.html">
+          analytics.ParameterMap</a><br/>
+        <div class="class-details">A map of <code> analytics.Parameter</code> to <code> analytics.Value</code>.
+Individual parameters are identified by name (the query parameter name).
+Two different instances of <code> Parameter</code> with the same <code> .name</code>
+are treated as identical independent of all other attributes in the
+<code> analytics.Parameter</code> typedef.
+
+<p>As of this writing multiple values per parameter are not supported,
+though this aspect of GA tracking behavior needs to be verified. So this
+aspect of the API as well as the associated types are subject to change.
+
+</p></div>
+ </div>
+ <div class="fn-constructor">
         <a href="interface_analytics_Tracker.html">
           analytics.Tracker</a><br/>
         <div class="class-details">Provides support for sending hits to Google Analytics using convenient
@@ -229,7 +244,9 @@ Obtain a instance using the <code> analytics.Service#getTracker</code>.
 
 
      <div class="entryOverview">
-       All supported hit parameters.
+       All supported public hit parameters excepting DIMENSION[0-199]
+and METRIC[0-199] which must be created with a user supplied index.
+
 
      </div>
 
@@ -280,6 +297,14 @@ Obtain a instance using the <code> analytics.Service#getTracker</code>.
              </td></tr>
               <tr><td>
                 <span class="entryName">
+                  USER_ID
+                </span>
+                <div class="entryOverview">
+                  <span class='nodesc'>No description.</span>
+                </div>
+             </td></tr>
+              <tr><td>
+                <span class="entryName">
                   NON_INTERACTION
                 </span>
                 <div class="entryOverview">
@@ -297,22 +322,6 @@ Obtain a instance using the <code> analytics.Service#getTracker</code>.
               <tr><td>
                 <span class="entryName">
                   TITLE
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  DIMENSION
-                </span>
-                <div class="entryOverview">
-                  <span class='nodesc'>No description.</span>
-                </div>
-             </td></tr>
-              <tr><td>
-                <span class="entryName">
-                  METRIC
                 </span>
                 <div class="entryOverview">
                   <span class='nodesc'>No description.</span>
@@ -918,6 +927,138 @@ declared here for obvious reasons.
 
 
   <td>
+    <a name="analytics.createDimensionParam"></a>
+
+
+     <div class="arg">
+       <img align="left" src="static/images/blank.gif">
+
+        <span class="entryNamespace">analytics.</span><span class="entryName">createDimensionParam<span class="args">(<span class="arg">index</span>)</span>
+        </span>
+        &#8658; <span>!</span><span class="type">analytics.Parameter</span>
+      </div>
+
+
+     <div class="entryOverview">
+       Returns a new DIMENSION param.
+
+
+     </div>
+
+
+    <! -- Method details -->
+    <div class="entryDetails">
+
+      <div class="detailsSection">
+        <b>Arguments: </b>
+
+
+
+
+
+
+<table class="horiz-rule">
+     
+   <tr class="even">
+     <td>
+        <span class="entryName">index</span>
+        : <span class="type"><a href="https://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FNumber">number</a></span>
+        <div class="entryOverview">Each dimension has an index configured in
+   the Google Analytics admin console. This is that value.
+   It must be between 1 and 200.</div>
+     </td>
+   </tr>
+  </table>
+      </div>
+   
+      <div class="detailsSection">
+        <b>Returns:</b>&nbsp;<span>!</span><span class="type">analytics.Parameter</span>&nbsp;
+            <span class='nodesc'>No description.</span>
+      </div>
+  
+    </div>
+   
+  </td>
+
+
+     </tr>
+
+
+     <tr class="odd entry public">
+       <td class="access"></td>
+
+
+
+
+
+
+  <td>
+    <a name="analytics.createMetricParam"></a>
+
+
+     <div class="arg">
+       <img align="left" src="static/images/blank.gif">
+
+        <span class="entryNamespace">analytics.</span><span class="entryName">createMetricParam<span class="args">(<span class="arg">index</span>)</span>
+        </span>
+        &#8658; <span>!</span><span class="type">analytics.Parameter</span>
+      </div>
+
+
+     <div class="entryOverview">
+       Returns a new METRIC param.
+
+
+     </div>
+
+
+    <! -- Method details -->
+    <div class="entryDetails">
+
+      <div class="detailsSection">
+        <b>Arguments: </b>
+
+
+
+
+
+
+<table class="horiz-rule">
+     
+   <tr class="even">
+     <td>
+        <span class="entryName">index</span>
+        : <span class="type"><a href="https://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FNumber">number</a></span>
+        <div class="entryOverview">Each metric has an index configured in
+   the Google Analytics admin console. This is that value.
+   It must be between 1 and 200.</div>
+     </td>
+   </tr>
+  </table>
+      </div>
+   
+      <div class="detailsSection">
+        <b>Returns:</b>&nbsp;<span>!</span><span class="type">analytics.Parameter</span>&nbsp;
+            <span class='nodesc'>No description.</span>
+      </div>
+  
+    </div>
+   
+  </td>
+
+
+     </tr>
+
+
+     <tr class="even entry public">
+       <td class="access"></td>
+
+
+
+
+
+
+  <td>
     <a name="analytics.getService"></a>
 
 
@@ -1188,6 +1329,38 @@ library. This name is used to scope hits to your app on Google Analytics.
 
 
 
+  <a name="analytics.LIBRARY_VERSION"></a>
+
+  <td>
+
+
+     <div class="arg">
+        <img align="left" src="static/images/blank.gif">
+
+        <span class="entryNamespace">analytics.</span><span class="entryName">LIBRARY_VERSION</span>
+        : 
+     </div>
+
+
+     <div class="entryOverview">
+       The current version of this library. Should be increased whenever we make a
+major change to the library.
+
+     </div>
+
+  </td>
+
+
+     </tr>
+
+
+     <tr class="even entry public">
+       <td class="access"></td>
+
+
+
+
+
   <a name="analytics.Parameter"></a>
 
   <td>
@@ -1212,7 +1385,7 @@ library. This name is used to scope hits to your app on Google Analytics.
      </tr>
 
 
-     <tr class="even entry public">
+     <tr class="odd entry public">
        <td class="access"></td>
 
 
@@ -1242,7 +1415,7 @@ library. This name is used to scope hits to your app on Google Analytics.
      </tr>
 
 
-     <tr class="odd entry public">
+     <tr class="even entry public">
        <td class="access"></td>
 
 
@@ -1273,7 +1446,7 @@ library. This name is used to scope hits to your app on Google Analytics.
      </tr>
 
 
-     <tr class="even entry public">
+     <tr class="odd entry public">
        <td class="access"></td>
 
 
@@ -1303,7 +1476,7 @@ library. This name is used to scope hits to your app on Google Analytics.
      </tr>
 
 
-     <tr class="odd entry public">
+     <tr class="even entry public">
        <td class="access"></td>
 
 
@@ -1334,7 +1507,7 @@ library. This name is used to scope hits to your app on Google Analytics.
      </tr>
 
 
-     <tr class="even entry public">
+     <tr class="odd entry public">
        <td class="access"></td>
 
 
@@ -1365,7 +1538,7 @@ library. This name is used to scope hits to your app on Google Analytics.
      </tr>
 
 
-     <tr class="odd entry public">
+     <tr class="even entry public">
        <td class="access"></td>
 
 
@@ -1396,7 +1569,7 @@ library. This name is used to scope hits to your app on Google Analytics.
      </tr>
 
 
-     <tr class="even entry public">
+     <tr class="odd entry public">
        <td class="access"></td>
 
 

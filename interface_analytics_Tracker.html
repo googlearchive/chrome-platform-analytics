@@ -142,33 +142,52 @@ Obtain a instance using the <code> analytics.Service#getTracker</code>.
 
 
   <td>
-    <a name="analytics.Tracker.prototype.getEventTarget"></a>
+    <a name="analytics.Tracker.prototype.addFilter"></a>
 
 
      <div class="arg">
        <img align="left" src="static/images/blank.gif">
 
-        <span class="entryName">getEventTarget<span class="args">()</span>
+        <span class="entryName">addFilter<span class="args">(<span class="arg">filter</span>)</span>
         </span>
-        &#8658; <span>!</span><span class="type">goog.events.EventTarget</span>
       </div>
 
 
      <div class="entryOverview">
-       <span class='nodesc'>No description.</span>
+       Adds a <code> analytics.Tracker.Filter</code> to the request
+handling pipeline. The filter will be called once for each hit,
+immediately after the hit is sent.
+
+<li>Filters will not be applied when tracking is disabled by the user.
+<li>Filters are applied in the order they are added.
+
+</li></li>
      </div>
 
 
     <! -- Method details -->
     <div class="entryDetails">
 
-   
       <div class="detailsSection">
-        <b>Returns:</b>&nbsp;<span>!</span><span class="type">goog.events.EventTarget</span>&nbsp;
-            An event target that emits events for each
-    hit that is "sent" via the tracker. Events will only be published when
-    analytics reporting is enabled.
+        <b>Arguments: </b>
+
+
+
+
+
+
+<table class="horiz-rule">
+     
+   <tr class="even">
+     <td>
+        <span class="entryName">filter</span>
+        : <span>!</span><span class="type">analytics.Tracker.Filter</span>
+        <div class="entryOverview"><span class='nodesc'>No description.</span></div>
+     </td>
+   </tr>
+  </table>
       </div>
+   
   
     </div>
    
@@ -227,18 +246,21 @@ using <code> set</code> or using <code> opt_extraParams</code>.
    <tr class="even">
      <td>
         <span class="entryName">hitType</span>
-        : <span>!</span><span class="type">analytics.HitType</span>
-        <div class="entryOverview"><span class='nodesc'>No description.</span></div>
+        : <span>!</span><span class="type">analytics.HitType</span><span>&nbsp;|&nbsp;</span><span>!</span><span class="type">analytics.EventBuilder</span>
+        <div class="entryOverview">The hitType
+    or an EventBuilder. If EventBuilder the hitType and opt_extraParams
+    are collected from this object, and opt_extraParams will be ignored.</div>
      </td>
    </tr>
      
    <tr class="odd">
      <td>
         <span class="entryName">opt_extraParams</span>
-        : <span>!</span><span class="type">Object=</span>
-        <div class="entryOverview">An optional object containing
-    <code> string</code> / <code> !analytics.Value</code> pairs
-    to send with the hit. The values are NOT persisted in the tracker.</div>
+        : (<span>!</span><span class="type"><a href="class_analytics_ParameterMap.html">analytics.ParameterMap</a></span><span>&nbsp;|&nbsp;</span><span class="type">
+       !Object</span>.&lt;<span class="type"><a href="https://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FString">string</a></span>,<span class="type"> !analytics.Value></span>)&gt;
+        <div class="entryOverview">Additional parameters to include in the hit along with any
+    values previously supplied via calls to <code> Tracker#set</code>.
+    NOTE: These values are NOT persisted in the tracker.</div>
      </td>
    </tr>
   </table>
@@ -585,7 +607,7 @@ using <code> set</code> or using <code> opt_extraParams</code>.
      <div class="arg">
        <img align="left" src="static/images/blank.gif">
 
-        <span class="entryName">sendTiming<span class="args">(<span class="arg">category</span>,&nbsp;<span class="arg">variable</span>,&nbsp;<span class="arg">value</span>,&nbsp;<span class="arg">opt_label</span>)</span>
+        <span class="entryName">sendTiming<span class="args">(<span class="arg">category</span>,&nbsp;<span class="arg">variable</span>,&nbsp;<span class="arg">value</span>,&nbsp;<span class="arg">opt_label</span>,&nbsp;<span class="arg">opt_sampleRate</span>)</span>
         </span>
         &#8658; <span>!</span><span class="type">goog.async.Deferred</span>
       </div>
@@ -640,6 +662,14 @@ using <code> set</code> or using <code> opt_extraParams</code>.
         <span class="entryName">opt_label</span>
         : <span class="type">string=</span>
         <div class="entryOverview">Specifies the optional label of the timing.</div>
+     </td>
+   </tr>
+     
+   <tr class="even">
+     <td>
+        <span class="entryName">opt_sampleRate</span>
+        : <span class="type">number=</span>
+        <div class="entryOverview"><span class='nodesc'>No description.</span></div>
      </td>
    </tr>
   </table>
@@ -743,7 +773,7 @@ to <code> set</code>.
      <div class="arg">
        <img align="left" src="static/images/blank.gif">
 
-        <span class="entryName">startTiming<span class="args">(<span class="arg">category</span>,&nbsp;<span class="arg">variable</span>,&nbsp;<span class="arg">opt_label</span>)</span>
+        <span class="entryName">startTiming<span class="args">(<span class="arg">category</span>,&nbsp;<span class="arg">variable</span>,&nbsp;<span class="arg">opt_label</span>,&nbsp;<span class="arg">opt_sampleRate</span>)</span>
         </span>
         &#8658; <span>!</span><span class="type"><a href="interface_analytics_Tracker_Timing.html">analytics.Tracker.Timing</a></span>
       </div>
@@ -789,6 +819,14 @@ to <code> set</code>.
      <td>
         <span class="entryName">opt_label</span>
         : <span class="type">string=</span>
+        <div class="entryOverview"><span class='nodesc'>No description.</span></div>
+     </td>
+   </tr>
+     
+   <tr class="odd">
+     <td>
+        <span class="entryName">opt_sampleRate</span>
+        : <span class="type">number=</span>
         <div class="entryOverview"><span class='nodesc'>No description.</span></div>
      </td>
    </tr>
@@ -897,6 +935,7 @@ automatic session management.
 
 
 
+<h2>Static Properties</h2>
 
 
 
@@ -905,6 +944,38 @@ automatic session management.
 
 <div class="section">
   <table class="horiz-rule">
+
+
+     <tr class="even entry public">
+       <td class="access"></td>
+
+
+
+
+
+  <a name="analytics.Tracker.Filter"></a>
+
+  <td>
+
+
+     <div class="arg">
+        <img align="left" src="static/images/blank.gif">
+
+        <span class="entryNamespace">analytics.Tracker.</span><span class="entryName">Filter</span>
+        : 
+     </div>
+
+
+     <div class="entryOverview">
+       A <code> function</code> that processes a hit.
+
+
+     </div>
+
+  </td>
+
+
+     </tr>
 
 
   </table>
