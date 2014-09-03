@@ -1,0 +1,175 @@
+<!doctype html>
+
+
+<html>
+<head>
+  <link rel="shortcut icon" href="static/images/favicon.ico" type="image/x-icon">
+  <title>filters (Chrome Platform Analytics - JavaScript)</title>
+  <link rel="stylesheet" href="static/css/base.css">
+  <link rel="stylesheet" href="static/css/doc.css">
+  <link rel="stylesheet" href="static/css/sidetree.css">
+  <link rel="stylesheet" href="static/css/prettify.css">
+
+  <script>
+     var _staticFilePath = "static/";
+     var _typeTreeName = "analytics";
+     var _fileTreeName = "Source";
+  </script>
+
+  <script src="static/js/doc.js">
+  </script>
+
+
+  <meta charset="utf8">
+</head>
+
+<body onload="grokdoc.onLoad();">
+
+<div id="header">
+  <div class="g-section g-tpl-50-50 g-split">
+    <div class="g-unit g-first">
+      <a id="logo" href="index.html">Chrome Platform Analytics</a>
+    </div>
+
+    <div class="g-unit">
+      <div class="g-c">
+        <strong>Go to class or file:</strong>
+        <input type="text" id="ac">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<div class="colmask rightmenu">
+<div class="colleft">
+    <div class="col1">
+      <!-- Column 1 start -->
+
+<div id="title">
+       <span class="fn">filters</span>
+</div>
+
+<hr/>
+
+
+  <h2>Classes</h2>
+ <div class="fn-constructor">
+        <a href="class_analytics_filters_EventLabelerBuilder.html">
+          analytics.filters.EventLabelerBuilder</a><br/>
+        <div class="class-details">Builder class for a labeler filter. Filters built using this class will
+auto-generate a label based on the the value supplied with the hit.
+
+<p>If an existing label was specified, it will be replaced by the new one
+unless the <code> appendToExistingLabel()</code> feature is specified, in which
+case the new label will be appended to the end of the existing label like so:
+"Existing Label - 256-512".
+
+<p>Example: If 205 were the value for a hit, this function would
+generate a label of '128-256'.
+
+<p>NOTE: Negative or zero values just get mapped to "&lt;= 0". Non-numeric
+values get left as-is.
+
+</p></p></p></div>
+ </div>
+ <div class="fn-constructor">
+        <a href="class_analytics_filters_FilterBuilder.html">
+          analytics.filters.FilterBuilder</a><br/>
+        <div class="class-details">Class that facilitates building filters that are called
+only when a <code> analytics.Tracker.Hit</code> matches certain
+conditions.
+
+</div>
+ </div>
+   
+<br/>
+
+
+
+
+
+
+
+
+
+
+<div class="section">
+  <table class="horiz-rule">
+
+
+  </table>
+</div>
+
+
+
+
+
+
+
+  <h2>Global Properties</h2>
+
+
+
+
+
+<div class="section">
+  <table class="horiz-rule">
+
+
+     <tr class="even entry public">
+       <td class="access"></td>
+
+
+
+
+
+  <a name="analytics.filters.Buckets"></a>
+
+  <td>
+
+
+     <div class="arg">
+        <img align="left" src="static/images/blank.gif">
+
+        <span class="entryNamespace">analytics.filters.</span><span class="entryName">Buckets</span>
+        : 
+     </div>
+
+
+     <div class="entryOverview">
+       <span class='nodesc'>No description.</span>
+     </div>
+
+  </td>
+
+
+     </tr>
+
+
+  </table>
+</div>
+      <!-- Column 1 end -->
+    </div>
+
+        <div class="col2">
+          <!-- Column 2 start -->
+          <div class="col2-c">
+            <h2 id="ref-head">Package filters</h2>
+            <div id="localView"></div>
+          </div>
+
+          <div class="col2-c">
+            <h2 id="ref-head">Package Reference</h2>
+            <div id="sideTypeIndex" rootPath="" current="filters"></div>
+          </div>
+          <!-- Column 2 end -->
+        </div>
+</div>
+</div>
+
+</body>
+</html>

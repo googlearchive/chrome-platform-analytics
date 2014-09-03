@@ -1,0 +1,622 @@
+<!doctype html>
+
+
+<html>
+<head>
+  <link rel="shortcut icon" href="static/images/favicon.ico" type="image/x-icon">
+  <title>FilterBuilder (Chrome Platform Analytics - JavaScript)</title>
+  <link rel="stylesheet" href="static/css/base.css">
+  <link rel="stylesheet" href="static/css/doc.css">
+  <link rel="stylesheet" href="static/css/sidetree.css">
+  <link rel="stylesheet" href="static/css/prettify.css">
+
+  <script>
+     var _staticFilePath = "static/";
+     var _typeTreeName = "analytics";
+     var _fileTreeName = "Source";
+  </script>
+
+  <script src="static/js/doc.js">
+  </script>
+
+  <script type="text/javascript" src="//www.google.com/jsapi"></script>
+  <script type="text/javascript">
+     google.load("visualization", "1", {packages:["orgchart"]});
+     var _loadingVisualizations = true;
+  </script>
+
+  <meta charset="utf8">
+</head>
+
+<body onload="grokdoc.onLoad();">
+
+<div id="header">
+  <div class="g-section g-tpl-50-50 g-split">
+    <div class="g-unit g-first">
+      <a id="logo" href="index.html">Chrome Platform Analytics</a>
+    </div>
+
+    <div class="g-unit">
+      <div class="g-c">
+        <strong>Go to class or file:</strong>
+        <input type="text" id="ac">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<div class="colmask rightmenu">
+<div class="colleft">
+    <div class="col1">
+      <!-- Column 1 start -->
+
+<div id="title">
+        <span class="fn">filters.FilterBuilder</span>
+        <span>Extends</span>
+        <span class="fn-name">
+          
+        </span>
+</div>
+
+<div class="g-section g-tpl-75-25">
+  <div class="g-unit g-first" id="description">
+    Class that facilitates building filters that are called
+only when a <code> analytics.Tracker.Hit</code> matches certain
+conditions.
+
+
+  </div>
+
+
+</div>
+
+
+
+
+
+
+<h2 class="g-first">Inheritance</h2>
+<div class='gviz-org-chart-container goog-inline-block'>
+<table class='gviz-org-chart' style='display:none'>
+  <tr><td>analytics.filters.FilterBuilder</td><td></td></tr>
+</table>
+</div>
+<div class='gviz-org-chart-container goog-inline-block'>
+<table class='gviz-org-chart' style='display:none'>
+</table>
+</div>
+
+
+
+
+  <h2>Constructor</h2>
+      <div class="fn-constructor">
+    analytics.filters.FilterBuilder(<span></span>)
+  </div>
+
+
+
+<h2>Instance Methods</h2>
+
+
+
+
+
+
+
+
+
+<div>
+       <div class="desc">
+         Defined in
+         <span class="fn-name">
+            <a href="class_analytics_filters_FilterBuilder.html">
+              analytics.filters.FilterBuilder
+            </a>
+         </span>
+       </div>
+
+
+
+
+
+
+<div class="section">
+  <table class="horiz-rule">
+
+
+     <tr class="even entry public">
+       <td class="access"></td>
+
+
+
+
+
+
+  <td>
+    <a name="analytics.filters.FilterBuilder.prototype.applyFilter"></a>
+
+
+     <div class="arg">
+       <img align="left" src="static/images/blank.gif">
+
+        <span class="entryName">applyFilter<span class="args">(<span class="arg">filter</span>,&nbsp;<span class="arg">opt_scope</span>)</span>
+        </span>
+        &#8658; <span>!</span><span class="type"><a href="class_analytics_filters_FilterBuilder.html">analytics.filters.FilterBuilder</a></span>
+      </div>
+
+
+     <div class="entryOverview">
+       Specifies the filter to be called if all conditions are met.
+Only one filter can be specified.
+
+
+     </div>
+
+
+    <! -- Method details -->
+    <div class="entryDetails">
+
+      <div class="detailsSection">
+        <b>Arguments: </b>
+
+
+
+
+
+
+<table class="horiz-rule">
+     
+   <tr class="even">
+     <td>
+        <span class="entryName">filter</span>
+        : <span>!</span><span class="type">analytics.Tracker.Filter</span>
+        <div class="entryOverview"><span class='nodesc'>No description.</span></div>
+     </td>
+   </tr>
+     
+   <tr class="odd">
+     <td>
+        <span class="entryName">opt_scope</span>
+        : <span>!</span><span class="type">Object=</span>
+        <div class="entryOverview">Optional scope in which to call the filter.</div>
+     </td>
+   </tr>
+  </table>
+      </div>
+   
+      <div class="detailsSection">
+        <b>Returns:</b>&nbsp;<span>!</span><span class="type"><a href="class_analytics_filters_FilterBuilder.html">analytics.filters.FilterBuilder</a></span>&nbsp;
+            <span class='nodesc'>No description.</span>
+      </div>
+  
+    </div>
+   
+  </td>
+
+
+     </tr>
+
+
+     <tr class="odd entry public">
+       <td class="access"></td>
+
+
+
+
+
+
+  <td>
+    <a name="analytics.filters.FilterBuilder.prototype.build"></a>
+
+
+     <div class="arg">
+       <img align="left" src="static/images/blank.gif">
+
+        <span class="entryName">build<span class="args">()</span>
+        </span>
+        &#8658; <span>!</span><span class="type">analytics.Tracker.Filter</span>
+      </div>
+
+
+     <div class="entryOverview">
+       Builds the filter.
+
+
+     </div>
+
+
+    <! -- Method details -->
+    <div class="entryDetails">
+
+   
+      <div class="detailsSection">
+        <b>Returns:</b>&nbsp;<span>!</span><span class="type">analytics.Tracker.Filter</span>&nbsp;
+            <span class='nodesc'>No description.</span>
+      </div>
+  
+    </div>
+   
+  </td>
+
+
+     </tr>
+
+
+     <tr class="even entry public">
+       <td class="access"></td>
+
+
+
+
+
+
+  <td>
+    <a name="analytics.filters.FilterBuilder.prototype.when"></a>
+
+
+     <div class="arg">
+       <img align="left" src="static/images/blank.gif">
+
+        <span class="entryName">when<span class="args">(<span class="arg">predicate</span>)</span>
+        </span>
+        &#8658; <span>!</span><span class="type"><a href="class_analytics_filters_FilterBuilder.html">analytics.filters.FilterBuilder</a></span>
+      </div>
+
+
+     <div class="entryOverview">
+       Matches filter to hits where <code> predicate</code> returns <code> true</code>.
+
+<p>NOTE: In most cases use of <code> #whenHitType</code> and
+<code> #whenValue</code> is preferred to writing your own predicate.
+
+</p>
+     </div>
+
+
+    <! -- Method details -->
+    <div class="entryDetails">
+
+      <div class="detailsSection">
+        <b>Arguments: </b>
+
+
+
+
+
+
+<table class="horiz-rule">
+     
+   <tr class="even">
+     <td>
+        <span class="entryName">predicate</span>
+        : <span>!</span><span class="type">analytics.filters.FilterBuilder.Predicate</span>
+        <div class="entryOverview"><span class='nodesc'>No description.</span></div>
+     </td>
+   </tr>
+  </table>
+      </div>
+   
+      <div class="detailsSection">
+        <b>Returns:</b>&nbsp;<span>!</span><span class="type"><a href="class_analytics_filters_FilterBuilder.html">analytics.filters.FilterBuilder</a></span>&nbsp;
+            <span class='nodesc'>No description.</span>
+      </div>
+  
+    </div>
+   
+  </td>
+
+
+     </tr>
+
+
+     <tr class="odd entry public">
+       <td class="access"></td>
+
+
+
+
+
+
+  <td>
+    <a name="analytics.filters.FilterBuilder.prototype.whenHitType"></a>
+
+
+     <div class="arg">
+       <img align="left" src="static/images/blank.gif">
+
+        <span class="entryName">whenHitType<span class="args">(<span class="arg">var_args</span>)</span>
+        </span>
+        &#8658; <span>!</span><span class="type"><a href="class_analytics_filters_FilterBuilder.html">analytics.filters.FilterBuilder</a></span>
+      </div>
+
+
+     <div class="entryOverview">
+       Restricts filter to hits with a matching hitType. Note that hitTypes
+from this call are effectively ANDed with all other calls. If you
+want to support multiple hit types, pass them in a single call.
+
+
+     </div>
+
+
+    <! -- Method details -->
+    <div class="entryDetails">
+
+      <div class="detailsSection">
+        <b>Arguments: </b>
+
+
+
+
+
+
+<table class="horiz-rule">
+     
+   <tr class="even">
+     <td>
+        <span class="entryName">var_args</span>
+        : <span class="type">...!analytics.HitType</span>
+        <div class="entryOverview"><span class='nodesc'>No description.</span></div>
+     </td>
+   </tr>
+  </table>
+      </div>
+   
+      <div class="detailsSection">
+        <b>Returns:</b>&nbsp;<span>!</span><span class="type"><a href="class_analytics_filters_FilterBuilder.html">analytics.filters.FilterBuilder</a></span>&nbsp;
+            <span class='nodesc'>No description.</span>
+      </div>
+  
+    </div>
+   
+  </td>
+
+
+     </tr>
+
+
+     <tr class="even entry public">
+       <td class="access"></td>
+
+
+
+
+
+
+  <td>
+    <a name="analytics.filters.FilterBuilder.prototype.whenValue"></a>
+
+
+     <div class="arg">
+       <img align="left" src="static/images/blank.gif">
+
+        <span class="entryName">whenValue<span class="args">(<span class="arg">parameter</span>,&nbsp;<span class="arg">var_args</span>)</span>
+        </span>
+        &#8658; <span>!</span><span class="type"><a href="class_analytics_filters_FilterBuilder.html">analytics.filters.FilterBuilder</a></span>
+      </div>
+
+
+     <div class="entryOverview">
+       Matches hits where <code> parameter</code> has one of the specified values.
+
+<p>NOTE: Multiple calls to this method will result in the conditions
+described in call 1 being ANDed with the conditions described in call 2.
+
+</p>
+     </div>
+
+
+    <! -- Method details -->
+    <div class="entryDetails">
+
+      <div class="detailsSection">
+        <b>Arguments: </b>
+
+
+
+
+
+
+<table class="horiz-rule">
+     
+   <tr class="even">
+     <td>
+        <span class="entryName">parameter</span>
+        : <span>!</span><span class="type">analytics.Parameter</span>
+        <div class="entryOverview">The parameter identifying
+    the value to check in the hit.</div>
+     </td>
+   </tr>
+     
+   <tr class="odd">
+     <td>
+        <span class="entryName">var_args</span>
+        : <span class="type">...!analytics.Value</span>
+        <div class="entryOverview">List of values to match.</div>
+     </td>
+   </tr>
+  </table>
+      </div>
+   
+      <div class="detailsSection">
+        <b>Returns:</b>&nbsp;<span>!</span><span class="type"><a href="class_analytics_filters_FilterBuilder.html">analytics.filters.FilterBuilder</a></span>&nbsp;
+            <span class='nodesc'>No description.</span>
+      </div>
+  
+    </div>
+   
+  </td>
+
+
+     </tr>
+
+
+  </table>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2>Static Methods</h2>
+
+
+
+
+
+
+<div class="section">
+  <table class="horiz-rule">
+
+
+     <tr class="even entry public">
+       <td class="access"></td>
+
+
+
+
+
+
+  <td>
+    <a name="analytics.filters.FilterBuilder.builder"></a>
+
+
+     <div class="arg">
+       <img align="left" src="static/images/blank.gif">
+
+        <span class="entryNamespace">analytics.filters.FilterBuilder.</span><span class="entryName">builder<span class="args">()</span>
+        </span>
+        &#8658; <span>!</span><span class="type"><a href="class_analytics_filters_FilterBuilder.html">analytics.filters.FilterBuilder</a></span>
+      </div>
+
+
+     <div class="entryOverview">
+       Factory method...because for some reason newing up a builder seems wierd.
+
+
+     </div>
+
+
+    <! -- Method details -->
+    <div class="entryDetails">
+
+   
+      <div class="detailsSection">
+        <b>Returns:</b>&nbsp;<span>!</span><span class="type"><a href="class_analytics_filters_FilterBuilder.html">analytics.filters.FilterBuilder</a></span>&nbsp;
+            <span class='nodesc'>No description.</span>
+      </div>
+  
+    </div>
+   
+  </td>
+
+
+     </tr>
+
+
+  </table>
+</div>
+
+
+
+<h2>Static Properties</h2>
+
+
+
+
+
+
+<div class="section">
+  <table class="horiz-rule">
+
+
+     <tr class="even entry public">
+       <td class="access"></td>
+
+
+
+
+
+  <a name="analytics.filters.FilterBuilder.Predicate"></a>
+
+  <td>
+
+
+     <div class="arg">
+        <img align="left" src="static/images/blank.gif">
+
+        <span class="entryNamespace">analytics.filters.FilterBuilder.</span><span class="entryName">Predicate</span>
+        : 
+     </div>
+
+
+     <div class="entryOverview">
+       Returns true to indicate that a filter should be applied to a hit.
+This is the means by which you match your filters to hits with
+particular qualities.
+
+<p>NOTE: A predicate should not mutate a hit. If you want to mutate
+a hit, do it in a filter.
+
+</p>
+     </div>
+
+  </td>
+
+
+     </tr>
+
+
+  </table>
+</div>
+
+
+
+
+
+
+
+
+
+<div class="section">
+  <table class="horiz-rule">
+
+
+  </table>
+</div>
+      <!-- Column 1 end -->
+    </div>
+
+        <div class="col2">
+          <!-- Column 2 start -->
+          <div class="col2-c">
+            <h2 id="ref-head">Package filters</h2>
+            <div id="localView"></div>
+          </div>
+
+          <div class="col2-c">
+            <h2 id="ref-head">Package Reference</h2>
+            <div id="sideTypeIndex" rootPath="" current="filters.FilterBuilder"></div>
+          </div>
+          <!-- Column 2 end -->
+        </div>
+</div>
+</div>
+
+</body>
+</html>

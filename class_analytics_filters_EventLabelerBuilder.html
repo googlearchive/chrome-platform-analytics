@@ -1,0 +1,563 @@
+<!doctype html>
+
+
+<html>
+<head>
+  <link rel="shortcut icon" href="static/images/favicon.ico" type="image/x-icon">
+  <title>EventLabelerBuilder (Chrome Platform Analytics - JavaScript)</title>
+  <link rel="stylesheet" href="static/css/base.css">
+  <link rel="stylesheet" href="static/css/doc.css">
+  <link rel="stylesheet" href="static/css/sidetree.css">
+  <link rel="stylesheet" href="static/css/prettify.css">
+
+  <script>
+     var _staticFilePath = "static/";
+     var _typeTreeName = "analytics";
+     var _fileTreeName = "Source";
+  </script>
+
+  <script src="static/js/doc.js">
+  </script>
+
+  <script type="text/javascript" src="//www.google.com/jsapi"></script>
+  <script type="text/javascript">
+     google.load("visualization", "1", {packages:["orgchart"]});
+     var _loadingVisualizations = true;
+  </script>
+
+  <meta charset="utf8">
+</head>
+
+<body onload="grokdoc.onLoad();">
+
+<div id="header">
+  <div class="g-section g-tpl-50-50 g-split">
+    <div class="g-unit g-first">
+      <a id="logo" href="index.html">Chrome Platform Analytics</a>
+    </div>
+
+    <div class="g-unit">
+      <div class="g-c">
+        <strong>Go to class or file:</strong>
+        <input type="text" id="ac">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<div class="colmask rightmenu">
+<div class="colleft">
+    <div class="col1">
+      <!-- Column 1 start -->
+
+<div id="title">
+        <span class="fn">filters.EventLabelerBuilder</span>
+        <span>Extends</span>
+        <span class="fn-name">
+          
+        </span>
+</div>
+
+<div class="g-section g-tpl-75-25">
+  <div class="g-unit g-first" id="description">
+    Builder class for a labeler filter. Filters built using this class will
+auto-generate a label based on the the value supplied with the hit.
+
+<p>If an existing label was specified, it will be replaced by the new one
+unless the <code> appendToExistingLabel()</code> feature is specified, in which
+case the new label will be appended to the end of the existing label like so:
+"Existing Label - 256-512".
+
+<p>Example: If 205 were the value for a hit, this function would
+generate a label of '128-256'.
+
+<p>NOTE: Negative or zero values just get mapped to "&lt;= 0". Non-numeric
+values get left as-is.
+
+</p></p></p>
+  </div>
+
+
+</div>
+
+
+
+
+
+
+<h2 class="g-first">Inheritance</h2>
+<div class='gviz-org-chart-container goog-inline-block'>
+<table class='gviz-org-chart' style='display:none'>
+  <tr><td>analytics.filters.EventLabelerBuilder</td><td></td></tr>
+</table>
+</div>
+<div class='gviz-org-chart-container goog-inline-block'>
+<table class='gviz-org-chart' style='display:none'>
+</table>
+</div>
+
+
+
+
+  <h2>Constructor</h2>
+      <div class="fn-constructor">
+    analytics.filters.EventLabelerBuilder(<span></span>)
+  </div>
+
+
+
+<h2>Instance Methods</h2>
+
+
+
+
+
+
+
+
+
+<div>
+       <div class="desc">
+         Defined in
+         <span class="fn-name">
+            <a href="class_analytics_filters_EventLabelerBuilder.html">
+              analytics.filters.EventLabelerBuilder
+            </a>
+         </span>
+       </div>
+
+
+
+
+
+
+<div class="section">
+  <table class="horiz-rule">
+
+
+     <tr class="even entry public">
+       <td class="access"></td>
+
+
+
+
+
+
+  <td>
+    <a name="analytics.filters.EventLabelerBuilder.prototype.appendToExistingLabel"></a>
+
+
+     <div class="arg">
+       <img align="left" src="static/images/blank.gif">
+
+        <span class="entryName">appendToExistingLabel<span class="args">(<span class="arg">opt_separator</span>)</span>
+        </span>
+        &#8658; <span>!</span><span class="type"><a href="class_analytics_filters_EventLabelerBuilder.html">analytics.filters.EventLabelerBuilder</a></span>
+      </div>
+
+
+     <div class="entryOverview">
+       <span class='nodesc'>No description.</span>
+     </div>
+
+
+    <! -- Method details -->
+    <div class="entryDetails">
+
+      <div class="detailsSection">
+        <b>Arguments: </b>
+
+
+
+
+
+
+<table class="horiz-rule">
+     
+   <tr class="even">
+     <td>
+        <span class="entryName">opt_separator</span>
+        : <span class="type">string=</span>
+        <div class="entryOverview">A separator between existing and new label.
+    If unspecified, a default ' - ' is used.</div>
+     </td>
+   </tr>
+  </table>
+      </div>
+   
+      <div class="detailsSection">
+        <b>Returns:</b>&nbsp;<span>!</span><span class="type"><a href="class_analytics_filters_EventLabelerBuilder.html">analytics.filters.EventLabelerBuilder</a></span>&nbsp;
+            This
+    builder, configured such that the new label gets appended to the end of
+    the existing one.
+      </div>
+  
+    </div>
+   
+  </td>
+
+
+     </tr>
+
+
+     <tr class="odd entry public">
+       <td class="access"></td>
+
+
+
+
+
+
+  <td>
+    <a name="analytics.filters.EventLabelerBuilder.prototype.build"></a>
+
+
+     <div class="arg">
+       <img align="left" src="static/images/blank.gif">
+
+        <span class="entryName">build<span class="args">()</span>
+        </span>
+        &#8658; <span>!</span><span class="type">analytics.Tracker.Filter</span>
+      </div>
+
+
+     <div class="entryOverview">
+       <span class='nodesc'>No description.</span>
+     </div>
+
+
+    <! -- Method details -->
+    <div class="entryDetails">
+
+   
+      <div class="detailsSection">
+        <b>Returns:</b>&nbsp;<span>!</span><span class="type">analytics.Tracker.Filter</span>&nbsp;
+            The labeler filter itself.
+      </div>
+  
+    </div>
+   
+  </td>
+
+
+     </tr>
+
+
+     <tr class="even entry public">
+       <td class="access"></td>
+
+
+
+
+
+
+  <td>
+    <a name="analytics.filters.EventLabelerBuilder.prototype.labeler"></a>
+
+
+     <div class="arg">
+       <img align="left" src="static/images/blank.gif">
+
+        <span class="entryName">labeler<span class="args">(<span class="arg">labeler</span>)</span>
+        </span>
+        &#8658; <span>!</span><span class="type"><a href="class_analytics_filters_EventLabelerBuilder.html">analytics.filters.EventLabelerBuilder</a></span>
+      </div>
+
+
+     <div class="entryOverview">
+       Configures the labeler to use the supplied labeler function.
+
+
+     </div>
+
+
+    <! -- Method details -->
+    <div class="entryDetails">
+
+      <div class="detailsSection">
+        <b>Arguments: </b>
+
+
+
+
+
+
+<table class="horiz-rule">
+     
+   <tr class="even">
+     <td>
+        <span class="entryName">labeler</span>
+        : <span class="type">function(number): string</span>
+        <div class="entryOverview"><span class='nodesc'>No description.</span></div>
+     </td>
+   </tr>
+  </table>
+      </div>
+   
+      <div class="detailsSection">
+        <b>Returns:</b>&nbsp;<span>!</span><span class="type"><a href="class_analytics_filters_EventLabelerBuilder.html">analytics.filters.EventLabelerBuilder</a></span>&nbsp;
+            This
+    builder, configured such that the supplied labeler is used.
+      </div>
+  
+    </div>
+   
+  </td>
+
+
+     </tr>
+
+
+     <tr class="odd entry public">
+       <td class="access"></td>
+
+
+
+
+
+
+  <td>
+    <a name="analytics.filters.EventLabelerBuilder.prototype.powersOfTwo"></a>
+
+
+     <div class="arg">
+       <img align="left" src="static/images/blank.gif">
+
+        <span class="entryName">powersOfTwo<span class="args">()</span>
+        </span>
+        &#8658; <span>!</span><span class="type"><a href="class_analytics_filters_EventLabelerBuilder.html">analytics.filters.EventLabelerBuilder</a></span>
+      </div>
+
+
+     <div class="entryOverview">
+       Configures the labeler to apply to event hits and put the given positive
+integer value into the appropriate range power-of-two bucket.
+
+<p>E.g.,
+<pre class="lang-js prettyprint">
+   50 -&gt; "32-64"
+   51 -&gt; "32-64"
+   120 -&gt; "64-128"
+   15 -&gt; "8-16"
+   ...
+</pre>
+
+</p>
+     </div>
+
+
+    <! -- Method details -->
+    <div class="entryDetails">
+
+   
+      <div class="detailsSection">
+        <b>Returns:</b>&nbsp;<span>!</span><span class="type"><a href="class_analytics_filters_EventLabelerBuilder.html">analytics.filters.EventLabelerBuilder</a></span>&nbsp;
+            This
+    builder, configured such that the powers-of-two labeler is used.
+      </div>
+  
+    </div>
+   
+  </td>
+
+
+     </tr>
+
+
+     <tr class="even entry public">
+       <td class="access"></td>
+
+
+
+
+
+
+  <td>
+    <a name="analytics.filters.EventLabelerBuilder.prototype.rangeBounds"></a>
+
+
+     <div class="arg">
+       <img align="left" src="static/images/blank.gif">
+
+        <span class="entryName">rangeBounds<span class="args">(<span class="arg">rightBounds</span>)</span>
+        </span>
+        &#8658; <span>!</span><span class="type"><a href="class_analytics_filters_EventLabelerBuilder.html">analytics.filters.EventLabelerBuilder</a></span>
+      </div>
+
+
+     <div class="entryOverview">
+       Configures the labeler to put the given positive integer value into the
+appropriate range (bucket) for the given range bounds.
+
+<p>E.g., if <code> rightBounds</code> were [10, 20, 30], then a val of 17 would
+result in a label of '11-20'.
+
+</p>
+     </div>
+
+
+    <! -- Method details -->
+    <div class="entryDetails">
+
+      <div class="detailsSection">
+        <b>Arguments: </b>
+
+
+
+
+
+
+<table class="horiz-rule">
+     
+   <tr class="even">
+     <td>
+        <span class="entryName">rightBounds</span>
+        : <span>!</span><span class="type"><a href="https://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FArray">Array</a></span>.&lt;<span class="type"><a href="https://www.google.com/url?sa=D&q=https%3A%2F%2Fdeveloper.mozilla.org%2Fen%2FCore_JavaScript_1.5_Reference%2FGlobal_Objects%2FNumber">number</a></span>&gt;
+        <div class="entryOverview">The right bounds of each range.</div>
+     </td>
+   </tr>
+  </table>
+      </div>
+   
+      <div class="detailsSection">
+        <b>Returns:</b>&nbsp;<span>!</span><span class="type"><a href="class_analytics_filters_EventLabelerBuilder.html">analytics.filters.EventLabelerBuilder</a></span>&nbsp;
+            This
+    builder, configured such that the range bounds labeler is used.
+      </div>
+  
+    </div>
+   
+  </td>
+
+
+     </tr>
+
+
+     <tr class="odd entry public">
+       <td class="access"></td>
+
+
+
+
+
+
+  <td>
+    <a name="analytics.filters.EventLabelerBuilder.prototype.stripValue"></a>
+
+
+     <div class="arg">
+       <img align="left" src="static/images/blank.gif">
+
+        <span class="entryName">stripValue<span class="args">()</span>
+        </span>
+        &#8658; <span>!</span><span class="type"><a href="class_analytics_filters_EventLabelerBuilder.html">analytics.filters.EventLabelerBuilder</a></span>
+      </div>
+
+
+     <div class="entryOverview">
+       <span class='nodesc'>No description.</span>
+     </div>
+
+
+    <! -- Method details -->
+    <div class="entryDetails">
+
+   
+      <div class="detailsSection">
+        <b>Returns:</b>&nbsp;<span>!</span><span class="type"><a href="class_analytics_filters_EventLabelerBuilder.html">analytics.filters.EventLabelerBuilder</a></span>&nbsp;
+            This
+    builder, configured such that the event value for hits gets stripped out.
+      </div>
+  
+    </div>
+   
+  </td>
+
+
+     </tr>
+
+
+  </table>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section">
+  <table class="horiz-rule">
+
+
+  </table>
+</div>
+
+
+
+
+
+
+
+
+
+<div class="section">
+  <table class="horiz-rule">
+
+
+  </table>
+</div>
+
+
+
+
+
+
+
+
+
+<div class="section">
+  <table class="horiz-rule">
+
+
+  </table>
+</div>
+      <!-- Column 1 end -->
+    </div>
+
+        <div class="col2">
+          <!-- Column 2 start -->
+          <div class="col2-c">
+            <h2 id="ref-head">Package filters</h2>
+            <div id="localView"></div>
+          </div>
+
+          <div class="col2-c">
+            <h2 id="ref-head">Package Reference</h2>
+            <div id="sideTypeIndex" rootPath="" current="filters.EventLabelerBuilder"></div>
+          </div>
+          <!-- Column 2 end -->
+        </div>
+</div>
+</div>
+
+</body>
+</html>
