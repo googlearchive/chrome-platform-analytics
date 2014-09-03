@@ -21,6 +21,7 @@
 
 goog.setTestOnly();
 
+goog.require('analytics.EventBuilder');
 goog.require('analytics.HitTypes');
 goog.require('analytics.ParameterMap');
 goog.require('analytics.Parameters');
@@ -32,6 +33,13 @@ goog.require('analytics.testing.TestSettings');
 goog.require('goog.object');
 goog.require('goog.testing.MockClock');
 goog.require('goog.testing.jsunit');
+
+
+/** @const {!analytics.EventBuilder} */
+var EVENT_0 = analytics.EventBuilder.builder().
+    category('Hoopla').
+    action('Engage').
+    label('Raucously');
 
 
 /** @const {!analytics.ParameterMap} */
@@ -109,15 +117,34 @@ function setUp() {
   extraParams = {};
 }
 
+
 function tearDown() {
   clock.dispose();
 }
+
 
 function testSend() {
   tracker.set(analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768');
   tracker.set(analytics.Parameters.CAMPAIGN_ID, '789');
   tracker.send(analytics.HitTypes.EVENT);
 
+  channel.assertHitSent(HIT_0);
+}
+
+function testSend_EventBuilder() {
+  tracker.send(EVENT_0);
+  channel.assertEventSent(EVENT_0);
+}
+
+
+function testSend_EventBuilder_IgnoresExtraParams() {
+  tracker.send(EVENT_0, {'eventCategory': 'Ten Dollars'});
+  channel.assertEventSent(EVENT_0);
+}
+
+
+function testSend_ParameterMap() {
+  tracker.send(analytics.HitTypes.EVENT, HIT_0);
   channel.assertHitSent(HIT_0);
 }
 
@@ -156,6 +183,7 @@ function testSend_CustomParameters() {
   channel.assertLastHitHasEntry('dimension33', 'beta');
 }
 
+
 function testStartNewSession() {
   tracker.send(analytics.HitTypes.EVENT);
   assertUndefined(channel.findValue('sessionControl'));
@@ -168,10 +196,12 @@ function testStartNewSession() {
   assertUndefined(channel.findValue('sessionControl'));
 }
 
+
 function testSendAppView() {
   tracker.sendAppView(APPVIEW_HIT.description);
   assertTypedHitSent(APPVIEW_HIT);
 }
+
 
 function testSendAppView_PersistsDescriptionParameter() {
   tracker.sendAppView(APPVIEW_HIT.description);
@@ -184,6 +214,7 @@ function testSendAppView_PersistsDescriptionParameter() {
       analytics.Parameters.DESCRIPTION, APPVIEW_HIT.description);
 }
 
+
 function testSendEvent() {
   tracker.sendEvent(
       EVENT_HIT.eventCategory,
@@ -192,6 +223,7 @@ function testSendEvent() {
       EVENT_HIT.eventValue);
   assertTypedHitSent(EVENT_HIT);
 }
+
 
 function testSendEvent_DisallowsNegativeValues() {
   try {
@@ -204,10 +236,12 @@ function testSendEvent_DisallowsNegativeValues() {
   } catch (expected) {}
 }
 
+
 function testSendException() {
   tracker.sendException(EXCEPTION_HIT.exDescription, EXCEPTION_HIT.exFatal);
   assertTypedHitSent(EXCEPTION_HIT);
 }
+
 
 function testSendSocial() {
   tracker.sendSocial(
@@ -216,6 +250,7 @@ function testSendSocial() {
       SOCIAL_HIT.socialTarget);
   assertTypedHitSent(SOCIAL_HIT);
 }
+
 
 function testSendTiming() {
   tracker.sendTiming(
@@ -226,6 +261,7 @@ function testSendTiming() {
 
   assertTypedHitSent(TIMING_HIT);
 }
+
 
 function testTiming() {
   var timing = tracker.startTiming(
@@ -265,6 +301,7 @@ function assertTypedHitSent(hit, opt_extraParams) {
         channel.assertLastHitHasEntry(param, value);
       });
 }
+
 
 function testThrowsErrorForUnknownParameters() {
   // A bunch of parameter names which are not valid.

@@ -74,19 +74,29 @@ analytics.testing.TestChannel.prototype.getChannel = function() {
  * @return {boolean} True if the hit was previously sent.
  */
 analytics.testing.TestChannel.prototype.hitWasSent = function(expected) {
-
-  /** @type {boolean} */
-  var result = goog.array.some(
+  return goog.array.some(
       this.sent_,
-      /**
-       * @param {!analytics.internal.DivertingChannel.Capture} capture
-       * @return {boolean} True if `expected` equals `capture.parameters`.
-       */
+      /** @return {boolean} */
       function(capture) {
         return expected.equals(capture.parameters);
       });
+};
 
-  return result;
+
+/**
+ * @param {!analytics.HitType} hitType
+ * @param {!analytics.ParameterMap} params
+ *
+ * @return {boolean} True if such a hit was sent.
+ * @private
+ */
+analytics.testing.TestChannel.prototype.hasHit_ = function(hitType, params) {
+  return goog.array.some(
+      this.sent_,
+      /** @return {boolean} */
+      function(capture) {
+        return hitType == capture.hitType && params.equals(capture.parameters);
+      });
 };
 
 
@@ -149,9 +159,9 @@ analytics.testing.TestChannel.prototype.assertHitSent = function(expected) {
  * @param {!analytics.EventBuilder} expected
  */
 analytics.testing.TestChannel.prototype.assertEventSent = function(expected) {
-  var params = new analytics.ParameterMap();
-  expected.collect(params);
-  this.assertHitSent(params);
+  var expectedParams = new analytics.ParameterMap();
+  expected.collect(expectedParams);
+  assertTrue(this.hasHit_(analytics.HitTypes.EVENT, expectedParams));
 };
 
 

@@ -18,10 +18,25 @@
  * @author tbreisacher@google.com (Tyler Breisacher)
  */
 
-goog.require('analytics.getService');
+goog.require('analytics');
+goog.require('analytics.EventBuilder');
+goog.require('analytics.filters.FilterBuilder');
 
 goog.require('goog.dom');
 goog.require('goog.events');
+
+
+/**
+ * Use an EventBuilder to share event payloads. EventBuilders are both
+ * extensible AND immutable, so they're easy to tweak and safe to reuse.
+ * They can be especially useful in larger code bases where centralized
+ * control over events is desired.
+ *
+ * @const {!analytics.EventBuilder}
+ */
+var FLAVOR_EVENT = analytics.EventBuilder.builder().
+    category('Flavor').
+    action('Choose');
 
 
 /**
@@ -53,20 +68,6 @@ var service;
 var tracker;
 
 
-/**
- * @param {analytics.Config} config
- */
-function initAnalyticsConfig(config) {
-  document.getElementById('settings-loading').hidden = true;
-  document.getElementById('settings-loaded').hidden = false;
-
-  var checkbox = document.getElementById('analytics');
-  checkbox.checked = config.isTrackingPermitted();
-  goog.events.listen(checkbox, goog.events.EventType.CHANGE, function() {
-    config.setTrackingPermitted(checkbox.checked);
-  });
-}
-
 function startApp() {
   // Initialize the Analytics service object with the name of your app.
   service = analytics.getService('ice_cream_app');
@@ -75,16 +76,18 @@ function startApp() {
   // Get a Tracker using your Google Analytics app Tracking ID.
   tracker = service.getTracker('UA-XXXXX-X');
 
-  // Record an "appView" each time the user launches your app or goes to a new
-  // screen within the app.
-  tracker.sendAppView('MainView');
-
+  // Start timing...
   var timing = tracker.startTiming('Analytics Performance', 'Send Event');
 
-  // Record an "event".
-  tracker.sendEvent('Browsing', 'Browsed the app');
+  // Record an "appView" each time the user launches your app or goes to a new
+  // screen within the app.
+  tracker.sendAppView('TastyView');
 
-  // Send the timing information.
+
+  // Record user actions with "sendEvent".
+  tracker.sendEvent('Interesting Stuff', 'User Did Something');
+
+  // ...send elapsed time since we started timing.
   timing.send();
 
   var button1 = goog.dom.getElement('chocolate');
@@ -97,20 +100,41 @@ function startApp() {
 }
 
 
-// Add a filter that captures hits being sent to Google Analytics.
-// Useful for keeping track of what's happening in your app.
+/**
+ * @param {analytics.Config} config
+ */
+function initAnalyticsConfig(config) {
+  document.getElementById('settings-loading').hidden = true;
+  document.getElementById('settings-loaded').hidden = false;
+
+  var checkbox = document.getElementById('tracking-permitted');
+  checkbox.checked = config.isTrackingPermitted();
+  goog.events.listen(checkbox, goog.events.EventType.CHANGE, function() {
+    config.setTrackingPermitted(checkbox.checked);
+  });
+}
+
+
+/**
+ * Adds a filter that captures hits being sent to Google Analytics.
+ * Filters are useful for keeping track of what's happening in your app...
+ * you can show this info in a debug panel, or log them to the console.
+ */
 function setupAnalyticsListener() {
   // Listen for event hits of the 'Flavor' category, and record them.
   previous = [];
   tracker.addFilter(
-      function(hit) {
-        if (hit.getHitType() == analytics.HitTypes.EVENT) {
-          var params = hit.getParameters();
-          if (params.get(analytics.Parameters.EVENT_CATEGORY) == 'Flavor') {
-            previous.push(params.get(analytics.Parameters.EVENT_LABEL));
-          }
-        }
-      });
+      analytics.filters.FilterBuilder.builder().
+          whenHitType(analytics.HitTypes.EVENT).
+          whenValue(analytics.Parameters.EVENT_CATEGORY, 'Flavor').
+          whenValue(analytics.Parameters.EVENT_ACTION, 'Choose').
+          applyFilter(
+              /** @param {!analytics.Tracker.Hit} hit */
+              function(hit) {
+                previous.push(
+                    hit.getParameters().get(analytics.Parameters.EVENT_LABEL));
+              }).
+          build());
 }
 
 
@@ -120,9 +144,10 @@ function setupAnalyticsListener() {
 function addButtonListener(button) {
   goog.events.listen(button, goog.events.EventType.CLICK, function() {
     // Record user actions with sendEvent.
-    tracker.sendEvent('Flavor', 'Choose', button.id);
-    currentChoice.textContent = 'You chose: ' + button.textContent;
-    previousChoice.textContent = 'Your previous choices were: ' + previous;
+    tracker.send(
+        FLAVOR_EVENT.label(button.id));
+    currentChoice.textContent = button.textContent;
+    previousChoice.textContent = previous.join(', ');
   });
 }
 

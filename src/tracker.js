@@ -67,12 +67,14 @@ analytics.Tracker.prototype.set;
  * <p>Whenever possible use a named method like {@code sendAppView} or
  * {@code sendEvent}.
  *
- * @param {!analytics.HitType} hitType
- * @param {(!analytics.ParameterMap|!Object.<string, !analytics.Value>)=}
- *     opt_extraParams An optional ParameterMap || object containing
- *    {@code string} / {@code !analytics.Value}
- *     pairs to send with the hit.
- *     The values are NOT persisted in the tracker.
+ * @param {!analytics.HitType|!analytics.EventBuilder} hitType The hitType
+ *     or an EventBuilder. If EventBuilder the hitType and opt_extraParams
+ *     are collected from this object, and opt_extraParams will be ignored.
+ * @param {(!analytics.ParameterMap|
+ *     !Object.<string, !analytics.Value>)=} opt_extraParams
+ *     Additional parameters to include in the hit along with any
+ *     values previously supplied via calls to {@code Tracker#set}.
+ *     NOTE: These values are NOT persisted in the tracker.
  * @return {!goog.async.Deferred}
  */
 analytics.Tracker.prototype.send;

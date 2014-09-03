@@ -21,6 +21,7 @@
 
 goog.provide('analytics.internal.ServiceTracker');
 
+goog.require('analytics.EventBuilder');
 goog.require('analytics.HitType');
 goog.require('analytics.HitTypes');
 goog.require('analytics.Parameter');
@@ -76,8 +77,15 @@ analytics.internal.ServiceTracker.prototype.addFilter = function(filter) {
 /** @override */
 analytics.internal.ServiceTracker.prototype.send =
     function(hitType, opt_extraParams) {
-  var hit = this.params_.clone();
 
+  // If the first arg is an EventBuilder, delegate sending
+  // to it. It'll eventually end up calling back
+  // into this method with specific hittype and params.
+  if (hitType instanceof analytics.EventBuilder) {
+    return hitType.send(this);
+  }
+
+  var hit = this.params_.clone();
   if (opt_extraParams instanceof analytics.ParameterMap) {
     hit.addAll(opt_extraParams);
   } else if (goog.isObject(opt_extraParams)) {

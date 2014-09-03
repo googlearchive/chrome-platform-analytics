@@ -230,14 +230,17 @@ goog.exportSymbol(
     'analytics.EventBuilder',
     analytics.EventBuilder);
 goog.exportSymbol(
-    'analytics.EventBuilder.create',
-    analytics.EventBuilder.create);
+    'analytics.EventBuilder.builder',
+    analytics.EventBuilder.builder);
 goog.exportSymbol(
     'analytics.EventBuilder.prototype.category',
     analytics.EventBuilder.prototype.category);
 goog.exportSymbol(
     'analytics.EventBuilder.prototype.action',
     analytics.EventBuilder.prototype.action);
+goog.exportSymbol(
+    'analytics.EventBuilder.prototype.label',
+    analytics.EventBuilder.prototype.label);
 goog.exportSymbol(
     'analytics.EventBuilder.prototype.value',
     analytics.EventBuilder.prototype.value);

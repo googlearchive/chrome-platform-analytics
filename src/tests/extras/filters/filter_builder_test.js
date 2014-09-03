@@ -19,6 +19,7 @@
 
 goog.setTestOnly();
 
+goog.require('analytics.EventBuilder');
 goog.require('analytics.Parameters');
 goog.require('analytics.filters.FilterBuilder');
 goog.require('analytics.testing.Hits');

@@ -1,6 +1,6 @@
 {
-  "name": "Analytics Closure-based Sample App",
-  "description": "An example app using Google Analytics",
+  "name": "Flavor Picker: Chrome Platform Analytics sample app (for Closure)",
+  "description": "The vanilla example Chrome app using the Chrome Platform Analytics library to connect with Google Analytics",
   "version": "1.2.3",
   "manifest_version": 2,
   "app": {

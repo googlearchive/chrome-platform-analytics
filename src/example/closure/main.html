@@ -1,24 +1,53 @@
 <!doctype html>
 <html>
   <head>
-    <title>Analytics Closure-based sample app</title>
+    <title>Flavor Picker: Chrome Platform Analytics sample app (for Closure)</title>
+    <style type="text/css">
+      h1 {
+        margin-bottom: 0;
+      }
+      .description {
+        color: red;
+      }
+      .section {
+        margin-top: 1.5em;
+      }
+      .label {
+        font-weight: bold;
+        color: grey;
+      }
+    </style>
   </head>
   <body>
-    <div>
+    <h1>Flavor Picker</h1>
+    <div class='description'>Chrome Platform Analytics sample app (for Closure)</div>
+
+    <div class='section'>
+      <h3>Pick a flavor!</h3>
       <button id="chocolate">Chocolate</button>
       <button id="vanilla">Vanilla</button>
-
-      <div id=currentChoice></div>
-      <div id=previousChoice></div>
     </div>
-    <div id="settings">
-      <h1>Settings</h1>
+
+    <div class='section'>
+      <h3>Choices</h3>
+      <div>
+        <span class='label'>Current:</span>
+        <span id=currentChoice>None</span>
+      </div>
+      <div>
+        <span class='label'>Previous:</span>
+        <span id=previousChoice>None</span>
+      </div>
+    </div>
+
+    <div class='section'>
+      <h3>Set Your Settings!</h3>
       <div id="settings-loading">
         Loading settings...
       </div>
       <div id="settings-loaded" hidden>
         <label>
-          <input id="analytics" type="checkbox" />
+          <input id="tracking-permitted" type="checkbox" />
           Send anonymous usage data.
         </label>
       </div>
