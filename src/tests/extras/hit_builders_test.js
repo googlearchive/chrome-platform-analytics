@@ -45,8 +45,8 @@ function testEventBuilder() {
       category('mycategory').
       action('myaction').
       value(11).
-      dimension(11, 'abc').
-      metric(11, 123).
+      dimension({index: 11, value: 'abc'}).
+      metric({index: 11, value: 123}).
       send(tracker);
 
   channel.assertHitSent(

@@ -111,31 +111,29 @@ analytics.EventBuilder.prototype.value = function(value) {
 
 
 /**
- * @param {number} index
- * @param {string} value
+ * @param {!analytics.EventBuilder.Dimension} dimension
  *
  * @return {!analytics.EventBuilder}
  */
-analytics.EventBuilder.prototype.dimension = function(index, value) {
+analytics.EventBuilder.prototype.dimension = function(dimension) {
   var builder = new analytics.EventBuilder(
       goog.bind(this.collect, this));
-  builder.parameter_ = analytics.createDimensionParam(index);
-  builder.value_ = value;
+  builder.parameter_ = analytics.createDimensionParam(dimension.index);
+  builder.value_ = dimension.value;
   return builder;
 };
 
 
 /**
- * @param {number} index
- * @param {number} value
+ * @param {!analytics.EventBuilder.Metric} metric
  *
  * @return {!analytics.EventBuilder}
  */
-analytics.EventBuilder.prototype.metric = function(index, value) {
+analytics.EventBuilder.prototype.metric = function(metric) {
   var builder = new analytics.EventBuilder(
       goog.bind(this.collect, this));
-  builder.parameter_ = analytics.createMetricParam(index);
-  builder.value_ = value;
+  builder.parameter_ = analytics.createMetricParam(metric.index);
+  builder.value_ = metric.value;
   return builder;
 };
 
@@ -203,3 +201,21 @@ analytics.EventBuilder.EMPTY_ = new analytics.EventBuilder(goog.nullFunction);
 analytics.EventBuilder.builder = function() {
   return analytics.EventBuilder.EMPTY_;
 };
+
+
+/**
+ * @typedef {{
+ *   index: number,
+ *   value: string
+ * }}
+ */
+analytics.EventBuilder.Dimension;
+
+
+/**
+ * @typedef {{
+ *   index: number,
+ *   value: number
+ * }}
+ */
+analytics.EventBuilder.Metric;
