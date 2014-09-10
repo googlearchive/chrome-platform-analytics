@@ -176,11 +176,11 @@ analytics.internal.ServiceSettings.prototype.setTrackingPermitted =
 
   this.storage_.set(
       analytics.internal.Settings.Properties.TRACKING_PERMITTED,
-      permitted).addCallback(
-      function() {
-        this.permitted_ = permitted;
-      },
-      this);
+      permitted.toString()).addCallback(
+          function() {
+            this.permitted_ = permitted;
+          },
+          this);
 };
 
 
@@ -203,7 +203,17 @@ analytics.internal.ServiceSettings.prototype.loadTrackingPermitted_ =
       analytics.internal.Settings.Properties.TRACKING_PERMITTED).addCallback(
       function(value) {
         // Tracking is permitted by default.
-        this.permitted_ = goog.isDef(value) ? value : true;
+        this.permitted_ = true;
+        if (goog.isDef(value)) {
+          switch (value) {
+            case 'true':
+              this.permitted_ = true;
+              break;
+            case 'false':
+              this.permitted_ = false;
+              break;
+          }
+        }
       },
       this);
 };
@@ -281,7 +291,6 @@ analytics.internal.ServiceSettings.prototype.firePropertyChangedEvent_ =
       this.changeListeners_,
       /** @param {function(!analytics.internal.Settings.Property)} listener */
       function(listener) {
-        listener(
-            analytics.internal.Settings.Properties.TRACKING_PERMITTED);
+        listener(property);
       });
 };

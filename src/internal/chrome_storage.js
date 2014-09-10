@@ -116,7 +116,9 @@ analytics.internal.ChromeStorage.prototype.get = function(key) {
           d.errback(error);
         } else {
           var value = items[fullKey];
-          d.callback(value);
+          d.callback(
+              goog.isDefAndNotNull(value) ?
+                value.toString() : undefined);
         }
       });
 

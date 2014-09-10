@@ -13,8 +13,7 @@
 // limitations under the License.
 
 /**
- * @fileoverview Interface for async storage providing abstraction from the
- * underlying concrete implementation.
+ * @fileoverview Interface for async storage of simple values.
  *
  * @author smckay@google.com (Steve McKay)
  * @author tbreisacher@google.com (Tyler Breisacher)
@@ -29,7 +28,7 @@ goog.require('goog.events');
 
 /**
  * Interface for asynchronous persistent storage.
- * TODO(tbreisacher): Move this to Closure?
+ *
  * @interface
  * @extends {goog.events.Listenable}
  */
@@ -38,15 +37,15 @@ analytics.internal.AsyncStorage = function() {};
 
 /**
  * @param {string} key Key to retrieve -- must be non-empty.
- * @return {!goog.async.Deferred} A deferred whose callback will receive the
- *     value from storage, or undefined if the value is not stored.
+ * @return {!goog.async.Deferred} A deferred firing
+ *     with the loaded value, or undefined if the value is not set.
  */
 analytics.internal.AsyncStorage.prototype.get;
 
 
 /**
  * @param {string} key
- * @param {*} value Must not be null or undefined.
+ * @param {!string} value Must not be null or undefined.
  * @return {!goog.async.Deferred} A deferred firing when the value is set.
  */
 analytics.internal.AsyncStorage.prototype.set;
