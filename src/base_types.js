@@ -232,6 +232,14 @@ analytics.Parameters = {
     maxLength: undefined,
     defaultValue: undefined
   },
+  /* Session Group */
+  SESSION_GROUP: {
+    id: 'sessionGroup',
+    name: 'sg',
+    valueType: analytics.ValueTypes.TEXT,
+    maxLength: undefined,
+    defaultValue: undefined
+  },
   /* User ID */
   USER_ID: {
     id: 'userId',
