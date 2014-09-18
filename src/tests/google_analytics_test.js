@@ -25,6 +25,7 @@ goog.require('analytics.HitTypes');
 goog.require('analytics.Tracker');
 goog.require('analytics.getService');
 goog.require('analytics.resetForTesting');
+goog.require('analytics.testing.TestChromeRuntime');
 goog.require('analytics.testing.TestChromeStorageArea');
 
 goog.require('goog.array');
@@ -71,12 +72,12 @@ var EMPTY_XHR = {};
 var replacer;
 
 
-/** @type {!analytics.testing.TestChromeStorageArea} */
-var chromeStorage;
-
-
 /** @type {!analytics.GoogleAnalytics} */
 var service;
+
+
+/** @type {!analytics.Config} */
+var config;
 
 
 /** @type {!analytics.Tracker} */
@@ -86,16 +87,32 @@ var tracker;
 /** @type {!Object} */
 var sent;
 
+
+/** @type {function()} */
+var onTeardown = goog.nullFunction;
+
+
+/** @type {!Function} */
 var recorder;
 
 
+/** @suppress {const|checkTypes} */
+function setUpPage() {
+  if (!goog.isObject(chrome.runtime)) {
+    chrome.runtime = {};
+  }
+}
+
+
+/** @suppress {const|checkTypes} */
 function setUp() {
-  recorder = goog.testing.recordFunction();
-  analytics.resetForTesting();
-  chromeStorage = new analytics.testing.TestChromeStorageArea();
+  goog.asserts.assert(chrome.runtime, '`chrome.runtime` is missing');
 
   replacer = new goog.testing.PropertyReplacer();
-  setUpChromeEnv();
+  recorder = goog.testing.recordFunction();
+
+  analytics.resetForTesting();
+  setupEnv();
 
   service = analytics.getService(CHROME_MANIFEST.name);
   tracker = service.getTracker(TRACKING_ID0);
@@ -110,169 +127,145 @@ function setUp() {
         };
         callback();
       });
+
+  asyncTestCase.waitForAsync();
+  service.getConfig().addCallback(
+      function(readyConfig) {
+        config = readyConfig;
+        asyncTestCase.continueTesting();
+      });
+}
+
+
+function tearDown() {
+  onTeardown();
 }
 
 
 /** @suppress {const|checkTypes} */
-function setUpChromeEnv() {
-  chrome.runtime = {};
-  replacer.set(chrome.runtime, 'getManifest',
-      function() {
-        return CHROME_MANIFEST;
-      });
+function setupEnv() {
+  var chromeRuntime = new analytics.testing.TestChromeRuntime(
+      CHROME_MANIFEST.name,
+      CHROME_MANIFEST.version);
+  var chromeStorage = new analytics.testing.TestChromeStorageArea();
 
-  chrome.storage = {};
-  replacer.set(chrome.storage, 'local', chromeStorage);
+  chromeRuntime.install();
+  chromeStorage.install();
 
-  chrome.storage.onChanged = {};
-  replacer.set(
-      chrome.storage.onChanged,
-      'addListener',
-      function(listener) {
-        chromeStorage.addListener(listener);
-      });
+  // NOTE: This'll become conditional in the next iteration of this test.
+  // That's why define this in a function. So we can just call this
+  // on-teardown without having to replicate the logic.
+  onTeardown = function() {
+    chromeRuntime.uninstall();
+    chromeStorage.uninstall();
+  };
 }
 
-function tearDown() {
-  replacer.reset();
-}
 
 function testTrackerCreated() {
-  assertNotNull(tracker);
+  assertNotNull(service.getTracker('UA-1234-5'));
 }
 
 function testGetConfig() {
-  // Test code is currently fully synchronous so this call must be made
-  // before our call to continueTesting.
+  // This duplicates something in setup,
+  // be better to SEE what is being covered here in the test
+  // than having to go chase down where config is defined.
   asyncTestCase.waitForAsync();
   service.getConfig().addCallback(
-      /** @param {!analytics.Config} config */
       function(config) {
         assertNotNull(config);
         asyncTestCase.continueTesting();
       });
 }
 
-function testOptOut_SubsequentHitsNotSent() {
-  // Test code is currently fully synchronous so this call must be made
-  // before our call to continueTesting.
+function testOptOut_HitsNotSent() {
   asyncTestCase.waitForAsync();
-  service.getConfig().addCallback(
-      /** @param {!analytics.Config} config */
-      function(config) {
-        config.setTrackingPermitted(false);
+  config.setTrackingPermitted(false);
+
+  tracker.sendAppView('foo').addCallback(
+      function() {
+        assertEquals(sent, EMPTY_XHR);
         asyncTestCase.continueTesting();
       });
-  tracker.sendEvent(
-      EVENT_HIT.eventCategory,
-      EVENT_HIT.eventAction,
-      EVENT_HIT.eventLabel,
-      EVENT_HIT.eventValue);
-
-  assertEquals(sent, EMPTY_XHR);
 }
 
-
-/**
- * Tests that HitEvents are not dispatched for hits that are sent when the
- * Google Analytics service is disabled.
- */
-function testOptOut_SubsequentEventsNotSent() {
-
-  // Test code is currently fully synchronous so this call must be made
-  // before our call to continueTesting.
+function testOptOut_HitsNotFiltered() {
   asyncTestCase.waitForAsync();
 
   tracker.addFilter(recorder);
 
-  // Send one event first, to make sure things are working.
-  tracker.sendAppView('foo');
+  config.setTrackingPermitted(false);
 
-  // Check that we got the expected event.
-  recorder.assertCallCount(1);
-  recorder.reset();
-
-  // Disable the analytics service, then send another hit.
-  service.getConfig().addCallback(
-      /** @param {!analytics.Config} config */
-      function(config) {
-        config.addChangeListener(
-            function() {
-              tracker.sendAppView('foo');
-
-              recorder.assertCallCount(0);
-              asyncTestCase.continueTesting();
-            });
-
-        config.setTrackingPermitted(false);
+  tracker.sendAppView('foo').addCallback(
+      function() {
+        recorder.assertCallCount(0);
+        asyncTestCase.continueTesting();
       });
 }
 
-function testSend_DeferredFires_TrackingEnabled() {
-  var succeeded = false;
+
+function testOptIn_HitsFiltered() {
   asyncTestCase.waitForAsync();
-  service.getConfig().addCallback(
-      function(config) {
-        config.setTrackingPermitted(true);
-        tracker.sendEvent(
-            EVENT_HIT.eventCategory,
-            EVENT_HIT.eventAction,
-            EVENT_HIT.eventLabel,
-            EVENT_HIT.eventValue).addCallbacks(
-            function() {
-              succeeded = true;
-              asyncTestCase.continueTesting();
-            },
-            function() {
-              fail('Received error trying to send event.');
-            });
+  tracker.addFilter(recorder);
+  config.setTrackingPermitted(true);
+
+  tracker.sendAppView('foo').addCallback(
+      function() {
+        recorder.assertCallCount(1);
+        asyncTestCase.continueTesting();
       });
-  assertTrue(succeeded);
+}
+
+
+function testSend_DeferredFires_TrackingEnabled() {
+  asyncTestCase.waitForAsync();
+  config.setTrackingPermitted(true);
+
+  tracker.sendEvent(
+      EVENT_HIT.eventCategory,
+      EVENT_HIT.eventAction,
+      EVENT_HIT.eventLabel,
+      EVENT_HIT.eventValue).addCallback(
+      function() {
+        asyncTestCase.continueTesting();
+      });
 }
 
 function testSend_DeferredFires_TrackingDisabled() {
-  var succeeded = false;
   asyncTestCase.waitForAsync();
-  service.getConfig().addCallback(
-      function(config) {
-        config.setTrackingPermitted(false);
-        tracker.sendEvent(
-            EVENT_HIT.eventCategory,
-            EVENT_HIT.eventAction,
-            EVENT_HIT.eventLabel,
-            EVENT_HIT.eventValue).addCallbacks(
-            function() {
-              succeeded = true;
-              asyncTestCase.continueTesting();
-            },
-            function() {
-              fail('Received error trying to send event.');
-            });
+  config.setTrackingPermitted(false);
+
+  tracker.sendEvent(
+      EVENT_HIT.eventCategory,
+      EVENT_HIT.eventAction,
+      EVENT_HIT.eventLabel,
+      EVENT_HIT.eventValue).addCallback(
+      function() {
+        asyncTestCase.continueTesting();
       });
-  assertTrue(succeeded);
 }
 
-function testSend_DeliversPayload() {
+function testSend_SendsHits() {
   asyncTestCase.waitForAsync();
-  service.getConfig().addCallback(
-      function(config) {
-        config.setTrackingPermitted(true);
-        tracker.set('dimension11', 'Poodles');
-        tracker.set('metric72', 17);
-        tracker.sendEvent(
-            EVENT_HIT.eventCategory,
-            EVENT_HIT.eventAction,
-            EVENT_HIT.eventLabel,
-            EVENT_HIT.eventValue);
+  config.setTrackingPermitted(true);
+
+  tracker.set('dimension11', 'Poodles');
+  tracker.set('metric72', 17);
+  tracker.sendEvent(
+      EVENT_HIT.eventCategory,
+      EVENT_HIT.eventAction,
+      EVENT_HIT.eventLabel,
+      EVENT_HIT.eventValue).addCallback(
+      function() {
         var entries = sent.content.split('&');
         assertTrue(entries.length > 0);
-        assertTrue(sent.content, goog.array.contains(entries, 'cd11=Poodles'));
-        assertTrue(sent.content, goog.array.contains(entries, 'cm72=17'));
-        assertTrue(sent.content, goog.array.contains(entries, 'ec=IceCream'));
-        assertTrue(sent.content, goog.array.contains(entries, 'ea=Melt'));
-        assertTrue(sent.content, goog.array.contains(entries, 'el=Strawberry'));
-        assertTrue(sent.content, goog.array.contains(entries, 'ev=100'));
-        assertTrue(sent.content, goog.array.contains(entries, '_v=ca1.5.2'));
+        assertContains(sent.content, 'cd11=Poodles', entries);
+        assertContains(sent.content, 'cm72=17', entries);
+        assertContains(sent.content, 'ec=IceCream', entries);
+        assertContains(sent.content, 'ea=Melt', entries);
+        assertContains(sent.content, 'el=Strawberry', entries);
+        assertContains(sent.content, 'ev=100', entries);
+        assertContains(sent.content, '_v=ca1.5.2', entries);
         asyncTestCase.continueTesting();
       });
 }

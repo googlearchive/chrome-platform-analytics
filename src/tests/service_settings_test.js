@@ -48,7 +48,7 @@ function setUp() {
 
   window.localStorage.clear();  // An abundance of caution...
   recorder = goog.testing.recordFunction();
-  storage = new analytics.internal.Html5Storage('whoooosh!');
+  storage = new analytics.internal.Html5Storage();
   settings = new analytics.internal.ServiceSettings(storage);
   settings.whenReady().addCallback(
       function() {
@@ -99,12 +99,12 @@ function testNotifiesListener_WhenTrackingPermittedPropertyChanges() {
   settings.whenReady().addCallback(
       function() {
         settings.addChangeListener(
-          function(prop) {
-            assertEquals(
-                analytics.internal.Settings.Properties.TRACKING_PERMITTED,
-                prop);
-            asyncTest.continueTesting();
-          });
+            function(prop) {
+              assertEquals(
+                  analytics.internal.Settings.Properties.TRACKING_PERMITTED,
+                  prop);
+              asyncTest.continueTesting();
+            });
         settings.setTrackingPermitted(false);
       });
 }
@@ -129,5 +129,8 @@ function testTrackingPermitting_UpdatedWhenUnderlyingStorageChanges() {
       });
 
   var naughtySettings = new analytics.internal.ServiceSettings(storage);
-  naughtySettings.setTrackingPermitted(false);
+  naughtySettings.whenReady().addCallback(
+      function() {
+        naughtySettings.setTrackingPermitted(false);
+      });
 }

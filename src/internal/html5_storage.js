@@ -23,7 +23,7 @@
 goog.provide('analytics.internal.Html5Storage');
 
 goog.require('analytics.internal.AsyncStorage');
-
+goog.require('goog.Timer');
 goog.require('goog.asserts');
 goog.require('goog.async.Deferred');
 goog.require('goog.events.EventTarget');
@@ -40,14 +40,12 @@ goog.require('goog.string');
  * @implements {analytics.internal.AsyncStorage}
  * @extends {goog.events.EventTarget}
  * @struct @suppress {checkStructDictInheritance}
- *
- * @param {string} namespace Namespace to prevent key collisions.
  */
-analytics.internal.Html5Storage = function(namespace) {
+analytics.internal.Html5Storage = function() {
   goog.base(this);
 
   /** @private {string} */
-  this.namespace_ = namespace;
+  this.namespace_ = 'google-analytics';
 
   /** @private {!Storage} */
   this.storage_ = /** @type {!Storage} */ (window.localStorage);
@@ -70,6 +68,37 @@ goog.inherits(
     goog.events.EventTarget);
 
 
+/** @override */
+analytics.internal.Html5Storage.prototype.get = function(key) {
+  var value = this.get_(key);
+
+  var d = new goog.async.Deferred();
+  goog.Timer.callOnce(
+      function() {
+        d.callback(value);
+      });
+  return d;
+};
+
+
+/** @override */
+analytics.internal.Html5Storage.prototype.set = function(key, value) {
+  var changed = (value != this.get_(key));
+  if (changed) {
+    this.storage_.setItem(this.namespace_ + '.' + key, value);
+    this.dispatchEvent(
+        analytics.internal.AsyncStorage.Event.STORAGE_CHANGED);
+  }
+
+  var d = new goog.async.Deferred();
+  goog.Timer.callOnce(
+      function() {
+        d.callback();
+      });
+  return d;
+};
+
+
 /**
  * Notifies listeners when underlying storage changes.
  * NOTE: Unlike Chrome storage, this only fires when
@@ -87,23 +116,13 @@ analytics.internal.Html5Storage.prototype.onStorageChanged_ =
 };
 
 
-/** @override */
-analytics.internal.Html5Storage.prototype.get = function(key) {
+/**
+ * @param {string} key
+ *
+ * @return {string|undefined} value or undefined if not set.
+ * @private
+ */
+analytics.internal.Html5Storage.prototype.get_ = function(key) {
   var value = this.storage_.getItem(this.namespace_ + '.' + key);
-  return goog.async.Deferred.succeed(
-      goog.isDefAndNotNull(value) ? value : undefined);
-};
-
-
-/** @override */
-analytics.internal.Html5Storage.prototype.set = function(key, value) {
-  this.storage_.setItem(this.namespace_ + '.' + key, value);
-  var d = goog.async.Deferred.succeed();
-  d.branch().addCallback(
-      function() {
-          this.dispatchEvent(
-              analytics.internal.AsyncStorage.Event.STORAGE_CHANGED);
-      },
-      this);
-  return d;
+  return goog.isDefAndNotNull(value) ? value : undefined;
 };

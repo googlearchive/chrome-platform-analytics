@@ -43,10 +43,6 @@ goog.require('goog.structs.Map');
 analytics.LIBRARY_VERSION = 'ca1.5.2';
 
 
-/** @private {string} */
-analytics.STORAGE_NAMESPACE_ = 'google-analytics';
-
-
 /**
  * The URL of the GA server. This library only communicates over SSL.
  * @private {string}
@@ -119,8 +115,7 @@ analytics.getService = function(appName) {
 analytics.getSettings_ = function() {
   if (!analytics.settings_) {
     /** @type {!analytics.internal.AsyncStorage} */
-    var storage = new analytics.internal.ChromeStorage(
-        analytics.STORAGE_NAMESPACE_);
+    var storage = new analytics.internal.ChromeStorage();
 
     analytics.settings_ = new analytics.internal.ServiceSettings(storage);
   }

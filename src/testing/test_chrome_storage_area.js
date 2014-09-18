@@ -23,12 +23,17 @@
 
 goog.provide('analytics.testing.TestChromeStorageArea');
 
+goog.require('goog.Timer');
+goog.require('goog.asserts');
 goog.require('goog.object');
+goog.require('goog.testing.PropertyReplacer');
 
 
 
 /**
  * @constructor
+ * @final
+ *
  * @extends {StorageArea}
  */
 analytics.testing.TestChromeStorageArea = function() {
@@ -44,32 +49,61 @@ analytics.testing.TestChromeStorageArea = function() {
    * @private {?function(Object.<string, {oldValue, newValue}>, string)}
    */
   this.listenCallback_ = null;
+
+  /** @private {!goog.testing.PropertyReplacer} */
+  this.replacer_ = new goog.testing.PropertyReplacer();
+
+  /** @private {function()} */
+  this.uninstall_ = goog.nullFunction;
 };
 
 
 /** @override */
-analytics.testing.TestChromeStorageArea.prototype.set = function(keys,
-    opt_callback) {
+analytics.testing.TestChromeStorageArea.prototype.set =
+    function(keys, opt_callback) {
   var diff = {};
-  goog.object.forEach(keys, function(element, index, obj) {
-    diff[index] = {oldValue: this.storage_[index], newValue: element};
-  }, this);
-  goog.object.extend(this.storage_, keys);
 
-  if (this.listenCallback_) {
-    this.listenCallback_(diff, 'local');
+  goog.object.forEach(
+      keys,
+      function(value, key, obj) {
+        if (this.storage_[key] != value) {
+          diff[key] = {oldValue: this.storage_[key], newValue: value};
+        }
+      }, this);
+
+  if (!goog.object.isEmpty(diff)) {
+    goog.object.extend(this.storage_, keys);
+    if (this.listenCallback_) {
+      this.listenCallback_(diff, 'local');
+    }
   }
 
-  if (opt_callback) {
-    opt_callback();
-  }
+  goog.Timer.callOnce(
+      function() {
+        if (opt_callback) {
+          opt_callback();
+        }
+      });
 };
 
 
 /** @override */
 analytics.testing.TestChromeStorageArea.prototype.get =
-    function(keys, callback) {
-  callback(this.storage_);
+    function(key, callback) {
+
+  goog.asserts.assert(goog.isString(key),
+      'key argument must be a string.');
+
+  var result = goog.object.filter(
+      this.storage_,
+      function(value, entryKey) {
+        return entryKey == key;
+      }, this);
+
+  goog.Timer.callOnce(
+      function() {
+        callback(result);
+      });
 };
 
 
@@ -80,4 +114,45 @@ analytics.testing.TestChromeStorageArea.prototype.get =
 analytics.testing.TestChromeStorageArea.prototype.addListener =
     function(callback) {
   this.listenCallback_ = callback;
+};
+
+
+/**
+ * Installs the test chrome storage area in the chrome.storage.local area.
+ *
+ * @suppress {const|checkTypes}
+ */
+analytics.testing.TestChromeStorageArea.prototype.install = function() {
+  goog.asserts.assert(
+      !goog.isDef(chrome.storage),
+      'chrome.storage is already defined.');
+
+  chrome.storage = {};
+  this.replacer_.set(chrome.storage, 'local', this);
+
+  chrome.storage.onChanged = {};
+  this.replacer_.set(
+      chrome.storage.onChanged,
+      'addListener',
+      goog.bind(
+          function(listener) {
+            this.addListener(listener);
+          },
+          this));
+
+  this.uninstall_ = goog.bind(
+      function() {
+        goog.asserts.assert(goog.isObject(chrome.storage));
+        this.replacer_.reset();
+        delete chrome.storage.onChanged;
+        delete chrome.storage;
+        goog.asserts.assert(!goog.isDef(chrome.storage));
+      },
+      this);
+};
+
+
+/** Uninstalls test instrumentation. */
+analytics.testing.TestChromeStorageArea.prototype.uninstall = function() {
+  this.uninstall_();
 };

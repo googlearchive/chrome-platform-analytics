@@ -144,6 +144,7 @@ analytics.internal.ServiceSettings.prototype.whenReady = function() {
  */
 analytics.internal.ServiceSettings.prototype.handleStorageChanged_ =
     function() {
+  goog.asserts.assert(this.whenReady().hasFired());
   var userId = this.getUserId();
   var trackingPermitted = this.isTrackingPermitted();
   this.loadSettings_().addCallback(
@@ -174,13 +175,17 @@ analytics.internal.ServiceSettings.prototype.setTrackingPermitted =
     function(permitted) {
   goog.asserts.assert(this.ready_.hasFired());
 
+  var changed = this.permitted_ != permitted;
+
+  this.permitted_ = permitted;
   this.storage_.set(
       analytics.internal.Settings.Properties.TRACKING_PERMITTED,
-      permitted.toString()).addCallback(
-          function() {
-            this.permitted_ = permitted;
-          },
-          this);
+      permitted.toString());
+
+  if (changed) {
+    this.firePropertyChangedEvent_(
+        analytics.internal.Settings.Properties.TRACKING_PERMITTED);
+  }
 };
 
 
@@ -188,6 +193,7 @@ analytics.internal.ServiceSettings.prototype.setTrackingPermitted =
 analytics.internal.ServiceSettings.prototype.isTrackingPermitted =
     function() {
   goog.asserts.assert(this.ready_.hasFired());
+
   return /** @type {boolean} */ (this.permitted_) && !this.isOptOutViaPlugin_();
 };
 
@@ -253,7 +259,7 @@ analytics.internal.ServiceSettings.prototype.loadUserId_ = function() {
   return this.storage_.get(analytics.internal.Settings.Properties.USER_ID).
       addCallback(
           function(id) {
-            if (!id) {
+            if (!goog.isDef(id)) {
               id = analytics.internal.Identifier.generateUuid();
               this.storage_.set(
                   analytics.internal.Settings.Properties.USER_ID, id);

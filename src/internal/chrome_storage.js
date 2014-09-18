@@ -23,7 +23,7 @@
 goog.provide('analytics.internal.ChromeStorage');
 
 goog.require('analytics.internal.AsyncStorage');
-
+goog.require('goog.asserts');
 goog.require('goog.async.Deferred');
 goog.require('goog.events.EventTarget');
 goog.require('goog.object');
@@ -40,14 +40,12 @@ goog.require('goog.string');
  * @implements {analytics.internal.AsyncStorage}
  * @extends {goog.events.EventTarget}
  * @struct @suppress {checkStructDictInheritance}
- *
- * @param {string} namespace Namespace to prevent key collisions.
  */
-analytics.internal.ChromeStorage = function(namespace) {
+analytics.internal.ChromeStorage = function() {
   goog.base(this);
 
   /** @private {string} */
-  this.namespace_ = namespace;
+  this.namespace_ = 'google-analytics';
 
   /** @private {!StorageArea} */
   this.storage_ = chrome.storage.local;
@@ -111,14 +109,13 @@ analytics.internal.ChromeStorage.prototype.get = function(key) {
       fullKey,
       /** @param {Object} items */
       function(items) {
-        var error = chrome.runtime.lastError;
-        if (error) {
-          d.errback(error);
+        if (chrome.runtime.lastError) {
+          d.errback(chrome.runtime.lastError);
         } else {
           var value = items[fullKey];
           d.callback(
               goog.isDefAndNotNull(value) ?
-                value.toString() : undefined);
+              value.toString() : undefined);
         }
       });
 
@@ -132,14 +129,15 @@ analytics.internal.ChromeStorage.prototype.set = function(key, value) {
 
   var data = {};
   data[this.namespace_ + '.' + key] = value;
-  this.storage_.set(data, function() {
-    var error = chrome.runtime.lastError;
-    if (error) {
-      d.errback(error);
-    } else {
-      d.callback();
-    }
-  });
+  this.storage_.set(
+      data,
+      function() {
+        if (chrome.runtime.lastError) {
+          d.errback(chrome.runtime.lastError);
+        } else {
+          d.callback();
+        }
+      });
 
   return d;
 };
