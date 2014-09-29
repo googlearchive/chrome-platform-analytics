@@ -37,7 +37,7 @@ analytics.internal.AsyncStorage = function() {};
 
 /**
  * @param {string} key Key to retrieve -- must be non-empty.
- * @return {!goog.async.Deferred} A deferred firing
+ * @return {!goog.async.Deferred.<string>} A deferred firing
  *     with the loaded value, or undefined if the value is not set.
  */
 analytics.internal.AsyncStorage.prototype.get;

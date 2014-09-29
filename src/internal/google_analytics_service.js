@@ -104,10 +104,10 @@ analytics.internal.GoogleAnalyticsService.addEnvironmentalParams_ =
 
   // Note: We're using ['foo'] notation to avoid issues with missing
   // externs and the possibility of the closure compiler renaming fields.
-  value = screen['colorDepth'] + '-bit';
+  value = screen.colorDepth + '-bit';
   tracker.set(analytics.internal.Parameters.SCREEN_COLORS, value);
 
-  value = [screen['width'], screen['height']].join('x');
+  value = [screen.width, screen.height].join('x');
   tracker.set(analytics.internal.Parameters.SCREEN_RESOLUTION, value);
 
   var size = goog.dom.getViewportSize();

@@ -102,7 +102,7 @@ analytics.internal.XhrChannel.prototype.toQueryString_ =
        * @param {!analytics.Value} value
        */
       function(key, value) {
-        queryData.add(key.name, (value).toString());
+        queryData.add(key.name, value.toString());
       });
   return queryData.toString();
 };
