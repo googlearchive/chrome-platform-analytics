@@ -114,9 +114,12 @@ analytics.internal.ServiceChannel.Channels_;
  */
 analytics.internal.ServiceChannel.prototype.onSettingsReady_ =
     function(enabledChannelFactory, settings) {
-  goog.asserts.assert(!goog.isNull(this.diverted_),
-      'Channel setup already completed.');
-  goog.asserts.assert(settings == this.settings_);
+  if (goog.isNull(this.diverted_)) {
+    throw new Error('Channel setup already completed.');
+  }
+  if (settings != this.settings_) {
+    throw new Error('Yikes! Multiple settings instances!');
+  }
 
   // Get the "enabled" channel from the factory
   this.channels_.enabled = enabledChannelFactory();
@@ -143,8 +146,9 @@ analytics.internal.ServiceChannel.prototype.onSettingsReady_ =
  * @private
  */
 analytics.internal.ServiceChannel.prototype.onSettingsLoadFailed_ = function() {
-  goog.asserts.assert(!goog.isNull(this.diverted_),
-      'Channel setup already completed.');
+  if (goog.isNull(this.diverted_)) {
+    throw new Error('Channel setup already completed.');
+  }
 
   this.channels_.enabled = this.channels_.disabled;
   this.channel_ = this.channels_.disabled;

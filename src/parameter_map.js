@@ -27,7 +27,6 @@ goog.require('analytics.Parameter');
 goog.require('analytics.Value');
 
 goog.require('goog.array.ArrayLike');
-goog.require('goog.asserts');
 goog.require('goog.string.format');
 goog.require('goog.structs');
 goog.require('goog.structs.Map');
@@ -55,7 +54,9 @@ analytics.ParameterMap = function(var_args) {
       string, analytics.ParameterMap.Entry>} */
   this.entries_ = new goog.structs.Map();
 
-  goog.asserts.assert(!(arguments.length % 2), 'Uneven number of arguments.');
+  if (arguments.length % 2 > 0) {
+    throw new Error('Uneven number of arguments to ParameterMap constructor.');
+  }
   this.addPairs_(arguments);
 };
 
@@ -78,9 +79,9 @@ analytics.ParameterMap.Entry;
  * @param {!analytics.Value} value
  */
 analytics.ParameterMap.prototype.set = function(param, value) {
-  goog.asserts.assert(
-      goog.isDefAndNotNull(value),
-      'Invalid undefined-or-null value for key: ' + param.name);
+  if (!goog.isDefAndNotNull(value)) {
+    throw new Error('undefined-or-null value for key: ' + param.name);
+  }
 
   this.entries_.set(param.name, {'key': param, 'value': value});
 };

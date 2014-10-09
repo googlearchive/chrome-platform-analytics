@@ -107,10 +107,13 @@ analytics.testing.TestSettings.prototype.getSampleRate = function() {
 
 
 /** @override */
-analytics.testing.TestSettings.prototype.getUserId =
-    function() {
+analytics.testing.TestSettings.prototype.getUserId = function() {
   return this.userId_;
 };
+
+
+/** @override */
+analytics.testing.TestSettings.prototype.dispose = goog.nullFunction;
 
 
 /**

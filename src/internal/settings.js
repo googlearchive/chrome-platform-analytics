@@ -62,6 +62,16 @@ analytics.internal.Settings.prototype.getUserId;
 analytics.internal.Settings.prototype.getSampleRate;
 
 
+/**
+ * Cleanup all internal state before being destroyed.
+ * This exists solely to tightly manage the lifecycle of the
+ * ServiceSettings object when used in integration testing.
+ * This is necessitated due to unpredictable object
+ * cleanup in IE browsers.
+ */
+analytics.internal.Settings.prototype.dispose;
+
+
 /** @typedef {string} */
 analytics.internal.Settings.Property;
 

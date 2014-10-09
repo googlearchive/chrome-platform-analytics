@@ -24,7 +24,6 @@ goog.provide('analytics.internal.Html5Storage');
 
 goog.require('analytics.internal.AsyncStorage');
 goog.require('goog.Timer');
-goog.require('goog.asserts');
 goog.require('goog.async.Deferred');
 goog.require('goog.events.EventTarget');
 goog.require('goog.object');
@@ -53,14 +52,10 @@ analytics.internal.Html5Storage = function() {
   // Get notified when our underlying storage changes.
   // NOTE: Unlike Chrome storage, this only fires when
   // storage is changed in a different script context.
-  window.addEventListener(
+  goog.events.listen(
+      window,
       'storage',
-      goog.bind(
-          function(event) {
-            goog.asserts.assert(event instanceof StorageEvent);
-            this.onStorageChanged_(event);
-          },
-          this),
+      goog.bind(this.onStorageChanged_, this),
       false);
 };
 goog.inherits(
@@ -109,6 +104,17 @@ analytics.internal.Html5Storage.prototype.set = function(key, value) {
  */
 analytics.internal.Html5Storage.prototype.onStorageChanged_ =
     function(event) {
+  // IE, duh.
+  if (!(event instanceof StorageEvent) && event.type == 'storage') {
+    event = window.event;
+  }
+  if (!('storageArea' in event)) {
+    throw new Error(
+        '"storageArea" property missing from event type: ' + event.type);
+  }
+  if (!('key' in event)) {
+    throw new Error('"key" property missing from event type: ' + event.type);
+  }
   if (event.storageArea == this.storage_ &&
       goog.string.startsWith(event.key, this.namespace_)) {
     this.dispatchEvent(analytics.internal.AsyncStorage.Event.STORAGE_CHANGED);

@@ -82,9 +82,13 @@ analytics.channelFactory_;
  * @suppress {checkTypes}
  */
 analytics.resetForTesting = function() {
-  analytics.serviceInstances_ = new goog.structs.Map();
+  if (!goog.isObject(analytics.settings_)) {
+    throw new Error('Invalid analytics.settings_');
+  }
+  analytics.settings_.dispose();
   analytics.settings_ = undefined;
   analytics.channelFactory_ = undefined;
+  analytics.serviceInstances_ = new goog.structs.Map();
 };
 
 

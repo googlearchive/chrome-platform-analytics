@@ -28,7 +28,6 @@ goog.require('analytics.internal.Identifier');
 goog.require('analytics.internal.Settings');
 goog.require('analytics.internal.Settings.Properties');
 
-goog.require('goog.asserts');
 goog.require('goog.async.Deferred');
 goog.require('goog.async.DeferredList');
 goog.require('goog.events');
@@ -63,12 +62,20 @@ analytics.internal.ServiceSettings = function(storage) {
   /** @private {!goog.async.Deferred} */
   this.ready_ = this.init_();
 
+
+  /**
+   * In certain testing circumstances we want to tightly control
+   * the lifecycle of this object (well its listeners).
+   * @private {goog.events.Key}
+   */
+  this.storageListenerKey_;
+
   // Finally, once we're initialized, add a change listener
   // on the underlying storage in case a settings instance
   // in another script context changes the settings.
   this.ready_.addCallback(
       function() {
-        goog.events.listen(
+        this.storageListenerKey_ = goog.events.listen(
             this.storage_,
             analytics.internal.AsyncStorage.Event.STORAGE_CHANGED,
             goog.bind(this.handleStorageChanged_, this));
@@ -144,7 +151,7 @@ analytics.internal.ServiceSettings.prototype.whenReady = function() {
  */
 analytics.internal.ServiceSettings.prototype.handleStorageChanged_ =
     function() {
-  goog.asserts.assert(this.whenReady().hasFired());
+  this.assertReady_();
   var userId = this.getUserId();
   var trackingPermitted = this.isTrackingPermitted();
   this.loadSettings_().addCallback(
@@ -164,8 +171,7 @@ analytics.internal.ServiceSettings.prototype.handleStorageChanged_ =
 /** @override */
 analytics.internal.ServiceSettings.prototype.addChangeListener =
     function(listener) {
-  goog.asserts.assert(this.ready_.hasFired());
-
+  this.assertReady_();
   this.changeListeners_.push(listener);
 };
 
@@ -173,7 +179,7 @@ analytics.internal.ServiceSettings.prototype.addChangeListener =
 /** @override */
 analytics.internal.ServiceSettings.prototype.setTrackingPermitted =
     function(permitted) {
-  goog.asserts.assert(this.ready_.hasFired());
+  this.assertReady_();
 
   var changed = this.permitted_ != permitted;
 
@@ -192,7 +198,7 @@ analytics.internal.ServiceSettings.prototype.setTrackingPermitted =
 /** @override */
 analytics.internal.ServiceSettings.prototype.isTrackingPermitted =
     function() {
-  goog.asserts.assert(this.ready_.hasFired());
+  this.assertReady_();
 
   return /** @type {boolean} */ (this.permitted_) && !this.isOptOutViaPlugin_();
 };
@@ -242,8 +248,10 @@ analytics.internal.ServiceSettings.prototype.isOptOutViaPlugin_ = function() {
 
 /** @override */
 analytics.internal.ServiceSettings.prototype.getUserId = function() {
-  goog.asserts.assert(this.ready_.hasFired());
-  goog.asserts.assertString(this.userId_);
+  this.assertReady_();
+  if (!goog.isString(this.userId_)) {
+    throw new Error('Invalid state. UserID is not a string.');
+  }
   return this.userId_;
 };
 
@@ -272,14 +280,14 @@ analytics.internal.ServiceSettings.prototype.loadUserId_ = function() {
 /** @override */
 analytics.internal.ServiceSettings.prototype.setSampleRate =
     function(sampleRate) {
-  goog.asserts.assert(this.ready_.hasFired());
+  this.assertReady_();
   this.sampleRate_ = sampleRate;
 };
 
 
 /** @override */
 analytics.internal.ServiceSettings.prototype.getSampleRate = function() {
-  goog.asserts.assert(this.ready_.hasFired());
+  this.assertReady_();
   return this.sampleRate_;
 };
 
@@ -298,4 +306,20 @@ analytics.internal.ServiceSettings.prototype.firePropertyChangedEvent_ =
       function(listener) {
         listener(property);
       });
+};
+
+
+/** @override */
+analytics.internal.ServiceSettings.prototype.dispose = function() {
+  if (goog.isDefAndNotNull(this.storageListenerKey_)) {
+    goog.events.unlistenByKey(this.storageListenerKey_);
+  }
+};
+
+
+/** @private */
+analytics.internal.ServiceSettings.prototype.assertReady_ = function() {
+  if (!this.whenReady().hasFired()) {
+    throw new Error('Settings object accessed prior to entering ready state.');
+  }
 };
