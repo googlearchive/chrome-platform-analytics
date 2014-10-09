@@ -49,9 +49,9 @@ analytics.Tracker = function() {};
 
 /**
  * Sets an individual value on the {@code Tracker}, replacing any previously
- * set values with the same param. The value is persistent for the life
- * of the {@code Tracker} instance, or until replaced with another call
- * to {@code set}.
+ * set values with the same param. The value is persisted for the life
+ * of the {@code Tracker} instance, or until replaced by a subsequent call
+ * to {@code set} with the same parameter.
  *
  * @param {!analytics.Parameter|string} param
  * @param {!analytics.Value} value

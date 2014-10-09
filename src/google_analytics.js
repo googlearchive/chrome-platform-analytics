@@ -27,11 +27,11 @@ goog.require('analytics.Tracker');
 goog.require('analytics.internal.Channel');
 goog.require('analytics.internal.ChromeStorage');
 goog.require('analytics.internal.GoogleAnalyticsService');
+goog.require('analytics.internal.Html5Storage');
 goog.require('analytics.internal.ServiceChannelManager.Factory');
 goog.require('analytics.internal.ServiceSettings');
 goog.require('analytics.internal.SharedChannelFactory');
-
-
+goog.require('goog.string');
 goog.require('goog.structs.Map');
 
 
@@ -78,10 +78,13 @@ analytics.channelFactory_;
 
 /**
  * Resets the global runtime state for the purposes of testing.
+ *
+ * @suppress {checkTypes}
  */
 analytics.resetForTesting = function() {
   analytics.serviceInstances_ = new goog.structs.Map();
-  analytics.channelPipeline_ = undefined;
+  analytics.settings_ = undefined;
+  analytics.channelFactory_ = undefined;
 };
 
 
@@ -95,13 +98,17 @@ analytics.resetForTesting = function() {
  *     Though library could read the name of the app from the chrome manifest
  *     file as it does with the app version, the name may in fact be translated.
  *     For this reason the caller must supplied a name.
+ * @param {string=} opt_appVersion For Chrome apps this will be automatically
+ *     read from the manifest file, therefor it can be omitted. For all
+ *     other environments this value must be specified.
  *
  * @return {!analytics.GoogleAnalytics}
  */
-analytics.getService = function(appName) {
+analytics.getService = function(appName, opt_appVersion) {
   var service = analytics.serviceInstances_.get(appName, null);
   if (goog.isNull(service)) {
-    service = analytics.createService_(appName);
+    service = analytics.createService_(
+        appName, analytics.getAppVersion_(opt_appVersion));
     analytics.serviceInstances_.set(appName, service);
   }
   return service;
@@ -115,37 +122,52 @@ analytics.getService = function(appName) {
 analytics.getSettings_ = function() {
   if (!analytics.settings_) {
     /** @type {!analytics.internal.AsyncStorage} */
-    var storage = new analytics.internal.ChromeStorage();
+    var storage = analytics.isChromeApp_() ?
+        new analytics.internal.ChromeStorage() :
+        new analytics.internal.Html5Storage();
 
     analytics.settings_ = new analytics.internal.ServiceSettings(storage);
   }
-  return analytics.settings_;
 
+  return analytics.settings_;
 };
 
 
 /**
  * @param {string} appName
+ * @param {string} appVersion
+ *
  * @return {!analytics.internal.GoogleAnalyticsService}
  * @private
  */
-analytics.createService_ = function(appName) {
+analytics.createService_ = function(appName, appVersion) {
   return new analytics.internal.GoogleAnalyticsService(
       analytics.LIBRARY_VERSION,
       appName,
-      analytics.getAppVersion_(),
+      appVersion,
       analytics.getSettings_(),
       analytics.getChannelFactory_());
 };
 
 
 /**
- * @return {string} version number of the host chrome app.
+ * @param {string=} opt_version Value is ignored if the
+ *     script is hosted in a chrome app, else the value
+ *     must be non-empty.
+ *
+ * @return {string} version number
  * @private
  */
-analytics.getAppVersion_ = function() {
-  var manifest = chrome.runtime.getManifest();
-  return manifest.version;
+analytics.getAppVersion_ = function(opt_version) {
+  if (analytics.isChromeApp_()) {
+    var manifest = chrome.runtime.getManifest();
+    return manifest.version;
+  }
+
+  if (!goog.isString(opt_version) || goog.string.isEmpty(opt_version)) {
+    throw new Error('Invalid version. Must be non-empty string.');
+  }
+  return opt_version;
 };
 
 
@@ -165,6 +187,23 @@ analytics.getChannelFactory_ = function() {
                 analytics.MAX_POST_LENGTH_));
   }
   return analytics.channelFactory_;
+};
+
+
+/**
+ * The "protocol" portion of URLs in Chrome Apps.
+ * @private {string}
+ */
+analytics.CHROME_APP_PROTOCOL_ = 'chrome-extension:';
+
+
+/**
+ * @return {boolean} Whether this code is being executed from within a Chrome
+ *     App.
+ * @private
+ */
+analytics.isChromeApp_ = function() {
+  return goog.global.location.protocol == analytics.CHROME_APP_PROTOCOL_;
 };
 
 

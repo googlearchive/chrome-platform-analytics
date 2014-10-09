@@ -160,17 +160,19 @@ function testSend_ExtraParamsById() {
 
 
 /** @suppress {checkTypes} */
-function testSend_OmitsNullAndUndefinedValues() {
-  var screenName = 'MyMainView';
-  tracker.set(analytics.Parameters.EVENT_LABEL, null);
-  tracker.set(analytics.Parameters.EVENT_VALUE, undefined);
-  tracker.set(analytics.Parameters.DESCRIPTION, screenName);
-  tracker.send(analytics.HitTypes.EVENT);
+function testSend_ThrowsErrorsForIllegalValues() {
 
-  var expected = new analytics.ParameterMap(
-      analytics.Parameters.DESCRIPTION, screenName
-      );
-  channel.assertHitSent(expected);
+  assertThrows(
+    goog.partial(
+      tracker.set,
+      analytics.Parameters.EVENT_LABEL,
+      null));
+
+  assertThrows(
+    goog.partial(
+      tracker.set,
+      analytics.Parameters.EVENT_LABEL,
+      undefined));
 }
 
 

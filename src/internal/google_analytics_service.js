@@ -99,18 +99,29 @@ analytics.internal.GoogleAnalyticsService.prototype.getConfig = function() {
  */
 analytics.internal.GoogleAnalyticsService.addEnvironmentalParams_ =
     function(tracker) {
-  var value = window.navigator.language;
-  tracker.set(analytics.internal.Parameters.LANGUAGE, value);
+  var value = navigator.language ||
+      navigator.browserLanguage;
+  if (value) {
+    tracker.set(analytics.internal.Parameters.LANGUAGE, value);
+  }
 
   // Note: We're using ['foo'] notation to avoid issues with missing
   // externs and the possibility of the closure compiler renaming fields.
   value = screen.colorDepth + '-bit';
-  tracker.set(analytics.internal.Parameters.SCREEN_COLORS, value);
+  if (value) {
+    tracker.set(analytics.internal.Parameters.SCREEN_COLORS, value);
+  }
 
   value = [screen.width, screen.height].join('x');
-  tracker.set(analytics.internal.Parameters.SCREEN_RESOLUTION, value);
+
+  if (value) {
+    tracker.set(analytics.internal.Parameters.SCREEN_RESOLUTION, value);
+  }
 
   var size = goog.dom.getViewportSize();
   value = [size.width, size.height].join('x');
-  tracker.set(analytics.internal.Parameters.VIEWPORT_SIZE, value);
+
+  if (value) {
+    tracker.set(analytics.internal.Parameters.VIEWPORT_SIZE, value);
+  }
 };

@@ -69,7 +69,7 @@ analytics.internal.SharedChannelFactory =
 /** @override */
 analytics.internal.SharedChannelFactory.prototype.getChannel = function() {
   if (!this.channel_) {
-    this.channel_ = this.createChannel_(this.settings_);
+    this.channel_ = this.createChannel_();
   }
   return this.channel_;
 };
@@ -81,15 +81,13 @@ analytics.internal.SharedChannelFactory.prototype.getChannel = function() {
  * delayed initialization of the pipeline. Deferred initialization is
  * necessitated by asynchronous loading of settings from local storage.
  *
- * @param {!analytics.internal.Settings} settings A *ready* settings object.
- *
  * @return {!analytics.internal.Channel}
  * @private
  */
 analytics.internal.SharedChannelFactory.prototype.createChannel_ =
-    function(settings) {
+    function() {
 
-  if (!settings.whenReady().hasFired()) {
+  if (!this.settings_.whenReady().hasFired()) {
     throw new Error(
         'Cannot construct shared channel prior to settings being ready.');
   }
@@ -114,10 +112,10 @@ analytics.internal.SharedChannelFactory.prototype.createChannel_ =
       paramFilterChannel);
 
   var samplingChannel = new analytics.internal.UserSamplingChannel(
-      settings,
+      this.settings_,
       limitingChannel);
 
   return new analytics.internal.AsyncSettingsChannel(
-      settings,
+      this.settings_,
       samplingChannel);
 };

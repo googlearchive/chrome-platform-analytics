@@ -75,9 +75,13 @@ analytics.ParameterMap.Entry;
  * value.
  *
  * @param {!analytics.Parameter} param
- * @param {analytics.Value} value
+ * @param {!analytics.Value} value
  */
 analytics.ParameterMap.prototype.set = function(param, value) {
+  goog.asserts.assert(
+      goog.isDefAndNotNull(value),
+      'Invalid undefined-or-null value for key: ' + param.name);
+
   this.entries_.set(param.name, {'key': param, 'value': value});
 };
 
@@ -142,9 +146,7 @@ analytics.ParameterMap.prototype.addPairs_ = function(elements) {
 analytics.ParameterMap.prototype.forEachEntry = function(receiver) {
   goog.array.forEach(
       this.entries_.getValues(),
-      /**
-       * @param {!analytics.ParameterMap.Entry} entry
-       */
+      /** @param {!analytics.ParameterMap.Entry} entry */
       function(entry) {
         receiver(entry.key, entry.value);
       });

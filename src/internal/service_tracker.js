@@ -63,6 +63,10 @@ analytics.internal.ServiceTracker = function(settings, channelManager) {
 
 /** @override */
 analytics.internal.ServiceTracker.prototype.set = function(param, value) {
+  if (!goog.isDefAndNotNull(value)) {
+    throw new Error(
+      'Value must be defined and not null. Parameter=' + param.id);
+  }
   var parameter = analytics.internal.parameters.asParameter(param);
   this.params_.set(parameter, value);
 };

@@ -35,9 +35,38 @@ goog.require('goog.testing.jsunit');
 goog.require('goog.testing.recordFunction');
 
 
+/**
+ * @define {string} True if test to be run in "Chrome App" mode.
+ * Else HTML5 mode.
+ */
+goog.define('INTEGRATION_TEST_MODE', 'chromeapp');
+
+
+/**
+ * @enum {string}
+ */
+var Mode = {
+  CHROME_APP: 'chromeapp',
+  HTML5: 'html5'
+};
+
+
+/**
+ * @return {boolean}
+ */
+function isTestMode(mode) {
+  return mode == INTEGRATION_TEST_MODE;
+}
+
+if (!isTestMode(Mode.CHROME_APP) && !isTestMode(Mode.HTML5)) {
+  throw new Error('Invalid Mode: ' + INTEGRATION_TEST_MODE);
+}
+
+
 /** @type {!goog.testing.AsyncTestCase} */
 var asyncTestCase = goog.testing.AsyncTestCase.createAndInstall(
-    'GoogleAnalytics');
+    '(Platform: ' + INTEGRATION_TEST_MODE + ') ' +
+    'Chrome Platform Analytics Integration Test');
 
 
 /** @const {!analytics.EventHit} */
@@ -98,23 +127,36 @@ var recorder;
 
 /** @suppress {const|checkTypes} */
 function setUpPage() {
-  if (!goog.isObject(chrome.runtime)) {
-    chrome.runtime = {};
+
+  // chrome.runtime is only present for a webpage (like this test)
+  // when certain extensions are installed/available. Basically
+  // a unpredictable situation. So we create that namespace
+  // conditioanlly here.
+  if (isTestMode(Mode.CHROME_APP)) {
+    // This little extra check/definition let's the chromeapp tests
+    // run in any browser.
+    if (!('chrome' in window)) {
+      chrome = {};
+      chrome.runtime = {};
+    }
+
+    if (!('runtime' in chrome)) {
+      chrome.runtime = {};
+    }
   }
 }
 
 
 /** @suppress {const|checkTypes} */
 function setUp() {
-  goog.asserts.assert(chrome.runtime, '`chrome.runtime` is missing');
-
   replacer = new goog.testing.PropertyReplacer();
   recorder = goog.testing.recordFunction();
 
-  analytics.resetForTesting();
   setupEnv();
 
-  service = analytics.getService(CHROME_MANIFEST.name);
+  service = analytics.getService(
+      CHROME_MANIFEST.name,
+      CHROME_MANIFEST.version);
   tracker = service.getTracker(TRACKING_ID0);
 
   sent = EMPTY_XHR;
@@ -139,26 +181,46 @@ function setUp() {
 
 function tearDown() {
   onTeardown();
+  analytics.resetForTesting();
 }
 
 
 /** @suppress {const|checkTypes} */
 function setupEnv() {
-  var chromeRuntime = new analytics.testing.TestChromeRuntime(
-      CHROME_MANIFEST.name,
-      CHROME_MANIFEST.version);
-  var chromeStorage = new analytics.testing.TestChromeStorageArea();
 
-  chromeRuntime.install();
-  chromeStorage.install();
+  // Ensures analytics thinks it is running in the env we're setting up.
+  replacer.set(
+      analytics,
+      'isChromeApp_',
+      function() {
+        return isTestMode(Mode.CHROME_APP);
+      });
 
-  // NOTE: This'll become conditional in the next iteration of this test.
-  // That's why define this in a function. So we can just call this
-  // on-teardown without having to replicate the logic.
-  onTeardown = function() {
-    chromeRuntime.uninstall();
-    chromeStorage.uninstall();
-  };
+  if (isTestMode(Mode.CHROME_APP)) {
+    var chromeRuntime = new analytics.testing.TestChromeRuntime(
+        CHROME_MANIFEST.name,
+        CHROME_MANIFEST.version);
+    var chromeStorage = new analytics.testing.TestChromeStorageArea();
+
+    chromeRuntime.install();
+    chromeStorage.install();
+
+    // NOTE: This'll become conditional in the next iteration of this test.
+    // That's why define this in a function. So we can just call this
+    // on-teardown without having to replicate the logic.
+    onTeardown = function() {
+      replacer.reset();
+      chromeRuntime.uninstall();
+      chromeStorage.uninstall();
+    };
+  }
+
+  else if (isTestMode(Mode.HTML5)) {
+    onTeardown = function() {
+      replacer.reset();
+      window.localStorage.clear();
+    };
+  }
 }
 
 

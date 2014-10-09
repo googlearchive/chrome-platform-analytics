@@ -227,9 +227,8 @@ analytics.internal.ServiceSettings.prototype.loadTrackingPermitted_ =
 
 /**
  * Check whether the user is opted out via the plugin which adds a function to
- * the global scope. This only works on web pages (i.e. not in a Chrome app). We
- * do not intend this code to be used outside of Chrome apps, but this check is
- * included, just in case someone decides to do that.
+ * the global scope. This only works on web pages (i.e. not in a Chrome app).
+ *
  * @return {boolean} True if the user should be considered to have opted out
  *     because they installed the GA opt-out plugin.
  * @private
