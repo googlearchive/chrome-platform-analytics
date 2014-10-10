@@ -1,6 +1,6 @@
 {
   "name": "chrome-platform-analytics",
-  "version": "1.5.2",
+  "version": "1.6.0prerelease",
   "main": "google-analytics-bundle.js",
   "description": "Javascript Google Analytics (GA) client library for Chrome Platform Applications (and Extensions).",
   "license": "Apache 2.0",

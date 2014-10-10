@@ -327,7 +327,7 @@ function testSend_SendsHits() {
         assertContains(sent.content, 'ea=Melt', entries);
         assertContains(sent.content, 'el=Strawberry', entries);
         assertContains(sent.content, 'ev=100', entries);
-        assertContains(sent.content, '_v=ca1.5.2', entries);
+        assertContains(sent.content, '_v=ca1.6.0prerelease', entries);
         asyncTestCase.continueTesting();
       });
 }
