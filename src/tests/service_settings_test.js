@@ -110,13 +110,13 @@ function testNotifiesListener_WhenTrackingPermittedPropertyChanges() {
 }
 
 function testTrackingNotPermittedIfPluginInstalled() {
-  goog.global._gaUserPrefs = {
-    ioo: function() { return true; }
+  goog.global['_gaUserPrefs'] = {
+    'ioo': function() { return true; }
   };
 
   assertFalse(settings.isTrackingPermitted());
 
-  delete goog.global._gaUserPrefs;
+  delete goog.global['_gaUserPrefs'];
 }
 
 function testTrackingPermitting_UpdatedWhenUnderlyingStorageChanges() {
