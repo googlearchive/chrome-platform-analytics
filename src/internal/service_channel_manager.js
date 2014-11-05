@@ -21,7 +21,7 @@
 goog.provide('analytics.internal.ServiceChannelManager');
 goog.provide('analytics.internal.ServiceChannelManager.Factory');
 
-goog.require('analytics.internal.ChannelManager.Factory');
+goog.require('analytics.internal.ChannelManager');
 goog.require('analytics.internal.DummyChannel');
 goog.require('analytics.internal.FilterChannel');
 goog.require('analytics.internal.ServiceChannel');

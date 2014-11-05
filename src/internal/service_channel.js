@@ -27,7 +27,6 @@ goog.provide('analytics.internal.ServiceChannel');
 
 goog.require('analytics.internal.Channel');
 goog.require('analytics.internal.DivertingChannel');
-goog.require('analytics.internal.Parameters');
 goog.require('analytics.internal.Settings');
 
 goog.require('goog.dom');
@@ -109,16 +108,12 @@ analytics.internal.ServiceChannel.Channels_;
  * When settings becomes ready we complete channel initialization and
  * install property change listeners.
  * @param {function(): !analytics.internal.Channel} enabledChannelFactory
- * @param {!analytics.internal.Settings} settings
  * @private
  */
 analytics.internal.ServiceChannel.prototype.onSettingsReady_ =
-    function(enabledChannelFactory, settings) {
+    function(enabledChannelFactory) {
   if (goog.isNull(this.diverted_)) {
     throw new Error('Channel setup already completed.');
-  }
-  if (settings != this.settings_) {
-    throw new Error('Yikes! Multiple settings instances!');
   }
 
   // Get the "enabled" channel from the factory

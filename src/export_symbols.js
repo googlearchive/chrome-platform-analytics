@@ -13,15 +13,16 @@
 // limitations under the License.
 
 goog.require('analytics.EventBuilder');
-goog.require('analytics.GoogleAnalytics');
+goog.require('analytics.HitTypes');
+goog.require('analytics.ParameterMap');
+goog.require('analytics.Parameters');
 goog.require('analytics.filters.EventLabelerBuilder');
 goog.require('analytics.filters.FilterBuilder');
+goog.require('analytics.getService');
 goog.require('analytics.internal.FilterChannel');
 goog.require('analytics.internal.GoogleAnalyticsService');
-goog.require('analytics.internal.ServiceChannel');
 goog.require('analytics.internal.ServiceSettings');
 goog.require('analytics.internal.ServiceTracker');
-
 goog.require('goog.async.Deferred');
 goog.require('goog.events.EventTarget');
 goog.require('goog.object');

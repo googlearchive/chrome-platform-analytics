@@ -21,9 +21,9 @@
 
 goog.provide('analytics.internal.GoogleAnalyticsService');
 
+goog.require('analytics.GoogleAnalytics');
 goog.require('analytics.internal.Parameters');
 goog.require('analytics.internal.ServiceTracker');
-goog.require('analytics.internal.Settings');
 
 goog.require('goog.dom');
 
