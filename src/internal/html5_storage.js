@@ -41,7 +41,7 @@ goog.require('goog.string');
  * @struct @suppress {checkStructDictInheritance}
  */
 analytics.internal.Html5Storage = function() {
-  goog.base(this);
+  analytics.internal.Html5Storage.base(this, 'constructor');
 
   /** @private {string} */
   this.namespace_ = 'google-analytics';

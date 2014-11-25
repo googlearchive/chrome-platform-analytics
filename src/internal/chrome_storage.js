@@ -42,7 +42,7 @@ goog.require('goog.string');
  * @struct @suppress {checkStructDictInheritance}
  */
 analytics.internal.ChromeStorage = function() {
-  goog.base(this);
+  analytics.internal.ChromeStorage.base(this, 'constructor');
 
   /** @private {string} */
   this.namespace_ = 'google-analytics';

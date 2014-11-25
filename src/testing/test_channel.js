@@ -53,7 +53,7 @@ analytics.testing.TestChannel = function(opt_name) {
    */
   this.sent_ = [];
 
-  goog.base(this, this.sent_);
+  analytics.testing.TestChannel.base(this, 'constructor', this.sent_);
 };
 goog.inherits(analytics.testing.TestChannel,
     analytics.internal.DivertingChannel);

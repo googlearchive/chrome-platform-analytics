@@ -39,7 +39,11 @@ analytics.testing.TestTracker = function() {
   /** @private {!analytics.testing.TestChannel} */
   this.testChannel_ = channelManager.getTestChannel();
 
-  goog.base(this, new analytics.testing.TestSettings(), channelManager);
+  analytics.testing.TestTracker.base(
+      this,
+      'constructor',
+      new analytics.testing.TestSettings(),
+      channelManager);
 };
 goog.inherits(
     analytics.testing.TestTracker,
