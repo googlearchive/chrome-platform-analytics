@@ -66,7 +66,6 @@ analytics.ParameterMap = function(var_args) {
  *   key: !analytics.Parameter,
  *   value: !analytics.Value
  * }}
- * @private
  */
 analytics.ParameterMap.Entry;
 

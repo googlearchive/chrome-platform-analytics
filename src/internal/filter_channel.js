@@ -93,8 +93,7 @@ analytics.internal.FilterChannel.prototype.send =
  *
  * @param {!analytics.HitType} type
  * @param {!analytics.ParameterMap} parameters
- *
- * @protected
+
  */
 analytics.internal.FilterChannel.Hit = function(type, parameters) {
   /** @private {!analytics.HitType} */

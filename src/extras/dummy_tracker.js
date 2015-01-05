@@ -19,6 +19,8 @@
 goog.provide('analytics.extras.DummyTracker');
 
 goog.require('analytics.Tracker');
+goog.require('analytics.internal.ServiceTracker');
+goog.require('goog.async.Deferred');
 goog.require('goog.events.EventTarget');
 
 
@@ -39,27 +41,44 @@ analytics.extras.DummyTracker.prototype.set = goog.nullFunction;
 
 
 /** @override */
-analytics.extras.DummyTracker.prototype.send = goog.nullFunction;
+analytics.extras.DummyTracker.prototype.send =
+    function(hitType, opt_extraParams) {
+  return goog.async.Deferred.succeed();
+};
 
 
 /** @override */
-analytics.extras.DummyTracker.prototype.sendAppView = goog.nullFunction;
+analytics.extras.DummyTracker.prototype.sendAppView = function(description) {
+  return goog.async.Deferred.succeed();
+};
 
 
 /** @override */
-analytics.extras.DummyTracker.prototype.sendEvent = goog.nullFunction;
+analytics.extras.DummyTracker.prototype.sendEvent =
+    function(category, action, opt_label, opt_value) {
+  return goog.async.Deferred.succeed();
+};
 
 
 /** @override */
-analytics.extras.DummyTracker.prototype.sendSocial = goog.nullFunction;
+analytics.extras.DummyTracker.prototype.sendSocial =
+    function(network, action, target) {
+  return goog.async.Deferred.succeed();
+};
 
 
 /** @override */
-analytics.extras.DummyTracker.prototype.sendException = goog.nullFunction;
+analytics.extras.DummyTracker.prototype.sendException =
+    function(opt_description) {
+  return goog.async.Deferred.succeed();
+};
 
 
 /** @override */
-analytics.extras.DummyTracker.prototype.sendTiming = goog.nullFunction;
+analytics.extras.DummyTracker.prototype.sendTiming =
+    function(category, variable, value, opt_label, opt_sampleRate) {
+  return goog.async.Deferred.succeed();
+};
 
 
 /** @override */
@@ -67,8 +86,12 @@ analytics.extras.DummyTracker.prototype.forceSessionStart = goog.nullFunction;
 
 
 /** @override */
-analytics.extras.DummyTracker.prototype.startTiming = goog.nullFunction;
+analytics.extras.DummyTracker.prototype.startTiming =
+    function(category, variable, opt_label, opt_sampleRate) {
+  return new analytics.internal.ServiceTracker.Timing(
+      this, category, variable, opt_label, opt_sampleRate);
+};
 
 
 /** @override */
-analytics.extras.DummyTracker.prototype.getEventTarget = goog.nullFunction;
+analytics.extras.DummyTracker.prototype.addFilter = goog.nullFunction;
