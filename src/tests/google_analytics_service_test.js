@@ -22,6 +22,7 @@ goog.setTestOnly();
 
 goog.require('analytics.GoogleAnalytics');
 goog.require('analytics.HitTypes');
+goog.require('analytics.LIBRARY_VERSION');
 goog.require('analytics.Tracker');
 goog.require('analytics.internal.GoogleAnalyticsService');
 goog.require('analytics.internal.Parameters');

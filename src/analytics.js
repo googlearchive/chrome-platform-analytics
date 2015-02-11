@@ -19,6 +19,7 @@
  * @author tbreisacher@google.com (Tyler Breisacher)
  */
 
+goog.provide('analytics.LIBRARY_VERSION');
 goog.provide('analytics.getService');
 goog.provide('analytics.resetForTesting');
 
