@@ -21,6 +21,7 @@
 goog.setTestOnly();
 
 goog.require('analytics.EventBuilder');
+goog.require('analytics.ParameterMap');
 goog.require('analytics.Parameters');
 goog.require('analytics.testing.TestTracker');
 goog.require('goog.testing.jsunit');
