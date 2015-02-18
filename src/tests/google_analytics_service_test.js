@@ -143,7 +143,7 @@ function testGetTracker_AutofillsEnvironmentalParams() {
   tracker = service.getTracker(TRACKING_ID);
   tracker.send(analytics.HitTypes.EVENT);
 
-  assertTrue(/^[a-z]+-[A-Z]+$/.test(
+  assertTrue(/^[a-z]+-[A-Za-z]+$/.test(
       enabledChannel.findValue(analytics.internal.Parameters.LANGUAGE)));
   assertTrue(/^[0-9]+-bit$/.test(
       enabledChannel.findValue(analytics.internal.Parameters.SCREEN_COLORS)));
