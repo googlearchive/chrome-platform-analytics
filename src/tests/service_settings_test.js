@@ -21,43 +21,29 @@
 
 goog.setTestOnly();
 
-goog.require('analytics.internal.Html5Storage');
 goog.require('analytics.internal.ServiceSettings');
 goog.require('analytics.internal.Settings.Properties');
-goog.require('goog.testing.AsyncTestCase');
+goog.require('analytics.testing.TestStorage');
 goog.require('goog.testing.jsunit');
 goog.require('goog.testing.recordFunction');
 
 
-/** @type {!goog.testing.AsyncTestCase} */
-var asyncTest = goog.testing.AsyncTestCase.createAndInstall();
-
-
-/** @type {!analytics.internal.Html5Storage} */
+/** @type {!analytics.testing.TestStorage} */
 var storage;
 
 
 /** @type {!analytics.internal.ServiceSettings} */
 var settings;
 
+
 var recorder;
 
 
 function setUp() {
-  asyncTest.waitForAsync();
-
-  window.localStorage.clear();  // An abundance of caution...
   recorder = goog.testing.recordFunction();
-  storage = new analytics.internal.Html5Storage();
+  storage = new analytics.testing.TestStorage();
   settings = new analytics.internal.ServiceSettings(storage);
-  settings.whenReady().addCallback(
-      function() {
-        asyncTest.continueTesting();
-      });
-}
-
-function tearDown() {
-  window.localStorage.clear();
+  return settings.whenReady();
 }
 
 function testCreatesValidUserId() {
@@ -66,26 +52,30 @@ function testCreatesValidUserId() {
 }
 
 function testPersistsUserId() {
-  asyncTest.waitForAsync();
-
   var id = settings.getUserId();
   settings = new analytics.internal.ServiceSettings(storage);
-  settings.whenReady().addCallback(
+  return settings.whenReady().addCallback(
       function() {
         assertEquals(id, settings.getUserId());
-        asyncTest.continueTesting();
+      });
+}
+
+function testResetUserId() {
+  var id = settings.getUserId();
+  return settings.resetUserId().addCallback(
+      function() {
+        var newId = settings.getUserId();
+        assertTrue(goog.isString(newId));
+        assertNotEquals(id, newId);
       });
 }
 
 function testPersistsIsTrackingPermitted() {
-  asyncTest.waitForAsync();
-
   settings.setTrackingPermitted(false);
   settings = new analytics.internal.ServiceSettings(storage);
-  settings.whenReady().addCallback(
+  return settings.whenReady().addCallback(
       function() {
         assertFalse(settings.isTrackingPermitted());
-        asyncTest.continueTesting();
       });
 }
 
@@ -94,16 +84,13 @@ function testTrackingPermittingByDefault() {
 }
 
 function testNotifiesListener_WhenTrackingPermittedPropertyChanges() {
-  asyncTest.waitForAsync();
-
-  settings.whenReady().addCallback(
+  return settings.whenReady().addCallback(
       function() {
         settings.addChangeListener(
             function(prop) {
               assertEquals(
                   analytics.internal.Settings.Properties.TRACKING_PERMITTED,
                   prop);
-              asyncTest.continueTesting();
             });
         settings.setTrackingPermitted(false);
       });
@@ -120,12 +107,9 @@ function testTrackingNotPermittedIfPluginInstalled() {
 }
 
 function testTrackingPermitting_UpdatedWhenUnderlyingStorageChanges() {
-  asyncTest.waitForAsync();
-
-  settings.addChangeListener(
+  var deferred = settings.addChangeListener(
       function() {
         assertFalse(settings.isTrackingPermitted());
-        asyncTest.continueTesting();
       });
 
   var naughtySettings = new analytics.internal.ServiceSettings(storage);
@@ -133,4 +117,6 @@ function testTrackingPermitting_UpdatedWhenUnderlyingStorageChanges() {
       function() {
         naughtySettings.setTrackingPermitted(false);
       });
+
+  return deferred;
 }

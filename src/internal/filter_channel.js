@@ -68,18 +68,59 @@ analytics.internal.FilterChannel.prototype.addFilter = function(filter) {
 analytics.internal.FilterChannel.prototype.send =
     function(hitType, parameters) {
 
-  var hit = new analytics.internal.FilterChannel.Hit(hitType, parameters);
-
-  for (var i = 0; i < this.filters_.length; i++) {
-    this.filters_[i](hit);
-    if (hit.canceled_) {
-      break;
-    }
+  if (this.filters_.length == 0) {
+    return this.delegate_.send(hitType, parameters);
+  } else {
+    var hit = new analytics.internal.FilterChannel.Hit(hitType, parameters);
+    return this.applyFilter_(0, hit)
+        .addCallback(
+            /**
+             * @this {analytics.internal.FilterChannel}
+             */
+            function() {
+              if (!hit.canceled_) {
+                return this.delegate_.send(hitType, parameters);
+              }
+            },
+            this);
   }
+};
 
-  return hit.canceled_ ?
-      goog.async.Deferred.succeed() :
-      this.delegate_.send(hitType, parameters);
+
+/**
+ * Applies the specified filter, and the next until there are no more,
+ * or once cancels the hit.
+ *
+ * @param {number} index Index of filter to apply.
+ * @param {!analytics.internal.FilterChannel.Hit} hit
+ *
+ * @return {!goog.async.Deferred} Resolves when all filters have been
+ *     applied, or hit has been cancelled.
+ * @private
+ */
+analytics.internal.FilterChannel.prototype.applyFilter_ =
+      function(index, hit) {
+    return goog.async.Deferred.succeed()
+        .addCallback(
+            /** @this {analytics.internal.FilterChannel} */
+            function() {
+              // TODO(smckay): Once all filter user have been updated
+              // just call this directly.
+              return this.filters_[index](hit);
+            },
+            this)
+        .addCallback(
+            /**
+             * Recurses into applyFilter_ if there are more filters to be
+             *     applied and the hit has not be cancelled.
+             * @this {analytics.internal.FilterChannel}
+             */
+            function() {
+              if (++index < this.filters_.length && !hit.canceled_) {
+                return this.applyFilter_(index, hit);
+              }
+            },
+            this);
 };
 
 

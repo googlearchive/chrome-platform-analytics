@@ -33,6 +33,13 @@ goog.require('goog.testing.jsunit');
 goog.require('goog.testing.recordFunction');
 
 
+/**
+ * @param {!analytics.Tracker.Hit} hit
+ */
+var CANCEL_FILTER = function(hit) {
+  hit.cancel();
+};
+
 /** @const {!analytics.ParameterMap} */
 var PARAMS = new analytics.ParameterMap(
     analytics.internal.Parameters.SCREEN_RESOLUTION, '1024x768',
@@ -57,14 +64,21 @@ function setUp() {
 }
 
 function testDelegates_NoFilters() {
-  channel.send(analytics.HitTypes.EVENT, PARAMS);
-  delegateChannel.assertHitSent(PARAMS);
+  return channel.send(analytics.HitTypes.EVENT, PARAMS)
+      .then(
+          function() {
+             delegateChannel.assertHitSent(PARAMS);
+          });
 }
 
 function testDelegates_PostFilter() {
   channel.addFilter(recorder);
-  channel.send(analytics.HitTypes.EVENT, PARAMS);
-  delegateChannel.assertHitSent(PARAMS);
+
+  return channel.send(analytics.HitTypes.EVENT, PARAMS)
+      .then(
+          function() {
+             delegateChannel.assertHitSent(PARAMS);
+          });
 }
 
 function testDelegates_ConveysMutation() {
@@ -73,30 +87,38 @@ function testDelegates_ConveysMutation() {
   channel.addFilter(
       /** @param {!analytics.Tracker.Hit} hit */
       function(hit) {
-        hit.getParameters().remove(
-            analytics.internal.Parameters.SCREEN_RESOLUTION);
+        return goog.async.Deferred.succeed()
+            .then(
+                function() {
+                  hit.getParameters().remove(
+                      analytics.internal.Parameters.SCREEN_RESOLUTION);
+                });
       });
-  channel.send(analytics.HitTypes.EVENT, PARAMS);
-  delegateChannel.assertHitSent(expected);
+
+  return channel.send(analytics.HitTypes.EVENT, PARAMS)
+      .then(
+          function() {
+            delegateChannel.assertHitSent(expected);
+          });
 }
 
 function testDoesNotDelegate_WhenHitCanceled() {
-  channel.addFilter(
-      /** @param {!analytics.Tracker.Hit} hit */
-      function(hit) {
-        hit.cancel();
-      });
-  channel.send(analytics.HitTypes.EVENT, PARAMS);
-  delegateChannel.assertNumHitsSent(0);
+  channel.addFilter(CANCEL_FILTER);
+
+  return channel.send(analytics.HitTypes.EVENT, PARAMS)
+      .then(
+          function() {
+            delegateChannel.assertNumHitsSent(0);
+          });
 }
 
 function testDoesNotApplyNextFilter_WhenHitCanceled() {
-  channel.addFilter(
-      /** @param {!analytics.Tracker.Hit} hit */
-      function(hit) {
-        hit.cancel();
-      });
+  channel.addFilter(CANCEL_FILTER);
   channel.addFilter(recorder);
-  channel.send(analytics.HitTypes.EVENT, PARAMS);
-  recorder.assertCallCount(0);
+
+  return channel.send(analytics.HitTypes.EVENT, PARAMS)
+      .then(
+          function() {
+            recorder.assertCallCount(0);
+          });
 }

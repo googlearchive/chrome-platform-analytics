@@ -113,6 +113,18 @@ analytics.testing.TestSettings.prototype.getUserId = function() {
 
 
 /** @override */
+analytics.testing.TestSettings.prototype.resetUserId = function() {
+  this.userId_ = analytics.internal.Identifier.generateUuid();
+  return goog.async.Deferred.succeed().addCallback(
+      function() {
+        this.dispatchPropertyChangedEvent_(
+            analytics.internal.Settings.Properties.USER_ID);
+      },
+      this);
+};
+
+
+/** @override */
 analytics.testing.TestSettings.prototype.dispose = goog.nullFunction;
 
 

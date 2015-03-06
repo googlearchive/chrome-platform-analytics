@@ -25,7 +25,6 @@ goog.provide('analytics.resetForTesting');
 
 goog.require('analytics.internal.ChromeStorage');
 goog.require('analytics.internal.GoogleAnalyticsService');
-goog.require('analytics.internal.Html5Storage');
 goog.require('analytics.internal.ServiceChannelManager');
 goog.require('analytics.internal.ServiceSettings');
 goog.require('analytics.internal.SharedChannelFactory');
@@ -38,7 +37,7 @@ goog.require('goog.structs.Map');
  * major change to the library.
  * @const {string}
  */
-analytics.LIBRARY_VERSION = 'ca1.6.0prerelease';
+analytics.LIBRARY_VERSION = 'ca1.6.0';
 
 
 /**
@@ -99,18 +98,14 @@ analytics.resetForTesting = function() {
  * @param {string} appName The name of your Chrome Platform App/Extension.
  *     Though library could read the name of the app from the chrome manifest
  *     file as it does with the app version, the name may in fact be translated.
- *     For this reason the caller must supplied a name.
- * @param {string=} opt_appVersion For Chrome apps this will be automatically
- *     read from the manifest file, therefor it can be omitted. For all
- *     other environments this value must be specified.
  *
  * @return {!analytics.GoogleAnalytics}
  */
-analytics.getService = function(appName, opt_appVersion) {
+analytics.getService = function(appName) {
   var service = analytics.serviceInstances_.get(appName, null);
   if (goog.isNull(service)) {
     service = analytics.createService_(
-        appName, analytics.getAppVersion_(opt_appVersion));
+        appName, analytics.getAppVersion_());
     analytics.serviceInstances_.set(appName, service);
   }
   return service;
@@ -123,12 +118,8 @@ analytics.getService = function(appName, opt_appVersion) {
  */
 analytics.getSettings_ = function() {
   if (!analytics.settings_) {
-    /** @type {!analytics.internal.AsyncStorage} */
-    var storage = analytics.isChromeApp_() ?
-        new analytics.internal.ChromeStorage() :
-        new analytics.internal.Html5Storage();
-
-    analytics.settings_ = new analytics.internal.ServiceSettings(storage);
+    analytics.settings_ = new analytics.internal.ServiceSettings(
+        new analytics.internal.ChromeStorage());
   }
 
   return analytics.settings_;
@@ -153,23 +144,12 @@ analytics.createService_ = function(appName, appVersion) {
 
 
 /**
- * @param {string=} opt_version Value is ignored if the
- *     script is hosted in a chrome app, else the value
- *     must be non-empty.
- *
  * @return {string} version number
  * @private
  */
-analytics.getAppVersion_ = function(opt_version) {
-  if (analytics.isChromeApp_()) {
-    var manifest = chrome.runtime.getManifest();
-    return manifest.version;
-  }
-
-  if (!goog.isString(opt_version) || goog.string.isEmpty(opt_version)) {
-    throw new Error('Invalid version. Must be non-empty string.');
-  }
-  return opt_version;
+analytics.getAppVersion_ = function() {
+  var manifest = chrome.runtime.getManifest();
+  return manifest.version;
 };
 
 
@@ -197,13 +177,3 @@ analytics.getChannelFactory_ = function() {
  * @private {string}
  */
 analytics.CHROME_APP_PROTOCOL_ = 'chrome-extension:';
-
-
-/**
- * @return {boolean} Whether this code is being executed from within a Chrome
- *     App.
- * @private
- */
-analytics.isChromeApp_ = function() {
-  return goog.global.location.protocol == analytics.CHROME_APP_PROTOCOL_;
-};

@@ -204,9 +204,11 @@ analytics.Tracker.prototype.addFilter;
 
 
 /**
- * A {@code function} that processes a hit.
+ * A {@code function} that processes a hit. Filters may
+ * optionally return a Deferred instance if async handling
+ * is required.
  *
- * @typedef {function(!analytics.Tracker.Hit)}
+ * @typedef {function(!analytics.Tracker.Hit): (undefined|!goog.async.Deferred)}
  */
 analytics.Tracker.Filter;
 

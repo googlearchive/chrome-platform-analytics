@@ -13,8 +13,7 @@
 // limitations under the License.
 
 /**
- * @fileoverview Test guaranteeing that both analytics.internal.Html5Storage
- * and analytics.internal.ChromeStorage behave identically.
+ * @fileoverview Tests of analytics.internal.ChromeStorage.
  *
  * @author smckay@google.com (Steve McKay)
  * @author tbreisacher@google.com (Tyler Breisacher)
@@ -24,7 +23,6 @@ goog.setTestOnly();
 
 goog.require('analytics.internal.AsyncStorage');
 goog.require('analytics.internal.ChromeStorage');
-goog.require('analytics.internal.Html5Storage');
 goog.require('analytics.testing.TestChromeRuntime');
 goog.require('analytics.testing.TestChromeStorageArea');
 goog.require('goog.events');
@@ -49,10 +47,6 @@ var storageArea;
 var chromeStorage;
 
 
-/** @type {!analytics.internal.Html5Storage} */
-var html5Storage;
-
-
 /** @suppress {const|checkTypes} */
 function setUpPage() {
   if (!goog.isObject(chrome.runtime)) {
@@ -69,40 +63,24 @@ function setUp() {
   storageArea = new analytics.testing.TestChromeStorageArea();
   storageArea.install();
   chromeStorage = new analytics.internal.ChromeStorage();
-  html5Storage = new analytics.internal.Html5Storage();
 }
 
 function tearDown() {
   storageArea.uninstall();
   runtime.uninstall();
-  window.localStorage.clear();
 }
 
-function testChrome_SetAndGet() {
+function testSetAndGet() {
   assertSetsAndGets(chromeStorage);
 }
 
-function testChrome_NotifiesListeners() {
+function testNotifiesListeners() {
   assertNotifiesChangeListeners(chromeStorage);
 }
 
-function testChrome_DoesNotNotifyListenersOnNoopChange() {
+function testDoesNotNotifyListenersOnNoopChange() {
   assertDoesNotNotifyListenersOnNoopChange(chromeStorage);
 }
-
-function testHtml5_SetAndGet() {
-  assertSetsAndGets(html5Storage);
-}
-
-function testHtml5_NotifiesListeners() {
-  assertNotifiesChangeListeners(html5Storage);
-}
-
-
-function testHtml5_DoesNotNotifyListenersOnNoopChange() {
-  assertDoesNotNotifyListenersOnNoopChange(html5Storage);
-}
-
 
 /** @param {!analytics.internal.AsyncStorage} storage */
 function assertSetsAndGets(storage) {

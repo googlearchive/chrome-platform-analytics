@@ -157,7 +157,8 @@ analytics.internal.ServiceSettings.prototype.handleStorageChanged_ =
   this.loadSettings_().addCallback(
       function() {
         if (userId != this.getUserId()) {
-          throw new Error('User ID changed unexpectedly!');
+          this.firePropertyChangedEvent_(
+              analytics.internal.Settings.Properties.USER_ID);
         }
         if (trackingPermitted != this.isTrackingPermitted()) {
           this.firePropertyChangedEvent_(
@@ -266,14 +267,32 @@ analytics.internal.ServiceSettings.prototype.loadUserId_ = function() {
   return this.storage_.get(analytics.internal.Settings.Properties.USER_ID).
       addCallback(
           function(id) {
-            if (!goog.isDef(id)) {
-              id = analytics.internal.Identifier.generateUuid();
-              this.storage_.set(
-                  analytics.internal.Settings.Properties.USER_ID, id);
+            if (goog.isDef(id)) {
+              this.userId_ = id;
+            } else {
+              this.initializeUserId_();
             }
-            this.userId_ = id;
           },
           this);
+};
+
+
+/**
+ * Loads the user id from local storage. If it isn't present, creates it and
+ * writes it to local storage.
+ * @return {!goog.async.Deferred} A deferred firing when the user id is loaded.
+ * @private
+ */
+analytics.internal.ServiceSettings.prototype.initializeUserId_ = function() {
+  this.userId_ = analytics.internal.Identifier.generateUuid();
+  return this.storage_.set(
+      analytics.internal.Settings.Properties.USER_ID,
+      this.userId_)
+      .addCallback(
+          function() {
+            this.firePropertyChangedEvent_(
+                analytics.internal.Settings.Properties.USER_ID);
+          }, this);
 };
 
 
@@ -289,6 +308,12 @@ analytics.internal.ServiceSettings.prototype.setSampleRate =
 analytics.internal.ServiceSettings.prototype.getSampleRate = function() {
   this.assertReady_();
   return this.sampleRate_;
+};
+
+
+/** @override */
+analytics.internal.ServiceSettings.prototype.resetUserId = function() {
+  return this.initializeUserId_();
 };
 
 

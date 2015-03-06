@@ -69,3 +69,13 @@ analytics.Config.prototype.isTrackingPermitted;
  *     If not set defaults to 100.
  */
 analytics.Config.prototype.setSampleRate;
+
+
+/**
+ * Resets the user id. This is useful for clients wishing to afford users
+ * the opportunity to reset the auto-generated user id. Immediately generates
+ * a new user ID. Client code can continue using existing tracker objects.
+ *
+ * @return {!goog.async.Deferred} Settles once the id has been reset.
+ */
+analytics.Config.prototype.resetUserId;
