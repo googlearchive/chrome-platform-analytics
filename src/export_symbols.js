@@ -34,6 +34,9 @@ goog.exportSymbol(
     'goog.async.Deferred.prototype.addCallback',
     goog.async.Deferred.prototype.addCallback);
 goog.exportSymbol(
+    'goog.async.Deferred.prototype.callback',
+    goog.async.Deferred.prototype.callback);
+goog.exportSymbol(
     'goog.async.Deferred.prototype.then',
     goog.async.Deferred.prototype.then);
 
