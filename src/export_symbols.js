@@ -33,6 +33,9 @@ goog.exportSymbol(
 goog.exportSymbol(
     'goog.async.Deferred.prototype.addCallback',
     goog.async.Deferred.prototype.addCallback);
+goog.exportSymbol(
+    'goog.async.Deferred.prototype.then',
+    goog.async.Deferred.prototype.then);
 
 goog.exportSymbol(
     'goog.events.EventTarget',
@@ -72,6 +75,9 @@ goog.exportSymbol(
 goog.exportSymbol(
     'analytics.internal.ServiceSettings.prototype.setSampleRate',
     analytics.internal.ServiceSettings.prototype.setSampleRate);
+goog.exportSymbol(
+    'analytics.internal.ServiceSettings.prototype.resetUserId',
+    analytics.internal.ServiceSettings.prototype.resetUserId);
 
 // ServiceTracker...
 goog.exportSymbol(
