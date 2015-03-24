@@ -98,14 +98,16 @@ analytics.resetForTesting = function() {
  * @param {string} appName The name of your Chrome Platform App/Extension.
  *     Though library could read the name of the app from the chrome manifest
  *     file as it does with the app version, the name may in fact be translated.
+ * @param {string=} opt_appVersion An optional app version.  If provided, this
+ *     overrides the default app version (which is read from the app manifest).
  *
  * @return {!analytics.GoogleAnalytics}
  */
-analytics.getService = function(appName) {
+analytics.getService = function(appName, opt_appVersion) {
   var service = analytics.serviceInstances_.get(appName, null);
+  var appVersion = opt_appVersion || analytics.getAppVersion_();
   if (goog.isNull(service)) {
-    service = analytics.createService_(
-        appName, analytics.getAppVersion_());
+    service = analytics.createService_(appName, appVersion);
     analytics.serviceInstances_.set(appName, service);
   }
   return service;

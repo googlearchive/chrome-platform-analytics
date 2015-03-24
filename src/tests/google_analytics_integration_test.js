@@ -29,7 +29,6 @@ goog.require('analytics.testing.TestChromeRuntime');
 goog.require('analytics.testing.TestChromeStorageArea');
 
 goog.require('goog.array');
-goog.require('goog.testing.AsyncTestCase');
 goog.require('goog.testing.PropertyReplacer');
 goog.require('goog.testing.jsunit');
 goog.require('goog.testing.recordFunction');
@@ -61,12 +60,6 @@ function isTestMode(mode) {
 if (!isTestMode(Mode.CHROME_APP) && !isTestMode(Mode.HTML5)) {
   throw new Error('Invalid Mode: ' + INTEGRATION_TEST_MODE);
 }
-
-
-/** @type {!goog.testing.AsyncTestCase} */
-var asyncTestCase = goog.testing.AsyncTestCase.createAndInstall(
-    '(Platform: ' + INTEGRATION_TEST_MODE + ') ' +
-    'Chrome Platform Analytics Integration Test');
 
 
 /** @const {!analytics.EventHit} */
@@ -154,9 +147,7 @@ function setUp() {
 
   setupEnv();
 
-  service = analytics.getService(
-      CHROME_MANIFEST.name,
-      CHROME_MANIFEST.version);
+  service = analytics.getService(CHROME_MANIFEST.name);
   tracker = service.getTracker(TRACKING_ID0);
 
   sent = EMPTY_XHR;
@@ -170,11 +161,9 @@ function setUp() {
         callback();
       });
 
-  asyncTestCase.waitForAsync();
-  service.getConfig().addCallback(
+  return service.getConfig().addCallback(
       function(readyConfig) {
         config = readyConfig;
-        asyncTestCase.continueTesting();
       });
 }
 
@@ -232,88 +221,70 @@ function testGetConfig() {
   // This duplicates something in setup,
   // be better to SEE what is being covered here in the test
   // than having to go chase down where config is defined.
-  asyncTestCase.waitForAsync();
-  service.getConfig().addCallback(
+  return service.getConfig().addCallback(
       function(config) {
         assertNotNull(config);
-        asyncTestCase.continueTesting();
       });
 }
 
 function testOptOut_HitsNotSent() {
-  asyncTestCase.waitForAsync();
   config.setTrackingPermitted(false);
 
-  tracker.sendAppView('foo').addCallback(
+  return tracker.sendAppView('foo').addCallback(
       function() {
         assertEquals(sent, EMPTY_XHR);
-        asyncTestCase.continueTesting();
       });
 }
 
 function testOptOut_HitsNotFiltered() {
-  asyncTestCase.waitForAsync();
-
   tracker.addFilter(recorder);
 
   config.setTrackingPermitted(false);
 
-  tracker.sendAppView('foo').addCallback(
+  return tracker.sendAppView('foo').addCallback(
       function() {
         recorder.assertCallCount(0);
-        asyncTestCase.continueTesting();
       });
 }
 
 
 function testOptIn_HitsFiltered() {
-  asyncTestCase.waitForAsync();
   tracker.addFilter(recorder);
   config.setTrackingPermitted(true);
 
-  tracker.sendAppView('foo').addCallback(
+  return tracker.sendAppView('foo').addCallback(
       function() {
         recorder.assertCallCount(1);
-        asyncTestCase.continueTesting();
       });
 }
 
 
 function testSend_DeferredFires_TrackingEnabled() {
-  asyncTestCase.waitForAsync();
   config.setTrackingPermitted(true);
 
-  tracker.sendEvent(
+  return tracker.sendEvent(
       EVENT_HIT.eventCategory,
       EVENT_HIT.eventAction,
       EVENT_HIT.eventLabel,
-      EVENT_HIT.eventValue).addCallback(
-      function() {
-        asyncTestCase.continueTesting();
-      });
+      EVENT_HIT.eventValue);
 }
 
 function testSend_DeferredFires_TrackingDisabled() {
-  asyncTestCase.waitForAsync();
   config.setTrackingPermitted(false);
 
-  tracker.sendEvent(
+  return tracker.sendEvent(
       EVENT_HIT.eventCategory,
       EVENT_HIT.eventAction,
       EVENT_HIT.eventLabel,
-      EVENT_HIT.eventValue).addCallback(
-      function() {
-        asyncTestCase.continueTesting();
-      });
+      EVENT_HIT.eventValue);
 }
 
 function testSend_SendsHits() {
-  asyncTestCase.waitForAsync();
   config.setTrackingPermitted(true);
 
   tracker.set('dimension11', 'Poodles');
   tracker.set('metric72', 17);
-  tracker.sendEvent(
+  return tracker.sendEvent(
       EVENT_HIT.eventCategory,
       EVENT_HIT.eventAction,
       EVENT_HIT.eventLabel,
@@ -328,6 +299,29 @@ function testSend_SendsHits() {
         assertContains(sent.content, 'el=Strawberry', entries);
         assertContains(sent.content, 'ev=100', entries);
         assertContains(sent.content, '_v=ca1.6.0', entries);
-        asyncTestCase.continueTesting();
+      });
+}
+
+function testService_setAppVersion() {
+  /** @const {string} */
+  var CUSTOM_VERSION = 'IAmAUniqueAndSpecialSnowflake.2';
+
+  // Reset the service.
+  analytics.resetForTesting();
+  service = analytics.getService(CHROME_MANIFEST.name, CUSTOM_VERSION);
+
+  return service.getConfig().addCallback(
+      function(readyConfig) {
+        config = readyConfig;
+        config.setTrackingPermitted(true);
+        tracker = service.getTracker(TRACKING_ID0);
+
+        tracker.send(analytics.HitTypes.EVENT).addCallback(
+            function() {
+              console.log(sent);
+              var entries = sent.content.split('&');
+              assertTrue(entries.length > 0);
+              assertContains(sent.content, 'av=' + CUSTOM_VERSION, entries);
+            });
       });
 }
