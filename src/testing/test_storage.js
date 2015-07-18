@@ -35,7 +35,7 @@ goog.require('goog.structs.Map');
  * @constructor
  * @implements {analytics.internal.AsyncStorage}
  * @extends {goog.events.EventTarget}
- * @struct @suppress {checkStructDictInheritance}
+ * @struct
  */
 analytics.testing.TestStorage = function() {
   analytics.testing.TestStorage.base(this, 'constructor');

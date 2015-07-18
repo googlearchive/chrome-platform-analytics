@@ -39,7 +39,7 @@ goog.require('goog.string');
  * @constructor
  * @implements {analytics.internal.AsyncStorage}
  * @extends {goog.events.EventTarget}
- * @struct @suppress {checkStructDictInheritance}
+ * @struct
  */
 analytics.internal.ChromeStorage = function() {
   analytics.internal.ChromeStorage.base(this, 'constructor');
