@@ -86,6 +86,10 @@ analytics.extras.DummyTracker.prototype.forceSessionStart = goog.nullFunction;
 
 
 /** @override */
+analytics.extras.DummyTracker.prototype.anonymizeIps = goog.nullFunction;
+
+
+/** @override */
 analytics.extras.DummyTracker.prototype.startTiming =
     function(category, variable, opt_label, opt_sampleRate) {
   return new analytics.internal.ServiceTracker.Timing(

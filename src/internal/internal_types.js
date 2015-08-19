@@ -32,6 +32,14 @@ goog.require('analytics.ValueTypes');
  * @enum {analytics.Parameter}
  */
 analytics.internal.Parameters = {
+  /* Anonymize IP Addresses */
+  ANONYMIZE_IP: {
+    id: 'anonymizeIp',
+    name: 'aip',
+    valueType: analytics.ValueTypes.BOOLEAN,
+    maxLength: undefined,
+    defaultValue: undefined
+  },
   /* Protocol Version */
   API_VERSION: {
     id: 'apiVersion',

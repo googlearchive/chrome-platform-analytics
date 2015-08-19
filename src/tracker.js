@@ -156,6 +156,12 @@ analytics.Tracker.prototype.forceSessionStart;
 
 
 /**
+ * When present, the IP address of the sender will be anonymized.
+ */
+analytics.Tracker.prototype.anonymizeIps;
+
+
+/**
  * Creates a new timing object that tracks elapsed time for you.
  *
  * @see analytics.Tracker.sendTiming for a way to send timing events

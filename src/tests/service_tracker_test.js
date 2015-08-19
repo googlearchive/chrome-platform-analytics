@@ -199,6 +199,16 @@ function testStartNewSession() {
 }
 
 
+function testSendsAnonymizeIp() {
+  tracker.send(analytics.HitTypes.EVENT);
+  assertUndefined(channel.findValue('anonymizeIp'));
+
+  tracker.anonymizeIps();
+  tracker.send(analytics.HitTypes.EVENT);
+  channel.assertLastHitHasEntry('anonymizeIp', true);
+}
+
+
 function testSendAppView() {
   tracker.sendAppView(APPVIEW_HIT.description);
   assertTypedHitSent(APPVIEW_HIT);

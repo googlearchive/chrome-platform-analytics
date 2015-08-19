@@ -58,6 +58,9 @@ analytics.internal.ServiceTracker = function(settings, channelManager) {
 
   /** @private {boolean} */
   this.startSession_ = false;
+
+  /** @private {boolean} */
+  this.anonymizeIps_ = false;
 };
 
 
@@ -105,6 +108,10 @@ analytics.internal.ServiceTracker.prototype.send =
   if (this.startSession_) {
     this.startSession_ = false;
     hit.set(analytics.Parameters.SESSION_CONTROL, 'start');
+  }
+
+  if (this.anonymizeIps_) {
+    hit.set(analytics.internal.Parameters.ANONYMIZE_IP, true);
   }
 
   return this.channel_.send(hitType, hit);
@@ -187,6 +194,13 @@ analytics.internal.ServiceTracker.prototype.sendTiming =
 analytics.internal.ServiceTracker.prototype.forceSessionStart =
     function() {
   this.startSession_ = true;
+};
+
+
+/** @override */
+analytics.internal.ServiceTracker.prototype.anonymizeIps =
+    function() {
+  this.anonymizeIps_ = true;
 };
 
 
