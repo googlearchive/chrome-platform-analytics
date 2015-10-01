@@ -70,8 +70,7 @@ goog.inherits(
  */
 analytics.internal.ChromeStorage.prototype.onStorageChanged_ =
     function(changes, areaName) {
-  goog.asserts.assert(areaName == 'local');
-  if (this.hasChangesInNamespace_(changes)) {
+  if (areaName == 'local' && this.hasChangesInNamespace_(changes)) {
     this.dispatchEvent(analytics.internal.AsyncStorage.Event.STORAGE_CHANGED);
   }
 };
