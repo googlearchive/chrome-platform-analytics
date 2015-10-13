@@ -68,6 +68,7 @@ analytics.internal.Settings.prototype.getSampleRate;
  * ServiceSettings object when used in integration testing.
  * This is necessitated due to unpredictable object
  * cleanup in IE browsers.
+ * @type {function()}
  */
 analytics.internal.Settings.prototype.dispose;
 

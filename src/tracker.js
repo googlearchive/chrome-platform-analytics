@@ -151,12 +151,14 @@ analytics.Tracker.prototype.sendTiming;
  * Forces the tracker up to start a new session on the next hit.  Note that
  * clients should not usually need to call this as Google Analytics provides
  * automatic session management.
+ * @type {function()}
  */
 analytics.Tracker.prototype.forceSessionStart;
 
 
 /**
  * When present, the IP address of the sender will be anonymized.
+ * @type {function()}
  */
 analytics.Tracker.prototype.anonymizeIps;
 
@@ -246,5 +248,6 @@ analytics.Tracker.Hit.prototype.getParameters;
 /**
  * Marks the hit as canceled. The hit will endure no further
  * processing once it has been marked as canceled.
+ * @type {function()}
  */
 analytics.Tracker.Hit.prototype.cancel;
