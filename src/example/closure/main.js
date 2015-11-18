@@ -55,7 +55,7 @@ var previousChoice;
 
 /**
  * The user's previous choices.
- * @type {!Array.<string>}
+ * @type {!Array<?analytics.Value>}
  */
 var previous;
 
