@@ -18,6 +18,7 @@
  * @author kenobi@google.com (Ben Kwa)
  */
 
+goog.setTestOnly('analytics.testing.Hits');
 goog.provide('analytics.testing.Hits');
 
 goog.require('analytics.ParameterMap');

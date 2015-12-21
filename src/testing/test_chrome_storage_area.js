@@ -21,6 +21,7 @@
  * @author tbreisacher@google.com (Tyler Breisacher)
  */
 
+goog.setTestOnly('analytics.testing.TestChromeStorageArea');
 goog.provide('analytics.testing.TestChromeStorageArea');
 
 goog.require('goog.Timer');

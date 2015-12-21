@@ -19,6 +19,7 @@
  * @author tbreisacher@google.com (Tyler Breisacher)
  */
 
+goog.setTestOnly('analytics.testing.TestSettings');
 goog.provide('analytics.testing.TestSettings');
 
 goog.require('analytics.internal.Identifier');

@@ -19,6 +19,7 @@
  * @author tbreisacher@google.com (Tyler Breisacher)
  */
 
+goog.setTestOnly('analytics.testing.TestChromeRuntime');
 goog.provide('analytics.testing.TestChromeRuntime');
 
 goog.require('goog.asserts');

@@ -19,6 +19,7 @@
  * @author tbreisacher@google.com (Tyler Breisacher)
  */
 
+goog.setTestOnly('analytics.testing.TestStorage');
 goog.provide('analytics.testing.TestStorage');
 
 goog.require('analytics.internal.AsyncStorage');

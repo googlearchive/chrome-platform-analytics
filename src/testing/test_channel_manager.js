@@ -19,6 +19,7 @@
  * @author smckay@google.com (Steve McKay)
  */
 
+goog.setTestOnly('analytics.testing.TestChannelManager');
 goog.provide('analytics.testing.TestChannelManager');
 
 goog.require('analytics.internal.ChannelManager');

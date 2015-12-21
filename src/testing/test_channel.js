@@ -19,6 +19,7 @@
  * @author tbreisacher@google.com (Tyler Breisacher)
  */
 
+goog.setTestOnly('analytics.testing.TestChannel');
 goog.provide('analytics.testing.TestChannel');
 
 goog.require('analytics.EventBuilder');

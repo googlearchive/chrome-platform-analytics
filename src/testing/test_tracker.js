@@ -21,6 +21,7 @@
  * @author tbreisacher@google.com (Tyler Breisacher)
  */
 
+goog.setTestOnly('analytics.testing.TestTracker');
 goog.provide('analytics.testing.TestTracker');
 
 goog.require('analytics.internal.ServiceTracker');

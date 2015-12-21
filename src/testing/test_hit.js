@@ -1,3 +1,4 @@
+goog.setTestOnly('analytics.testing.TestHit');
 goog.provide('analytics.testing.TestHit');
 
 goog.require('analytics.Tracker.Hit');
