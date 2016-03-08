@@ -26,7 +26,6 @@ goog.provide('analytics.ParameterMap');
 goog.require('analytics.Parameter');
 goog.require('analytics.Value');
 
-goog.require('goog.array.ArrayLike');
 goog.require('goog.string.format');
 goog.require('goog.structs');
 goog.require('goog.structs.Map');
@@ -125,8 +124,7 @@ analytics.ParameterMap.prototype.addAll = function(map) {
  * Adds elements from list of alternating {@code analytics.Parameter}
  * and {@code analytics.Value} values.
  *
- * @param {!goog.array.ArrayLike.<
- *     analytics.Parameter|analytics.Value>} elements
+ * @param {!IArrayLike<analytics.Parameter|analytics.Value>} elements
  * @private
  */
 analytics.ParameterMap.prototype.addPairs_ = function(elements) {
